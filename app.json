@@ -36,6 +36,15 @@
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "a80e055e-af53-4879-89e1-12af854c7743"
+      }
+    },
+    "owner": "gearnshaw"
   }
 }
