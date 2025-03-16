@@ -211,6 +211,12 @@ export const auth = getAuth(app);
    - Use Zustand stores for managing UI state and local data cache
    - Implement real-time updates using Firestore listeners where needed
 
+## Testing
+New code should be testable and tested.
+1. Use jest for unit testing
+2. Use React Native Testing Library for component testing
+3. Use Maestro for E2E testing
+
 ## Code Organization Rules
 
 ### Imports
