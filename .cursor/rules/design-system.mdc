@@ -1,0 +1,305 @@
+---
+description: 
+globs: *.tsx
+alwaysApply: false
+---
+
+# Design System Implementation Guide
+
+## Rule Metadata
+- **Applies to**: `*.tsx` files in the project
+- **Primary focus**: Component implementation and organization
+- **Dependencies**: Requires TWRNC (Tailwind React Native Classnames)
+- **Related files**: 
+  - `project-architecture.mdc` (overall project structure)
+  - `tailwind.config.js` (styling tokens and configuration)
+
+## Component Organization
+
+The design system follows a hybrid approach combining the best aspects of Atomic Design with a feature-based architecture. Components are organized based on their complexity and scope of use.
+
+### Shared Components Structure
+
+```
+src/shared/components/
+├── base/           # Fundamental building blocks (former "atoms")
+│   ├── Button.tsx
+│   ├── Input.tsx
+│   └── Text.tsx
+├── common/         # Reusable combinations (former "molecules")
+│   ├── FormField.tsx
+│   └── Card.tsx
+└── composite/      # Complex shared components (former "organisms")
+    ├── Header.tsx
+    └── Navigation.tsx
+```
+
+## Component Categories
+
+### Base Components
+- Fundamental UI building blocks
+- No dependencies on other components
+- Pure presentational components
+- Highly reusable across the entire application
+- Examples: Button, Input, Text, Icon
+
+```typescript
+// Example Base Component Structure
+// src/shared/components/base/Button.tsx
+import { Pressable, Text } from 'react-native';
+import tw from 'twrnc';
+
+export interface ButtonProps {
+  variant?: 'primary' | 'secondary' | 'outline';
+  size?: 'sm' | 'md' | 'lg';
+  children: React.ReactNode;
+  onPress?: () => void;
+  disabled?: boolean;
+}
+
+export const Button = ({ 
+  variant = 'primary',
+  size = 'md',
+  children,
+  ...props 
+}: ButtonProps) => {
+  const styles = {
+    base: tw`rounded-lg flex-row items-center justify-center`,
+    variants: {
+      primary: tw`bg-primary-500`,
+      secondary: tw`bg-secondary-500`,
+      outline: tw`border-2 border-primary-500`
+    },
+    sizes: {
+      sm: tw`px-3 py-2`,
+      md: tw`px-4 py-3`,
+      lg: tw`px-6 py-4`
+    }
+  };
+
+  return (
+    <Pressable 
+      style={[styles.base, styles.variants[variant], styles.sizes[size]]}
+      {...props}
+    >
+      <Text style={tw`text-white font-medium`}>{children}</Text>
+    </Pressable>
+  );
+};
+```
+
+### Common Components
+- Combinations of base components
+- May contain simple state management
+- Reusable across different features
+- Examples: FormField, Card, ListItem
+
+```typescript
+// Example Common Component Structure
+// src/shared/components/common/FormField.tsx
+import { View } from 'react-native';
+import { Text, Input } from '../base';
+import tw from 'twrnc';
+
+export interface FormFieldProps {
+  label: string;
+  error?: string;
+  [key: string]: any; // Additional input props
+}
+
+export const FormField = ({ 
+  label, 
+  error, 
+  ...inputProps 
+}: FormFieldProps) => (
+  <View style={tw`mb-4`}>
+    <Text style={tw`mb-1 font-medium`}>{label}</Text>
+    <Input 
+      style={tw`${error ? 'border-red-500' : 'border-gray-200'}`}
+      {...inputProps}
+    />
+    {error && (
+      <Text style={tw`mt-1 text-red-500 text-sm`}>{error}</Text>
+    )}
+  </View>
+);
+```
+
+### Composite Components
+- Complex components that may combine multiple common components
+- May contain more complex state management
+- Still reusable but more specialized
+- Examples: Header, Navigation, Modal
+
+### Feature Components
+- Live within feature directories
+- Combine shared components for feature-specific use cases
+- May contain feature-specific business logic
+- Example: LoginForm within the auth feature
+
+```typescript
+// Example Feature Component Structure
+// src/features/auth/components/LoginForm.tsx
+import { View } from 'react-native';
+import { FormField } from '@/shared/components/common';
+import { Button } from '@/shared/components/base';
+import tw from 'twrnc';
+
+export interface LoginFormProps {
+  onSubmit: (data: { email: string; password: string }) => void;
+}
+
+export const LoginForm = ({ onSubmit }: LoginFormProps) => {
+  // Feature-specific logic here
+  return (
+    <View style={tw`p-4`}>
+      <FormField
+        label="Email"
+        placeholder="Enter your email"
+        keyboardType="email-address"
+      />
+      <FormField
+        label="Password"
+        placeholder="Enter your password"
+        secureTextEntry
+      />
+      <Button onPress={onSubmit}>
+        Log In
+      </Button>
+    </View>
+  );
+};
+```
+
+## Component Export Guidelines
+
+1. **Direct Exports**
+   - Export components directly from their files
+   - Avoid barrel exports (index.ts files)
+   - Use named exports for better tree-shaking
+   - Export types alongside their components
+
+Example of preferred component export:
+```typescript
+// src/shared/components/base/Button.tsx
+export interface ButtonProps {
+  // ... props definition
+}
+
+export const Button = ({ ...props }: ButtonProps) => {
+  // ... implementation
+};
+```
+
+2. **Import Style**
+   - Import components directly from their source files
+   - Use absolute imports with path aliases
+   - Be explicit about what you're importing
+
+```typescript
+// ✅ Preferred: Direct imports
+import { Button } from '@/shared/components/base/Button';
+import { FormField } from '@/shared/components/common/FormField';
+import { Header } from '@/shared/components/composite/Header';
+
+// ❌ Avoid: Barrel imports
+import { Button, Text } from '@/shared/components/base';
+import { FormField, Card } from '@/shared/components/common';
+```
+
+## Component Development Guidelines
+
+1. **Component Creation**
+   - Start with base components
+   - Build common components using base components
+   - Create composite components only when needed
+   - Keep feature components focused on business logic
+
+2. **Styling**
+   - Use TWRNC (Tailwind React Native Classnames) for styling
+   - Define reusable styles in the tailwind config
+   - Use consistent spacing and color tokens
+   - Platform-specific styles using TWRNC modifiers
+
+3. **Props and Types**
+   - Always define TypeScript interfaces for props
+   - Export interfaces for reuse
+   - Use sensible defaults for optional props
+   - Document complex props with JSDoc comments
+
+4. **State Management**
+   - Base components should be stateless when possible
+   - Common components may contain simple state
+   - Complex state belongs in feature components or hooks
+   - Use composition over prop drilling
+
+5. **Testing**
+   - Test base components thoroughly
+   - Test common components with different prop combinations
+   - Test feature components with integration tests
+   - Use React Native Testing Library
+
+## Usage Examples
+
+### Importing Components
+```typescript
+// Preferred import style
+import { Button, Text } from '@/shared/components/base';
+import { FormField, Card } from '@/shared/components/common';
+import { Header } from '@/shared/components/composite';
+
+// Feature components
+import { LoginForm } from '@/features/auth';
+```
+
+### Component Composition
+```typescript
+// Example of component composition
+import { View } from 'react-native';
+import { Button, Text } from '@/shared/components/base';
+import { Card } from '@/shared/components/common';
+import tw from 'twrnc';
+
+export const FeatureCard = ({ title, description, onAction }) => (
+  <Card style={tw`p-4`}>
+    <Text style={tw`text-lg font-bold`}>{title}</Text>
+    <Text style={tw`mt-2 text-gray-600`}>{description}</Text>
+    <Button 
+      variant="primary" 
+      size="sm" 
+      onPress={onAction}
+      style={tw`mt-4`}
+    >
+      Take Action
+    </Button>
+  </Card>
+);
+```
+
+## Best Practices
+
+1. **Component Size**
+   - Keep components focused and single-purpose
+   - Split large components into smaller, manageable pieces
+   - Use composition to build complex UIs
+
+2. **Performance**
+   - Memoize callbacks and complex calculations
+   - Use React.memo for pure components
+   - Lazy load components when appropriate
+
+3. **Accessibility**
+   - Include accessibility labels and hints
+   - Support screen readers
+   - Test with accessibility tools
+
+4. **Documentation**
+   - Document component APIs
+   - Include usage examples
+   - Document any platform-specific behavior
+
+5. **Maintenance**
+   - Regular audits of component usage
+   - Remove unused components
+   - Keep dependencies updated
+   - Monitor performance metrics

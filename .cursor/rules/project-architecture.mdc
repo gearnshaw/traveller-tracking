@@ -211,6 +211,48 @@ export const auth = getAuth(app);
    - Use Zustand stores for managing UI state and local data cache
    - Implement real-time updates using Firestore listeners where needed
 
+## Service Implementation Pattern
+
+Services should be implemented using TypeScript interfaces and factory functions rather than classes:
+
+```typescript
+// Define the interface
+export interface ExampleService {
+  methodOne(param: string): Promise<void>;
+  methodTwo(param: number): string;
+}
+
+// Implement with factory function
+const createExampleService = (dependencies): ExampleService => ({
+  async methodOne(param) {
+    // implementation
+  },
+  methodTwo(param) {
+    return "result";
+  }
+});
+
+// Export instance
+export const exampleService = createExampleService(dependencies);
+```
+
+### Guidelines
+1. Place interfaces and implementations in the same file
+2. Use JSDoc comments to document the interface
+3. Use closure scope for private functions
+4. Pass dependencies via factory function parameters
+5. Export the concrete instance as the default usage
+6. Co-locate tests using `*.test.ts` naming
+
+### Exceptions
+- React Components
+
+## Testing
+New code should be testable and tested.
+1. Use jest for unit testing
+2. Use React Native Testing Library for component testing
+3. Use Maestro for E2E testing
+
 ## Code Organization Rules
 
 ### Imports

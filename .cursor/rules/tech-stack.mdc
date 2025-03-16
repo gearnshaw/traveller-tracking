@@ -11,13 +11,15 @@ alwaysApply: true
 > - New third-party dependencies must be added here after approval
 > This ensures consistent technology choices across the project and prevents duplicate solutions.
 
-## State Management
+## Stack
+
+### State Management
 - **Zustand** - Primary state management solution
   - Used for: Feature-level state, UI state caching, cross-component state
   - Documentation: https://github.com/pmndrs/zustand
   - Usage: See `project-architecture.mdc` State Management section for patterns
 
-## Data Layer
+### Data Layer
 - **Firebase/Firestore** - Primary data storage
   - Used for: Data persistence, real-time updates, authentication
   - Documentation: https://firebase.google.com/docs/firestore
@@ -27,10 +29,74 @@ alwaysApply: true
     - `firebase/auth`
   - Usage: See `project-architecture.mdc` API Organization section for patterns
 
-## UI Framework
+### UI Framework
 - **React Native** with Expo
   - Build system: Expo
   - Navigation: Expo Router
+
+### Styling
+- **TWRNC** - Primary styling solution
+  - Used for: Component styling using Tailwind CSS utility classes
+  - Documentation: https://github.com/jaredh159/tailwind-react-native-classnames
+  - Key packages:
+    - `twrnc`
+  - Best practices:
+    - Use `tw` from `@/services/tailwind` for all styling
+    - Prefer utility classes over custom styles
+    - Use design system tokens from `tailwind.config.js`
+
+### Testing
+- **Jest** - Primary testing framework
+  - Used for: Unit testing, integration testing, snapshot testing
+  - Documentation: https://jestjs.io/
+  - Key packages:
+    - `jest`
+    - `@types/jest`
+    - `ts-jest`
+  - Configuration: Configured via `jest.config.js`
+  - Best practices:
+    - Co-locate test files with source code using `.test.ts(x)` extension
+    - Use snapshot testing sparingly and only for stable components
+    - Mock external dependencies and side effects
+    - Follow AAA pattern (Arrange, Act, Assert)
+
+### Analytics
+- **Firebase Analytics** - Primary analytics solution
+  - Used for: User behavior tracking, screen views, custom events, error monitoring
+  - Documentation: https://firebase.google.com/docs/analytics
+  - Key packages:
+    - `@react-native-firebase/analytics`
+  - Usage: Centralized through `analytics` service in `services/analytics.ts`
+    - Screen views: `logScreen(screenName, screenClass?)`
+    - Custom events: `logEvent(eventName, params?)`
+    - User properties: `setUserProperties(properties)`
+    - Pre-defined events: Trip creation/updates, auth flows, errors
+
+- **React Native Testing Library** - Component testing
+  - Used for: Component integration testing, user interaction testing
+  - Documentation: https://callstack.github.io/react-native-testing-library/
+  - Key packages:
+    - `@testing-library/react-native`
+    - `@testing-library/jest-native`
+  - Best practices:
+    - Test component behavior, not implementation
+    - Query elements by accessibility roles and labels
+    - Test user interactions using fireEvent
+    - Write tests from user's perspective
+
+- **Maestro** - End-to-end testing
+  - Used for: Full app integration testing, user flow testing
+  - Documentation: https://maestro.mobile.dev/
+  - Key features:
+    - Flow-based test writing
+    - Cross-platform support
+    - Visual testing capabilities
+    - CI/CD integration
+  - Best practices:
+    - Focus on critical user journeys
+    - Use stable test IDs
+    - Keep flows atomic and focused
+    - Include setup and teardown steps
 
 ## Adding New Dependencies
 1. All new dependencies must be:
