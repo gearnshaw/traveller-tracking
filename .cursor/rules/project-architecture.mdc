@@ -9,6 +9,9 @@ alwaysApply: true
 
 ```
 src/
+  app/              # Expo Router pages and layouts
+    (groups)/       # Route grouping
+    _layout.tsx     # Layout configuration
   features/           # Main features of the application
     {feature}/        # Each feature has its own directory
       components/     # Feature-specific UI components
@@ -25,11 +28,10 @@ src/
   services/          # Core services
     apiClient.ts    # Base API client configuration
     storage.ts      # Storage service
-    navigation.ts   # Navigation service
     firebase.ts     # Firebase setup
-  navigation/        # Navigation configuration
-    index.ts        # Navigation setup
 ```
+
+Note: Navigation is handled through Expo Router's file-based routing system in the `app/` directory. No additional navigation configuration is needed.
 
 ## Feature Organization Rules
 
@@ -298,4 +300,4 @@ export const auth = getAuth(app);
 2. Complex components should have:
    - JSDoc comments
    - Props documentation
-   - Usage examples 
+   - Usage examples

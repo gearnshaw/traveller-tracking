@@ -14,14 +14,12 @@ alwaysApply: true
 ## State Management
 - **Zustand** - Primary state management solution
   - Used for: Feature-level state, UI state caching, cross-component state
-  - Version: ^4.5.0
   - Documentation: https://github.com/pmndrs/zustand
   - Usage: See `project-architecture.mdc` State Management section for patterns
 
 ## Data Layer
 - **Firebase/Firestore** - Primary data storage
   - Used for: Data persistence, real-time updates, authentication
-  - Version: ^10.8.0
   - Documentation: https://firebase.google.com/docs/firestore
   - Key packages:
     - `firebase/app`
@@ -31,7 +29,6 @@ alwaysApply: true
 
 ## UI Framework
 - **React Native** with Expo
-  - Version: ^0.73.0
   - Build system: Expo
   - Navigation: Expo Router
 
@@ -44,7 +41,6 @@ alwaysApply: true
 
 2. Document new dependencies here including:
    - Purpose/Use case
-   - Version
    - Key packages/imports
    - Link to documentation
    - Any specific configuration requirements
