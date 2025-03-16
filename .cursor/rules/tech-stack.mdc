@@ -33,7 +33,18 @@ alwaysApply: true
 - **React Native** with Expo
   - Build system: Expo
   - Navigation: Expo Router
-   
+
+### Styling
+- **TWRNC** - Primary styling solution
+  - Used for: Component styling using Tailwind CSS utility classes
+  - Documentation: https://github.com/jaredh159/tailwind-react-native-classnames
+  - Key packages:
+    - `twrnc`
+  - Best practices:
+    - Use `tw` from `@/services/tailwind` for all styling
+    - Prefer utility classes over custom styles
+    - Use design system tokens from `tailwind.config.js`
+
 ### Testing
 - **Jest** - Primary testing framework
   - Used for: Unit testing, integration testing, snapshot testing
