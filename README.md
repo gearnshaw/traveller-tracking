@@ -1,50 +1,96 @@
-# Welcome to your Expo app 👋
+# Traveller Tracking App
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A modern React Native application for tracking travel experiences, built with Expo.
 
-## Get started
+## Getting Started
 
 1. Install dependencies
-
    ```bash
    npm install
    ```
 
 2. Start the app
-
    ```bash
-    npx expo start
+   npx expo start
    ```
 
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
+You can run the app in:
+- [Development build](https://docs.expo.dev/develop/development-builds/introduction/)
 - [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
 - [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+- [Expo Go](https://expo.dev/go)
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+## Project Architecture
 
-## Get a fresh project
+The project follows a feature-based architecture:
 
-When you're ready, run:
-
-```bash
-npm run reset-project
+```
+src/
+  app/              # Expo Router pages and layouts
+  features/         # Feature-specific code
+    {feature}/      
+      components/   # Feature UI components
+      hooks/        # Feature hooks
+      api.ts        # Feature API calls
+      types.ts      # Feature types
+  shared/          # Shared code
+    components/    # Reusable components
+    hooks/        # Common hooks
+    utils/        # Utilities
+  services/        # Core services
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+### Key Features
+- File-based routing with Expo Router
+- Feature-based organization
+- Shared component library
+- Centralized services
 
-## Learn more
+## Tech Stack
 
-To learn more about developing your project with Expo, look at the following resources:
+### Core
+- **React Native** with Expo
+- **TypeScript** for type safety
+- **Expo Router** for navigation
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+### State Management
+- **Zustand** for state management
+- **Firebase/Firestore** for data persistence
+- **Firebase Analytics** for user tracking
 
-## Join the community
+### UI & Styling
+- **TWRNC** (Tailwind React Native Classnames)
+- Custom design system with component hierarchy:
+  - Base components (fundamental UI blocks)
+  - Common components (reusable combinations)
+  - Composite components (complex shared components)
+  - Feature components (feature-specific UI)
 
-Join our community of developers creating universal apps.
+### Testing
+- **Jest** for unit testing
+- **React Native Testing Library** for component testing
+- **Maestro** for E2E testing
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+## Development Guidelines
+
+1. Follow the feature-based architecture
+2. Use TypeScript for all new code
+3. Write tests for new features
+4. Follow the design system component hierarchy
+5. Use Zustand for state management
+6. Implement analytics for new features
+
+## Learn More
+
+- [Expo documentation](https://docs.expo.dev/)
+- [Project architecture details](docs/project-architecture.md)
+- [Tech stack details](docs/tech-stack.md)
+- [Design system guide](docs/design-system.md)
+
+## Contributing
+
+1. Create a new feature directory under `src/features/`
+2. Follow the feature structure guidelines
+3. Use shared components when possible
+4. Add tests for your changes
+5. Update documentation as needed
