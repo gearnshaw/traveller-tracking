@@ -60,6 +60,18 @@ alwaysApply: true
     - Mock external dependencies and side effects
     - Follow AAA pattern (Arrange, Act, Assert)
 
+### Analytics
+- **Firebase Analytics** - Primary analytics solution
+  - Used for: User behavior tracking, screen views, custom events, error monitoring
+  - Documentation: https://firebase.google.com/docs/analytics
+  - Key packages:
+    - `@react-native-firebase/analytics`
+  - Usage: Centralized through `analytics` service in `services/analytics.ts`
+    - Screen views: `logScreen(screenName, screenClass?)`
+    - Custom events: `logEvent(eventName, params?)`
+    - User properties: `setUserProperties(properties)`
+    - Pre-defined events: Trip creation/updates, auth flows, errors
+
 - **React Native Testing Library** - Component testing
   - Used for: Component integration testing, user interaction testing
   - Documentation: https://callstack.github.io/react-native-testing-library/
