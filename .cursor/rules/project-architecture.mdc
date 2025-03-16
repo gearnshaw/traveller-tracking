@@ -1,0 +1,301 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Feature-Based Architecture Guidelines
+
+## Directory Structure
+
+```
+src/
+  features/           # Main features of the application
+    {feature}/        # Each feature has its own directory
+      components/     # Feature-specific UI components
+      hooks/         # Feature-specific hooks
+      api.ts         # API calls for this feature
+      types.ts       # TypeScript types for this feature
+      utils.ts       # Feature-specific utilities
+      index.ts       # Public API of the feature
+  shared/            # Shared/common code
+    components/      # Reusable UI components
+    hooks/          # Common hooks
+    utils/          # Common utilities
+    types/          # Shared TypeScript types
+  services/          # Core services
+    apiClient.ts    # Base API client configuration
+    storage.ts      # Storage service
+    navigation.ts   # Navigation service
+    firebase.ts     # Firebase setup
+  navigation/        # Navigation configuration
+    index.ts        # Navigation setup
+```
+
+## Feature Organization Rules
+
+1. Each feature should be self-contained in its own directory under `src/features/`
+2. Features should export their public API through an `index.ts` file
+3. Features can depend on shared code but should not depend on other features
+4. If code is used by multiple features, move it to `shared/`
+
+## API Organization
+
+### Feature-specific API (`api.ts`)
+- Place all Firestore interactions related to a specific feature in `features/{feature}/api.ts`
+- Export an object with methods for each Firestore operation
+- Use TypeScript types from the feature's `types.ts`
+- Example:
+```typescript
+// features/trips/api.ts
+import { collection, addDoc, query, where, getDocs } from 'firebase/firestore';
+import { db } from '@/services/firebase';
+import { Trip } from './types';
+
+export const tripsApi = {
+  getTrips: async (userId: string) => {
+    const tripsRef = collection(db, 'trips');
+    const q = query(tripsRef, where('userId', '==', userId));
+    const snapshot = await getDocs(q);
+    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as Trip[];
+  },
+  addTrip: async (trip: Omit<Trip, 'id'>) => {
+    const tripsRef = collection(db, 'trips');
+    const docRef = await addDoc(tripsRef, trip);
+    return { id: docRef.id, ...trip };
+  }
+};
+```
+
+### Core Firebase Setup (`services/firebase.ts`)
+- Initialize Firebase app
+- Configure Firestore
+- Set up authentication
+- Export initialized services
+Example:
+```typescript
+import { initializeApp } from 'firebase/app';
+import { getFirestore } from 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
+
+const firebaseConfig = {
+  // config values
+};
+
+export const app = initializeApp(firebaseConfig);
+export const db = getFirestore(app);
+export const auth = getAuth(app);
+```
+
+## Component Organization
+
+1. Feature-specific components go in `features/{feature}/components/`
+2. Shared/reusable components go in `shared/components/`
+3. Components should be organized by feature, not by type
+4. Keep components focused and single-purpose
+
+## State Management
+
+1. **Local State (useState)**
+   - Component-specific UI state (e.g., form inputs, toggles)
+   - Temporary visual states (e.g., isHovered, isExpanded)
+   - State that doesn't need to be shared
+   Example:
+   ```typescript
+   const [isOpen, setIsOpen] = useState(false);
+   const [selectedTab, setSelectedTab] = useState('details');
+   ```
+
+2. **Zustand (Primary State Manager)**
+   - Feature-level state that needs to be shared across components
+   - Complex state with multiple updates
+   - State that needs persistence
+   Example:
+   ```typescript
+   // features/trips/store.ts
+   interface TripStore {
+     trips: Trip[];
+     selectedTrip: Trip | null;
+     addTrip: (trip: Trip) => void;
+     setSelectedTrip: (trip: Trip | null) => void;
+   }
+
+   export const useTripStore = create<TripStore>((set) => ({
+     trips: [],
+     selectedTrip: null,
+     addTrip: (trip) => set((state) => ({ 
+       trips: [...state.trips, trip] 
+     })),
+     setSelectedTrip: (trip) => set({ selectedTrip: trip })
+   }));
+   ```
+
+3. **React Context**
+   - Theme/preferences (rarely updated)
+   - Authentication state
+   - Feature flags
+   - i18n/localization
+   - Place contexts in `shared/contexts` if global, or in feature directory if feature-specific
+   Example:
+   ```typescript
+   // shared/contexts/ThemeContext.tsx
+   export const ThemeContext = createContext<Theme>('light');
+   ```
+   ```typescript
+   // features/trips/contexts/TripFilterContext.tsx
+   export const TripFilterContext = createContext<TripFilters>(defaultFilters);
+   ```
+
+4. **Zustand with Firestore**
+   - Use Zustand for UI state and local cache of Firestore data
+   - Implement optimistic updates for better UX
+   - Handle loading and error states
+   Example:
+   ```typescript
+   // features/trips/store.ts
+   interface TripStore {
+     trips: Trip[];
+     isLoading: boolean;
+     error: Error | null;
+     fetchTrips: () => Promise<void>;
+     addTrip: (trip: Omit<Trip, 'id'>) => Promise<void>;
+   }
+
+   export const useTripStore = create<TripStore>((set, get) => ({
+     trips: [],
+     isLoading: false,
+     error: null,
+     fetchTrips: async () => {
+       set({ isLoading: true, error: null });
+       try {
+         const trips = await tripsApi.getTrips();
+         set({ trips, isLoading: false });
+       } catch (error) {
+         set({ error: error as Error, isLoading: false });
+       }
+     },
+     addTrip: async (newTrip) => {
+       // Optimistic update
+       const tempId = 'temp_' + Date.now();
+       set(state => ({ 
+         trips: [...state.trips, { ...newTrip, id: tempId }] 
+       }));
+       
+       try {
+         const savedTrip = await tripsApi.addTrip(newTrip);
+         set(state => ({
+           trips: state.trips.map(t => 
+             t.id === tempId ? savedTrip : t
+           )
+         }));
+       } catch (error) {
+         // Rollback on error
+         set(state => ({
+           trips: state.trips.filter(t => t.id !== tempId),
+           error: error as Error
+         }));
+       }
+     }
+   }));
+   ```
+
+5. **Persistence Strategy**
+   - Primary data persistence through Firestore
+   - Use Zustand for local state management and caching
+   - Consider using `zustand/persist` only for user preferences and app settings
+   - Implement offline support if needed using Firestore persistence
+
+6. **State Location Guidelines**
+   - Keep Firestore interaction logic in feature-specific `api.ts` files
+   - Use Zustand stores for managing UI state and local data cache
+   - Implement real-time updates using Firestore listeners where needed
+
+## Code Organization Rules
+
+### Imports
+1. Group imports in the following order:
+   - External libraries
+   - Shared utilities and components
+   - Feature-specific imports
+   - Types
+   - Styles
+
+### File Naming
+1. Use PascalCase for component files: `FeatureComponent.tsx`
+2. Use camelCase for utility files: `featureUtils.ts`
+3. Use kebab-case for style files: `feature-styles.ts`
+
+### Types and Interfaces
+1. Place feature-specific types in `features/{feature}/types.ts`
+2. Place shared types in `shared/types/`
+3. Use interfaces for objects that represent entities
+4. Use type aliases for unions and utility types
+
+## Best Practices
+
+1. **Feature Independence**
+   - Features should be independent and self-contained
+   - Minimize dependencies between features
+   - Use shared code for cross-feature functionality
+
+2. **Code Organization**
+   - Keep files small and focused
+   - Maximum 300 lines per file recommended
+   - One component per file
+
+3. **State Management**
+   - Use Zustand as the primary state management solution
+   - Keep state close to where it's used by creating feature-specific stores
+   - Use Context only for truly global, rarely-changing state
+   - Consider component composition before reaching for global state
+   - Split large stores into smaller, feature-specific ones
+
+4. **Testing**
+   - Place tests next to the code they test
+   - Name test files with `.test.ts` or `.test.tsx` extension
+   - Test business logic and complex components
+
+5. **Performance**
+   - Lazy load features when possible
+   - Use React.memo for expensive components
+   - Implement proper error boundaries
+
+## When to Break These Rules
+
+1. When dealing with legacy code that can't be immediately refactored
+2. When a quick prototype or proof of concept is needed
+3. When the overhead of following these rules outweighs the benefits
+4. When there's a compelling reason that has been discussed with the team
+
+## Adding New Features
+
+1. Create a new directory under `src/features/`
+2. Include necessary subdirectories (components, hooks, etc.)
+3. Create `types.ts` for feature-specific types
+4. Create `api.ts` for API calls
+5. Export public API through `index.ts`
+
+## Shared Code Guidelines
+
+1. Code should only be moved to `shared/` if:
+   - It's used by multiple features
+   - It's truly generic
+   - It has no feature-specific dependencies
+
+2. Shared components should:
+   - Be highly reusable
+   - Accept clear props interfaces
+   - Be well documented
+   - Be thoroughly tested
+
+## Documentation Requirements
+
+1. Each feature should have a README.md explaining:
+   - Purpose of the feature
+   - Main components
+   - State management approach
+   - API endpoints used
+
+2. Complex components should have:
+   - JSDoc comments
+   - Props documentation
+   - Usage examples 

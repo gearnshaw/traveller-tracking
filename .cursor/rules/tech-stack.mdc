@@ -1,0 +1,57 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+ # Technology Stack Guidelines
+
+> **Important**: All third-party dependencies must be documented in this file.
+> - If a dependency is not listed here, it should be flagged for review
+> - If an alternative exists in this file, it should be used instead
+> - New third-party dependencies must be added here after approval
+> This ensures consistent technology choices across the project and prevents duplicate solutions.
+
+## State Management
+- **Zustand** - Primary state management solution
+  - Used for: Feature-level state, UI state caching, cross-component state
+  - Version: ^4.5.0
+  - Documentation: https://github.com/pmndrs/zustand
+  - Usage: See `project-architecture.mdc` State Management section for patterns
+
+## Data Layer
+- **Firebase/Firestore** - Primary data storage
+  - Used for: Data persistence, real-time updates, authentication
+  - Version: ^10.8.0
+  - Documentation: https://firebase.google.com/docs/firestore
+  - Key packages:
+    - `firebase/app`
+    - `firebase/firestore`
+    - `firebase/auth`
+  - Usage: See `project-architecture.mdc` API Organization section for patterns
+
+## UI Framework
+- **React Native** with Expo
+  - Version: ^0.73.0
+  - Build system: Expo
+  - Navigation: Expo Router
+
+## Adding New Dependencies
+1. All new dependencies must be:
+   - Actively maintained (last release < 6 months)
+   - Well documented
+   - TypeScript compatible
+   - Compatible with Expo if applicable
+
+2. Document new dependencies here including:
+   - Purpose/Use case
+   - Version
+   - Key packages/imports
+   - Link to documentation
+   - Any specific configuration requirements
+
+3. Consider the following before adding:
+   - Bundle size impact
+   - Learning curve for team
+   - Long-term maintenance implications
+   - Platform compatibility (iOS/Android)
+   - Expo compatibility
