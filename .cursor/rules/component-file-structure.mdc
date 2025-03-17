@@ -1,0 +1,64 @@
+---
+description: 
+globs: *.tsx
+alwaysApply: false
+---
+## Component Style Guidelines
+
+### Component Declaration and Export
+1. **Use Arrow Function Components**
+   - Components should be declared as arrow functions
+   - Use const declarations
+   - Export components separately from their declaration
+   ```typescript
+   // ✅ Preferred
+   const MyComponent = () => {
+     return (
+       <View>
+         <Text>Content</Text>
+       </View>
+     );
+   };
+   
+   export default MyComponent;
+   
+   // ❌ Avoid
+   export default function MyComponent() {
+     return (
+       <View>
+         <Text>Content</Text>
+       </View>
+     );
+   }
+   ```
+
+2. **Component File Structure**
+   - Imports first (React/RN imports, then third-party, then local)
+   - Type/Interface declarations (if any)
+   - Component declaration
+   - Helper functions/hooks (if any)
+   - Export statement last
+   ```typescript
+   import { View, Text } from 'react-native';
+   import { someUtil } from '@/shared/utils';
+   
+   interface MyComponentProps {
+     title: string;
+   }
+   
+   const MyComponent = ({ title }: MyComponentProps) => {
+     // Component implementation
+   };
+   
+   export default MyComponent;
+   ```
+
+3. **Naming Conventions**
+   - Component names should be PascalCase
+   - Component files should match the component name
+   - Props interfaces should be named `{ComponentName}Props`
+
+4. **Props and Types**
+   - Always define prop types using TypeScript interfaces
+   - Place interfaces/types before the component declaration
+   - Export prop types if they're used by other components
