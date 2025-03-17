@@ -1,0 +1,62 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+## Code style guidelines
+
+### TypeScript Types vs Interfaces
+
+1. **Use `type` for:**
+   ```typescript
+   // Union types
+   type Status = "active" | "pending";
+   
+   // Simple object shapes
+   type User = {
+     id: string;
+     name: string;
+     status: Status;
+   };
+   
+   // Mapped types
+   type Optional<T> = {
+     [K in keyof T]?: T[K];
+   };
+   
+   // Utility types
+   type UserWithoutId = Omit<User, "id">;
+   ```
+
+2. **Use `interface` for:**
+   ```typescript
+   // When implementing a contract
+   interface Repository<T> {
+     find(id: string): Promise<T>;
+     save(item: T): Promise<void>;
+   }
+   
+   // When extending other interfaces
+   interface AdminUser extends User {
+     permissions: string[];
+   }
+   
+   // When classes will implement it
+   interface Observable {
+     subscribe(observer: Observer): void;
+     unsubscribe(observer: Observer): void;
+   }
+   ```
+
+3. **Decision Criteria:**
+   - Choose `type` when:
+     - Creating unions or intersections
+     - Defining simple object shapes
+     - No inheritance/extension needed
+     - Using utility type operations
+   
+   - Choose `interface` when:
+     - Need declaration merging
+     - Defining contracts for implementation
+     - Planning to extend/implement
+     - Working with OOP patterns

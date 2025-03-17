@@ -1,10 +1,27 @@
-import { Text, View } from "react-native";
-import { tw } from "../src/shared/utils/tw";
+import { View } from "react-native";
+import { tw } from "@/shared/utils/tw";
+import FollowersList from "@/features/followers/components/FollowersList";
+import { Follower } from "@/features/followers/types";
 
-export default function HomeScreen() {
+const sampleFollowers: Follower[] = [
+  { id: "1", name: "Mum", status: "active" },
+  { id: "2", name: "Dad", status: "active" },
+  { id: "3", name: "Sarah", status: "pending" },
+];
+
+const HomeScreen = () => {
+  const handleManagePress = () => {
+    // Will implement later
+  };
+
   return (
-    <View style={tw`flex-1 justify-center items-center`}>
-      <Text style={tw`text-lg text-primary-600`}>Home Screen</Text>
+    <View style={tw`flex-1 bg-gray-100 pt-14`}>
+      <FollowersList
+        followers={sampleFollowers}
+        onManagePress={handleManagePress}
+      />
     </View>
   );
-}
+};
+
+export default HomeScreen;
