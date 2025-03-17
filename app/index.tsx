@@ -1,5 +1,5 @@
 import { Text, View } from "react-native";
-import { tw } from "../src/services/tailwind";
+import { tw } from "../src/shared/utils/tw";
 
 export default function Index() {
   return (
