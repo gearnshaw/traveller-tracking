@@ -62,3 +62,74 @@ alwaysApply: false
    - Always define prop types using TypeScript interfaces
    - Place interfaces/types before the component declaration
    - Export prop types if they're used by other components
+
+### Screen Components
+1. **Screen Organization**
+   - Place screen components in their feature's `screens/` directory
+   - Keep Expo Router files (`app/` directory) minimal
+   - Pass through screen components from features to Expo Router
+   ```typescript
+   // ✅ Preferred: Screen in feature directory
+   // src/features/home/screens/HomeScreen.tsx
+   export const HomeScreen = () => {
+     // Screen implementation
+   };
+
+   // app/index.tsx
+   import { HomeScreen } from "@/features/home/screens/HomeScreen";
+   export default HomeScreen;
+
+   // ❌ Avoid: Screen implementation in app directory
+   // app/index.tsx
+   const HomeScreen = () => {
+     // Screen implementation
+   };
+   export default HomeScreen;
+   ```  
+
+### Hook Organization
+1. **Co-location with Components**
+   - Place hooks in the same directory as the component that uses them
+   - Name hooks with the prefix `use` followed by the component name
+   ```typescript
+   // ✅ Preferred: Hook next to its component
+   src/features/followers/components/
+   ├── FollowerCard.tsx
+   └── useFollowerCard.ts
+
+   // ❌ Avoid: Hooks in separate directory
+   src/features/followers/
+   ├── components/
+   │   └── FollowerCard.tsx
+   └── hooks/
+       └── useFollowerCard.ts
+   ```
+
+2. **Screen Hooks**
+   - Place screen hooks in the same directory as the screen
+   - Keep screen-specific business logic in the hook
+   ```typescript
+   src/features/trips/screens/
+   ├── TripDetailsScreen.tsx
+   └── useTripDetailsScreen.ts
+   ```
+
+3. **Hook Scope**
+   - Component hooks should only contain logic for their specific component
+   - Screen hooks can orchestrate multiple components and manage screen-level state
+   - Move shared logic to separate utility hooks when needed
+   ```typescript
+   // Component-specific hook
+   const useFollowerCard = (followerId: string) => {
+     // Logic specific to FollowerCard
+   };
+
+   // Screen-level hook
+   const useFollowersScreen = () => {
+     // Screen-wide state and logic
+   };
+
+   // Shared logic in utils (only if used by multiple components)
+   src/features/followers/utils/
+   └── useFollowerStatus.ts
+   ```

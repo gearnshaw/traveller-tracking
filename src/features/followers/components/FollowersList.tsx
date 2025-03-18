@@ -2,10 +2,10 @@ import { View, Text, Pressable } from "react-native";
 import { tw } from "@/shared/utils/tw";
 import { Follower } from "../types";
 
-interface FollowersListProps {
+type FollowersListProps = {
   followers: Follower[];
   onManagePress: () => void;
-}
+};
 
 const FollowersList = ({ followers, onManagePress }: FollowersListProps) => {
   return (

@@ -16,6 +16,7 @@ src/
     {feature}/        # Each feature has its own directory
       components/     # Feature-specific UI components
       hooks/         # Feature-specific hooks
+      screens/      # Top-level pages to pass through to Expo Router
       api.ts         # API calls for this feature
       types.ts       # TypeScript types for this feature
       utils.ts       # Feature-specific utilities
