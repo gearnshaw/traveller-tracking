@@ -8,7 +8,12 @@ export const HomeScreen = () => {
 
   return (
     <View style={tw`flex-1 bg-gray-100 pt-14`}>
-      <FollowersList followers={followers} onManagePress={handleManagePress} />
+      <View style={tw`mx-4`}>
+        <FollowersList
+          followers={followers}
+          onManagePress={handleManagePress}
+        />
+      </View>
     </View>
   );
 };
