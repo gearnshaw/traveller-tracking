@@ -1,8 +1,8 @@
 import { useState } from "react";
 
-interface UseFollowersListProps {
+type UseFollowersListProps = {
   onManagePress: () => void;
-}
+};
 
 export const useFollowersList = ({ onManagePress }: UseFollowersListProps) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
