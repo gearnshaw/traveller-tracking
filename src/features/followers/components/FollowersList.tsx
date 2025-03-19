@@ -28,7 +28,7 @@ const FollowersList = ({ followers, onManagePress }: FollowersListProps) => {
           </Pressable>
         </View>
 
-        <View style={tw`p-4`}>
+        <View style={tw`px-4`}>
           {followers.map((follower, index) => (
             <View
               key={follower.id}
