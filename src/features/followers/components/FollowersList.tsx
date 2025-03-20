@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text } from "react-native";
+import { View } from "react-native";
 import { tw } from "@/shared/utils/tw";
 import { Follower } from "../types";
 import Modal from "@/shared/components/common/Modal";
@@ -7,6 +7,7 @@ import { useFollowersList } from "./useFollowersList";
 import { TableRow } from "@/shared/components/base/TableRow";
 import { Card } from "@/shared/components/base/Card";
 import { TableSectionHeader } from "@/shared/components/base/TableSectionHeader";
+import { Typography } from "@/shared/components/base/Typography";
 
 type FollowersListProps = {
   followers: Follower[];
@@ -31,16 +32,17 @@ const FollowersList = ({ followers, onManagePress }: FollowersListProps) => {
         <Card>
           {followers.map((follower, index) => (
             <TableRow key={follower.id} isFirstRow={index === 0}>
-              <Text style={tw`text-lg`}>{follower.name}</Text>
-              <Text
-                style={tw`text-base ${
+              <Typography variant="body1">{follower.name}</Typography>
+              <Typography
+                variant="body1"
+                style={tw`${
                   follower.status === "active"
                     ? "text-green-500"
                     : "text-amber-500"
                 }`}
               >
                 {follower.status === "active" ? "Active" : "Pending"}
-              </Text>
+              </Typography>
             </TableRow>
           ))}
         </Card>
@@ -51,9 +53,9 @@ const FollowersList = ({ followers, onManagePress }: FollowersListProps) => {
         onClose={handleCloseModal}
         title="Manage Followers"
       >
-        <Text style={tw`text-base`}>
+        <Typography variant="body1">
           TODO: Implement follower management functionality
-        </Text>
+        </Typography>
       </Modal>
     </>
   );

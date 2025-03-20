@@ -1,5 +1,6 @@
-import { View, Text, Pressable, PressableProps } from "react-native";
+import { View, Pressable } from "react-native";
 import { tw } from "@/shared/utils/tw";
+import { Typography } from "./Typography";
 
 export type TableSectionHeaderProps = {
   title: string;
@@ -14,10 +15,10 @@ export const TableSectionHeader = ({
 }: TableSectionHeaderProps) => {
   return (
     <View style={tw`px-4 py-3 flex-row justify-between items-center`}>
-      <Text style={tw`text-xl font-semibold`}>{title}</Text>
+      <Typography variant="h4">{title}</Typography>
       {actionText && onActionPress && (
         <Pressable onPress={onActionPress}>
-          <Text style={tw`text-primary-600 text-base`}>{actionText}</Text>
+          <Typography variant="button">{actionText}</Typography>
         </Pressable>
       )}
     </View>
