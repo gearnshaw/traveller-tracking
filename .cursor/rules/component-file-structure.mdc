@@ -59,8 +59,8 @@ alwaysApply: false
    - Props interfaces should be named `{ComponentName}Props`
 
 4. **Props and Types**
-   - Always define prop types using TypeScript interfaces
-   - Place interfaces/types before the component declaration
+   - Always define prop types using TypeScript types
+   - Place types before the component declaration
    - Export prop types if they're used by other components
 
 ### Screen Components

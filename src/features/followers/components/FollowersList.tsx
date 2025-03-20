@@ -4,6 +4,7 @@ import { tw } from "@/shared/utils/tw";
 import { Follower } from "../types";
 import Modal from "@/shared/components/common/Modal";
 import { useFollowersList } from "./useFollowersList";
+import { TableRow } from "@/shared/components/base/TableRow";
 
 type FollowersListProps = {
   followers: Follower[];
@@ -29,12 +30,7 @@ const FollowersList = ({ followers, onManagePress }: FollowersListProps) => {
         <View style={tw`bg-white rounded-3xl shadow-sm`}>
           <View style={tw`px-4`}>
             {followers.map((follower, index) => (
-              <View
-                key={follower.id}
-                style={tw`py-4 ${
-                  index > 0 ? "border-t border-gray-200" : ""
-                } flex-row justify-between items-center`}
-              >
+              <TableRow key={follower.id} isFirstRow={index === 0}>
                 <Text style={tw`text-lg`}>{follower.name}</Text>
                 <Text
                   style={tw`text-base ${
@@ -45,7 +41,7 @@ const FollowersList = ({ followers, onManagePress }: FollowersListProps) => {
                 >
                   {follower.status === "active" ? "Active" : "Pending"}
                 </Text>
-              </View>
+              </TableRow>
             ))}
           </View>
         </View>
