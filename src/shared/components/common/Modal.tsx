@@ -31,7 +31,7 @@ const Modal = ({
     >
       <View style={tw`flex-1 justify-center items-center bg-black/50`}>
         <View style={tw`bg-white rounded-2xl p-6 m-4 w-5/6 max-w-lg`}>
-          <Typography variant="h4" style={tw`mb-4`}>
+          <Typography variant="sectionHeader" style={tw`mb-4`}>
             {title}
           </Typography>
           {children}
@@ -40,7 +40,7 @@ const Modal = ({
               onPress={onClose}
               style={tw`bg-gray-200 rounded-lg py-3 px-4`}
             >
-              <Typography variant="body1" style={tw`text-gray-700`}>
+              <Typography variant="body" style={tw`text-gray-700`}>
                 Cancel
               </Typography>
             </Pressable>
@@ -54,7 +54,7 @@ const Modal = ({
                 } rounded-lg py-3 px-4`}
               >
                 <Typography
-                  variant="body1"
+                  variant="body"
                   style={tw`${
                     actionButton.variant === "secondary"
                       ? "text-gray-700"

@@ -15,18 +15,18 @@ export const TripCard = ({ trip, onPress, onArchive }: TripCardProps) => {
   return (
     <Pressable onPress={onPress}>
       <View style={tw`bg-white rounded-xl p-4 my-2 mx-4 shadow-sm`}>
-        <Typography variant="h4" style={tw`mb-1`}>
+        <Typography variant="cardTitle" style={tw`mb-1`}>
           {trip.title}
         </Typography>
-        <Typography variant="body1" style={tw`text-gray-600 mb-1`}>
+        <Typography variant="body" style={tw`text-gray-600 mb-1`}>
           {trip.location}
         </Typography>
-        <Typography variant="body2" style={tw`text-gray-600 mb-2`}>
+        <Typography variant="secondary" style={tw`text-gray-600 mb-2`}>
           {trip.startDate.toLocaleDateString()} -{" "}
           {trip.endDate.toLocaleDateString()}
         </Typography>
         <Typography
-          variant="body2"
+          variant="secondary"
           style={tw`text-gray-700 mb-3`}
           numberOfLines={2}
         >

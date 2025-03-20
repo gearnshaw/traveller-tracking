@@ -1,35 +1,30 @@
-import { Text, TextProps, TextStyle } from "react-native";
+import React from "react";
+import { Text, TextProps } from "react-native";
 import { tw } from "@/shared/utils/tw";
 
-type TypographyVariant =
-  | "h1" // text-4xl font-bold
-  | "h2" // text-3xl font-bold
-  | "h3" // text-2xl font-bold
-  | "h4" // text-xl font-semibold
-  | "body1" // text-base
-  | "body2" // text-sm
-  | "button" // text-base text-primary-600
-  | "caption"; // text-xs
+export type TypographyVariant =
+  | "pageTitle"
+  | "cardTitle"
+  | "sectionHeader"
+  | "body"
+  | "secondary";
 
-export type TypographyProps = TextProps & {
+interface TypographyProps extends TextProps {
   variant?: TypographyVariant;
-};
+}
 
-const variantStyles: Record<TypographyVariant, TextStyle> = {
-  h1: tw`text-4xl font-bold`,
-  h2: tw`text-3xl font-bold`,
-  h3: tw`text-2xl font-bold`,
-  h4: tw`text-xl font-semibold`,
-  body1: tw`text-base`,
-  body2: tw`text-sm`,
-  button: tw`text-base text-primary-600`,
-  caption: tw`text-xs`,
+const variantStyles: Record<TypographyVariant, string> = {
+  pageTitle: "text-4xl font-bold",
+  cardTitle: "text-2xl font-bold",
+  sectionHeader: "text-xl font-semibold",
+  body: "text-base",
+  secondary: "text-sm",
 };
 
 export const Typography = ({
-  variant = "body1",
+  variant = "body",
   style,
   ...props
 }: TypographyProps) => {
-  return <Text style={[variantStyles[variant], style]} {...props} />;
+  return <Text style={[tw`${variantStyles[variant]}`, style]} {...props} />;
 };

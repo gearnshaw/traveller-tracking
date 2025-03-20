@@ -15,10 +15,12 @@ export const TableSectionHeader = ({
 }: TableSectionHeaderProps) => {
   return (
     <View style={tw`px-4 py-3 flex-row justify-between items-center`}>
-      <Typography variant="h4">{title}</Typography>
+      <Typography variant="sectionHeader">{title}</Typography>
       {actionText && onActionPress && (
         <Pressable onPress={onActionPress}>
-          <Typography variant="button">{actionText}</Typography>
+          <Typography variant="body" style={tw`text-primary-600`}>
+            {actionText}
+          </Typography>
         </Pressable>
       )}
     </View>

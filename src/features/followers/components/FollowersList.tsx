@@ -32,9 +32,9 @@ const FollowersList = ({ followers, onManagePress }: FollowersListProps) => {
         <Card>
           {followers.map((follower, index) => (
             <TableRow key={follower.id} isFirstRow={index === 0}>
-              <Typography variant="body1">{follower.name}</Typography>
+              <Typography variant="body">{follower.name}</Typography>
               <Typography
-                variant="body1"
+                variant="body"
                 style={tw`${
                   follower.status === "active"
                     ? "text-green-500"
@@ -53,7 +53,7 @@ const FollowersList = ({ followers, onManagePress }: FollowersListProps) => {
         onClose={handleCloseModal}
         title="Manage Followers"
       >
-        <Typography variant="body1">
+        <Typography variant="body">
           TODO: Implement follower management functionality
         </Typography>
       </Modal>
