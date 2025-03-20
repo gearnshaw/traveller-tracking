@@ -1,11 +1,12 @@
 import React from "react";
-import { View, Text, Pressable } from "react-native";
+import { View, Text } from "react-native";
 import { tw } from "@/shared/utils/tw";
 import { Follower } from "../types";
 import Modal from "@/shared/components/common/Modal";
 import { useFollowersList } from "./useFollowersList";
 import { TableRow } from "@/shared/components/base/TableRow";
 import { Card } from "@/shared/components/base/Card";
+import { TableSectionHeader } from "@/shared/components/base/TableSectionHeader";
 
 type FollowersListProps = {
   followers: Follower[];
@@ -21,12 +22,11 @@ const FollowersList = ({ followers, onManagePress }: FollowersListProps) => {
   return (
     <>
       <View>
-        <View style={tw`px-4 py-3 flex-row justify-between items-center`}>
-          <Text style={tw`text-xl font-semibold`}>Who Can See My Location</Text>
-          <Pressable onPress={handleManagePress}>
-            <Text style={tw`text-primary-600 text-base`}>Manage</Text>
-          </Pressable>
-        </View>
+        <TableSectionHeader
+          title="Who Can See My Location"
+          actionText="Manage"
+          onActionPress={handleManagePress}
+        />
 
         <Card>
           {followers.map((follower, index) => (
