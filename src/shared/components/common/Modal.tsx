@@ -1,6 +1,7 @@
 import React from "react";
-import { View, Text, Pressable, Modal as RNModal } from "react-native";
+import { View, Pressable, Modal as RNModal } from "react-native";
 import { tw } from "@/shared/utils/tw";
+import { Typography } from "../base/Typography";
 
 export type ModalProps = {
   visible: boolean;
@@ -30,14 +31,18 @@ const Modal = ({
     >
       <View style={tw`flex-1 justify-center items-center bg-black/50`}>
         <View style={tw`bg-white rounded-2xl p-6 m-4 w-5/6 max-w-lg`}>
-          <Text style={tw`text-xl font-semibold mb-4`}>{title}</Text>
+          <Typography variant="sectionHeader" style={tw`mb-4`}>
+            {title}
+          </Typography>
           {children}
           <View style={tw`flex-row justify-end gap-3 mt-6`}>
             <Pressable
               onPress={onClose}
               style={tw`bg-gray-200 rounded-lg py-3 px-4`}
             >
-              <Text style={tw`text-gray-700 font-medium`}>Cancel</Text>
+              <Typography variant="body" style={tw`text-gray-700`}>
+                Cancel
+              </Typography>
             </Pressable>
             {actionButton && (
               <Pressable
@@ -48,15 +53,16 @@ const Modal = ({
                     : "bg-primary-600"
                 } rounded-lg py-3 px-4`}
               >
-                <Text
+                <Typography
+                  variant="body"
                   style={tw`${
                     actionButton.variant === "secondary"
                       ? "text-gray-700"
                       : "text-white"
-                  } font-medium`}
+                  }`}
                 >
                   {actionButton.label}
-                </Text>
+                </Typography>
               </Pressable>
             )}
           </View>

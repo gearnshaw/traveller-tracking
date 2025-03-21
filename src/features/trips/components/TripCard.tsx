@@ -1,7 +1,9 @@
 import React from "react";
-import { View, Text, StyleSheet, Pressable } from "react-native";
+import { View, Pressable } from "react-native";
+import { tw } from "@/shared/utils/tw";
 import { Trip } from "../types";
-import { Button } from "../../../shared/components/Button";
+import { Button } from "@/shared/components/Button";
+import { Typography } from "@/shared/components/base/Typography";
 
 interface TripCardProps {
   trip: Trip;
@@ -12,22 +14,26 @@ interface TripCardProps {
 export const TripCard = ({ trip, onPress, onArchive }: TripCardProps) => {
   return (
     <Pressable onPress={onPress}>
-      <View style={styles.card}>
-        <Text style={styles.title}>{trip.title}</Text>
-        <Text style={styles.location}>{trip.location}</Text>
-        <Text style={styles.dates}>
+      <View style={tw`bg-white rounded-xl p-4 my-2 mx-4 shadow-sm`}>
+        <Typography variant="cardTitle" style={tw`mb-1`}>
+          {trip.title}
+        </Typography>
+        <Typography variant="body" style={tw`text-gray-600 mb-1`}>
+          {trip.location}
+        </Typography>
+        <Typography variant="secondary" style={tw`text-gray-600 mb-2`}>
           {trip.startDate.toLocaleDateString()} -{" "}
           {trip.endDate.toLocaleDateString()}
-        </Text>
-        <Text style={styles.description} numberOfLines={2}>
+        </Typography>
+        <Typography
+          variant="secondary"
+          style={tw`text-gray-700 mb-3`}
+          numberOfLines={2}
+        >
           {trip.description}
-        </Text>
+        </Typography>
         {onArchive && (
-          <Button
-            variant="outline"
-            onPress={onArchive}
-            style={styles.archiveButton}
-          >
+          <Button variant="outline" onPress={onArchive} style={tw`self-end`}>
             {trip.isArchived ? "Unarchive" : "Archive"}
           </Button>
         )}
@@ -35,44 +41,3 @@ export const TripCard = ({ trip, onPress, onArchive }: TripCardProps) => {
     </Pressable>
   );
 };
-
-const styles = StyleSheet.create({
-  card: {
-    backgroundColor: "#FFFFFF",
-    borderRadius: 12,
-    padding: 16,
-    marginVertical: 8,
-    marginHorizontal: 16,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: "600",
-    marginBottom: 4,
-  },
-  location: {
-    fontSize: 16,
-    color: "#666",
-    marginBottom: 4,
-  },
-  dates: {
-    fontSize: 14,
-    color: "#666",
-    marginBottom: 8,
-  },
-  description: {
-    fontSize: 14,
-    color: "#444",
-    marginBottom: 12,
-  },
-  archiveButton: {
-    alignSelf: "flex-end",
-  },
-});
