@@ -1,13 +1,12 @@
 import React from "react";
 import { View } from "react-native";
-import { tw } from "@/shared/utils/tw";
 import { Follower } from "../types";
 import Modal from "@/shared/components/common/Modal";
 import { useFollowersList } from "./useFollowersList";
-import { TableRow } from "@/shared/components/base/TableRow";
-import { Card } from "@/shared/components/base/Card";
 import { TableSectionHeader } from "@/shared/components/base/TableSectionHeader";
 import { Typography } from "@/shared/components/base/Typography";
+import { Table } from "@/shared/components/common/Table";
+import { FollowerRow } from "./FollowerRow";
 
 type FollowersListProps = {
   followers: Follower[];
@@ -29,23 +28,15 @@ const FollowersList = ({ followers, onManagePress }: FollowersListProps) => {
           onActionPress={handleManagePress}
         />
 
-        <Card>
+        <Table>
           {followers.map((follower, index) => (
-            <TableRow key={follower.id} isFirstRow={index === 0}>
-              <Typography variant="body">{follower.name}</Typography>
-              <Typography
-                variant="body"
-                style={tw`${
-                  follower.status === "active"
-                    ? "text-green-500"
-                    : "text-amber-500"
-                }`}
-              >
-                {follower.status === "active" ? "Active" : "Pending"}
-              </Typography>
-            </TableRow>
+            <FollowerRow
+              key={follower.id}
+              follower={follower}
+              isFirstRow={index === 0}
+            />
           ))}
-        </Card>
+        </Table>
       </View>
 
       <Modal
