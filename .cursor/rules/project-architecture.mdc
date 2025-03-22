@@ -98,152 +98,120 @@ export const auth = getAuth(app);
 
 ## State Management
 
-1. **Local State (useState)**
-   - Component-specific UI state (e.g., form inputs, toggles)
-   - Temporary visual states (e.g., isHovered, isExpanded)
-   - State that doesn't need to be shared
+1. **Firestore (Primary)**
+   - Server state and data persistence
+   - Real-time updates
+   - Offline support
+   - Data synchronization
    Example:
    ```typescript
-   const [isOpen, setIsOpen] = useState(false);
-   const [selectedTab, setSelectedTab] = useState('details');
+   // features/trips/hooks/useTrips.ts
+   export const useTrips = (userId: string) => {
+     const [trips, setTrips] = useState<Trip[]>([]);
+     const [isLoading, setIsLoading] = useState(true);
+     const [error, setError] = useState<Error | null>(null);
+
+     useEffect(() => {
+       const unsubscribe = onSnapshot(
+         query(collection(db, 'trips'), where('userId', '==', userId)),
+         (snapshot) => {
+           const tripsData = snapshot.docs.map(doc => ({
+             id: doc.id,
+             ...doc.data()
+           })) as Trip[];
+           setTrips(tripsData);
+           setIsLoading(false);
+         }
+       );
+       return () => unsubscribe();
+     }, [userId]);
+
+     return { trips, isLoading, error };
+   };
    ```
 
-2. **Zustand (Primary State Manager)**
-   - Feature-level state that needs to be shared across components
-   - Complex state with multiple updates
-   - State that needs persistence
+2. **React State (useState/useContext)**
+   - Component-specific UI state
+   - Form state
+   - Modal states
+   - Navigation state
    Example:
    ```typescript
-   // features/trips/store.ts
-   interface TripStore {
-     trips: Trip[];
-     selectedTrip: Trip | null;
-     addTrip: (trip: Trip) => void;
-     setSelectedTrip: (trip: Trip | null) => void;
-   }
-
-   export const useTripStore = create<TripStore>((set) => ({
-     trips: [],
-     selectedTrip: null,
-     addTrip: (trip) => set((state) => ({ 
-       trips: [...state.trips, trip] 
-     })),
-     setSelectedTrip: (trip) => set({ selectedTrip: trip })
-   }));
+   const [isEditing, setIsEditing] = useState(false);
+   const [formData, setFormData] = useState(initialData);
    ```
 
-3. **React Context**
-   - Theme/preferences (rarely updated)
-   - Authentication state
-   - Feature flags
-   - i18n/localization
-   - Place contexts in `shared/contexts` if global, or in feature directory if feature-specific
-   Example:
-   ```typescript
-   // shared/contexts/ThemeContext.tsx
-   export const ThemeContext = createContext<Theme>('light');
-   ```
-   ```typescript
-   // features/trips/contexts/TripFilterContext.tsx
-   export const TripFilterContext = createContext<TripFilters>(defaultFilters);
-   ```
-
-4. **Zustand with Firestore**
-   - Use Zustand for UI state and local cache of Firestore data
-   - Implement optimistic updates for better UX
-   - Handle loading and error states
-   Example:
-   ```typescript
-   // features/trips/store.ts
-   interface TripStore {
-     trips: Trip[];
-     isLoading: boolean;
-     error: Error | null;
-     fetchTrips: () => Promise<void>;
-     addTrip: (trip: Omit<Trip, 'id'>) => Promise<void>;
-   }
-
-   export const useTripStore = create<TripStore>((set, get) => ({
-     trips: [],
-     isLoading: false,
-     error: null,
-     fetchTrips: async () => {
-       set({ isLoading: true, error: null });
-       try {
-         const trips = await tripsApi.getTrips();
-         set({ trips, isLoading: false });
-       } catch (error) {
-         set({ error: error as Error, isLoading: false });
-       }
-     },
-     addTrip: async (newTrip) => {
-       // Optimistic update
-       const tempId = 'temp_' + Date.now();
-       set(state => ({ 
-         trips: [...state.trips, { ...newTrip, id: tempId }] 
-       }));
-       
-       try {
-         const savedTrip = await tripsApi.addTrip(newTrip);
-         set(state => ({
-           trips: state.trips.map(t => 
-             t.id === tempId ? savedTrip : t
-           )
-         }));
-       } catch (error) {
-         // Rollback on error
-         set(state => ({
-           trips: state.trips.filter(t => t.id !== tempId),
-           error: error as Error
-         }));
-       }
+3. **Zustand (When Needed)**
+   - Only use for complex client-side state management
+   - Examples of when to use Zustand:
+     ```typescript
+     // Complex UI state
+     interface UIStore {
+       selectedTripId: string | null;
+       isEditing: boolean;
+       sidebarOpen: boolean;
+       theme: 'light' | 'dark';
      }
-   }));
-   ```
 
-5. **Persistence Strategy**
-   - Primary data persistence through Firestore
-   - Use Zustand for local state management and caching
-   - Consider using `zustand/persist` only for user preferences and app settings
-   - Implement offline support if needed using Firestore persistence
+     // Complex derived state
+     interface FilteredTripsStore {
+       trips: Trip[];
+       filters: TripFilters;
+       filteredTrips: Trip[];
+       sortedTrips: Trip[];
+     }
 
-6. **State Location Guidelines**
-   - Keep Firestore interaction logic in feature-specific `api.ts` files
-   - Use Zustand stores for managing UI state and local data cache
-   - Implement real-time updates using Firestore listeners where needed
+     // Cross-component state
+     interface TripPlanningStore {
+       selectedTrip: Trip | null;
+       selectedDestination: Destination | null;
+       mapView: MapView;
+       timeline: Timeline;
+     }
+     ```
+
+4. **State Location Guidelines**
+   - Use Firestore for all persistent data
+   - Use React state for component-specific UI state
+   - Only use Zustand when managing complex client-side state
+   - Keep state close to where it's used
+   - Consider component composition before reaching for global state
 
 ## Service Implementation Pattern
 
-Services should be implemented using TypeScript interfaces and factory functions rather than classes:
+Services should be implemented as simple functions that interact with Firestore:
 
 ```typescript
-// Define the interface
-export interface ExampleService {
-  methodOne(param: string): Promise<void>;
-  methodTwo(param: number): string;
-}
-
-// Implement with factory function
-const createExampleService = (dependencies): ExampleService => ({
-  async methodOne(param) {
-    // implementation
+// features/trips/api.ts
+export const tripsApi = {
+  getTrips: async (userId: string) => {
+    const tripsRef = collection(db, 'trips');
+    const q = query(tripsRef, where('userId', '==', userId));
+    const snapshot = await getDocs(q);
+    return snapshot.docs.map(doc => ({ 
+      id: doc.id, 
+      ...doc.data() 
+    })) as Trip[];
   },
-  methodTwo(param) {
-    return "result";
-  }
-});
 
-// Export instance
-export const exampleService = createExampleService(dependencies);
+  addTrip: async (trip: Omit<Trip, 'id'>) => {
+    const tripsRef = collection(db, 'trips');
+    const docRef = await addDoc(tripsRef, {
+      ...trip,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    });
+    return { id: docRef.id, ...trip } as Trip;
+  }
+};
 ```
 
 ### Guidelines
-1. Place interfaces and implementations in the same file
-2. Use JSDoc comments to document the interface
-3. Use closure scope for private functions
-4. Pass dependencies via factory function parameters
-5. Export the concrete instance as the default usage
-6. Co-locate tests using `*.test.ts` naming
+1. Keep services simple and focused on Firestore operations
+2. Use TypeScript types for type safety
+3. Handle date conversions between Firestore and JavaScript
+4. Include proper error handling
+5. Co-locate tests using `*.test.ts` naming
 
 ### Exceptions
 - React Components
