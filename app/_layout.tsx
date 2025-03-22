@@ -1,8 +1,38 @@
+import { useEffect } from "react";
+import { Slot, useRouter, useSegments } from "expo-router";
+import { useAuthStore } from "@/features/auth/store";
+import { authApi } from "@/features/auth/api";
 import { Tabs } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { tw } from "../src/shared/utils/tw";
 
 export default function RootLayout() {
+  const segments = useSegments();
+  const router = useRouter();
+  const { setUser } = useAuthStore();
+
+  useEffect(() => {
+    // Set up auth state listener
+    const unsubscribe = authApi.onAuthStateChange((user) => {
+      setUser(user);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    const inAuthGroup = segments[0] === "(auth)";
+    const { user } = useAuthStore.getState();
+
+    if (!user && !inAuthGroup) {
+      // Redirect to login if not authenticated
+      router.replace("/login");
+    } else if (user && inAuthGroup) {
+      // Redirect to home if authenticated and trying to access auth screens
+      router.replace("/");
+    }
+  }, [segments]);
+
   return (
     <Tabs
       screenOptions={{
