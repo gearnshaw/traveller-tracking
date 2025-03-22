@@ -11,12 +11,12 @@ type AuthStore = AuthState & {
   setLoading: (isLoading: boolean) => void;
 };
 
-export const useAuthStore = create<AuthStore>((set) => ({
+export const useAuthStore = create<AuthStore>()((set) => ({
   user: null,
   isLoading: false,
   error: null,
 
-  login: async (credentials) => {
+  login: async (credentials: LoginCredentials) => {
     try {
       set({ isLoading: true, error: null });
       const user = await authApi.login(credentials);
@@ -32,7 +32,7 @@ export const useAuthStore = create<AuthStore>((set) => ({
     }
   },
 
-  signUp: async (credentials) => {
+  signUp: async (credentials: SignUpCredentials) => {
     try {
       set({ isLoading: true, error: null });
       const user = await authApi.signUp(credentials);
@@ -64,7 +64,7 @@ export const useAuthStore = create<AuthStore>((set) => ({
     }
   },
 
-  setUser: (user) => set({ user }),
-  setError: (error) => set({ error }),
-  setLoading: (isLoading) => set({ isLoading }),
+  setUser: (user: User | null) => set({ user }),
+  setError: (error: string | null) => set({ error }),
+  setLoading: (isLoading: boolean) => set({ isLoading }),
 }));
