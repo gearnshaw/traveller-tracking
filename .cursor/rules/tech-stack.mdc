@@ -14,10 +14,23 @@ alwaysApply: true
 ## Stack
 
 ### State Management
-- **Zustand** - Primary state management solution
-  - Used for: Feature-level state, UI state caching, cross-component state
+- **Firestore** - Primary data storage and real-time state
+  - Used for: Data persistence, real-time updates, authentication
+  - Documentation: https://firebase.google.com/docs/firestore
+  - Key packages:
+    - `firebase/app`
+    - `firebase/firestore`
+    - `firebase/auth`
+  - Usage: See `project-architecture.mdc` API Organization section for patterns
+
+- **Zustand** - Client-side state management (when needed)
+  - Used for: Complex UI state, derived state, cross-component state
+  - Only use when:
+    - Managing complex UI state across components
+    - Handling derived state that's used in multiple places
+    - Managing user preferences
+    - Coordinating complex state updates
   - Documentation: https://github.com/pmndrs/zustand
-  - Usage: See `project-architecture.mdc` State Management section for patterns
 
 ### Data Layer
 - **Firebase/Firestore** - Primary data storage

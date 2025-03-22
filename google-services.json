@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "398627406819",
+    "project_id": "traveller-tracking",
+    "storage_bucket": "traveller-tracking.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:398627406819:android:5abda63b7eac22a77756d6",
+        "android_client_info": {
+          "package_name": "com.gearnshaw.travellertracking"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBxY0JlttT774hfK_mv7HBWLIef91HIhCA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
