@@ -2,11 +2,11 @@ import { View, TextInput, Pressable } from "react-native";
 import { Typography } from "@/shared/components/base/Typography";
 import tw from "twrnc";
 import { Button } from "@/shared/components/base/Button";
-import { useState } from "react";
+import { useLoginScreen } from "./useLoginScreen";
 
 export const LoginScreen = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const { email, setEmail, password, setPassword, loading, handleLogin } =
+    useLoginScreen();
 
   return (
     <View style={tw`flex-1 bg-white p-4`}>
@@ -54,12 +54,12 @@ export const LoginScreen = () => {
 
         {/* Login Button */}
         <Button
-          style={tw`w-full`}
-          onPress={() => {
-            // Handle login
-          }}
+          variant="primary"
+          style={tw`w-full py-4`}
+          onPress={handleLogin}
+          disabled={loading}
         >
-          Log In
+          {loading ? "Signing in..." : "Log In"}
         </Button>
       </View>
     </View>
