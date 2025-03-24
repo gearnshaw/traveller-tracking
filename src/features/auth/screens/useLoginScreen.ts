@@ -31,7 +31,7 @@ export const useLoginScreen = () => {
       }
 
       Alert.alert("Error", message);
-      console.error(error);
+      console.info(error);
     } finally {
       setLoading(false);
     }
