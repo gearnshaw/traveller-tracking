@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { User as FirebaseUser } from "firebase/auth";
-import { auth } from "../../services/firebase";
+import { FirebaseAuthTypes } from "@react-native-firebase/auth";
+import { auth } from "@/services/firebase";
 import { User } from "../types";
 
 export const useAuth = () => {
@@ -9,7 +9,7 @@ export const useAuth = () => {
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(
-      (firebaseUser: FirebaseUser | null) => {
+      (firebaseUser: FirebaseAuthTypes.User | null) => {
         if (firebaseUser) {
           setUser({
             id: firebaseUser.uid,
