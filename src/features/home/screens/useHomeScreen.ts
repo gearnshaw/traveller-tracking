@@ -1,5 +1,5 @@
 import { Follower } from "@/features/followers/types";
-import auth from "@react-native-firebase/auth";
+import { auth } from "@/services/firebase";
 
 // This would typically come from an API or store
 const sampleFollowers: Follower[] = [
@@ -15,7 +15,7 @@ export const useHomeScreen = () => {
 
   const handleLogout = async () => {
     try {
-      await auth().signOut();
+      await auth.signOut();
     } catch (error) {
       console.error("Error signing out:", error);
     }
