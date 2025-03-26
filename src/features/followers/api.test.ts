@@ -16,7 +16,7 @@ describe('followersApi', () => {
     jest.clearAllMocks();
   });
 
-  const createMockSnapshot = (docs: Array<{ id: string; data: () => any }>) => ({
+  const createMockSnapshot = (docs: { id: string; data: () => any }[]) => ({
     docs
   });
 
