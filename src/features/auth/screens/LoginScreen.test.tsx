@@ -1,5 +1,4 @@
 import { render, screen, fireEvent } from '@testing-library/react-native';
-import { View, Text, Alert } from 'react-native';
 import { LoginScreen } from './LoginScreen';
 
 // Mock functions

@@ -5,7 +5,7 @@ import { useHomeScreen } from './useHomeScreen';
 import { Button } from '@/shared/components/base/Button';
 
 export const HomeScreen = () => {
-  const { followers, handleManagePress, handleLogout } = useHomeScreen();
+  const { handleLogout } = useHomeScreen();
 
   return (
     <ScrollView
@@ -14,9 +14,7 @@ export const HomeScreen = () => {
       showsVerticalScrollIndicator={false}
     >
       <View style={tw`mx-4`}>
-        <FollowersList followers={followers} onManagePress={handleManagePress} />
-
-        {/* Add more sections here as needed */}
+        <FollowersList />
       </View>
 
       <View style={tw`mt-8 mx-4`}>
