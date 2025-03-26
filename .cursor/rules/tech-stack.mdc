@@ -13,14 +13,17 @@ alwaysApply: true
 
 ## Stack
 
+### Firebase
+- Several subcomponents of firebase are used (see below). NB the app uses React Native Firebase, NOT the web libraries
+
 ### State Management
 - **Firestore** - Primary data storage and real-time state
   - Used for: Data persistence, real-time updates, authentication
   - Documentation: https://firebase.google.com/docs/firestore
   - Key packages:
-    - `firebase/app`
-    - `firebase/firestore`
-    - `firebase/auth`
+    - `@react-native-firebase/app`
+    - `@react-native-firebase/firestore`
+    - `@react-native-firebase/auth`
   - Usage: See `project-architecture.mdc` API Organization section for patterns
 
 - **Zustand** - Client-side state management (when needed)
@@ -37,9 +40,9 @@ alwaysApply: true
   - Used for: Data persistence, real-time updates, authentication
   - Documentation: https://firebase.google.com/docs/firestore
   - Key packages:
-    - `firebase/app`
-    - `firebase/firestore`
-    - `firebase/auth`
+    - `@react-native-firebase/app`
+    - `@react-native-firebase/firestore`
+    - `@react-native-firebase/auth`
   - Usage: See `project-architecture.mdc` API Organization section for patterns
 
 ### UI Framework

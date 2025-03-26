@@ -1,22 +1,20 @@
 import React from 'react';
-import { View } from 'react-native';
-import { Follower } from '../types';
+import { View, ActivityIndicator } from 'react-native';
 import Modal from '@/shared/components/common/Modal';
-import { useFollowersList } from './useFollowersList';
 import { TableSectionHeader } from '@/shared/components/base/TableSectionHeader';
 import { Typography } from '@/shared/components/base/Typography';
 import { Table } from '@/shared/components/common/Table';
 import { FollowerRow } from './FollowerRow';
+import { tw } from '@/shared/utils/tw';
+import { useFollowersList } from './useFollowersList';
 
-type FollowersListProps = {
-  followers: Follower[];
-  onManagePress: () => void;
-};
-
-const FollowersList = ({ followers, onManagePress }: FollowersListProps) => {
-  const { isModalVisible, handleManagePress, handleCloseModal } = useFollowersList({
-    onManagePress
-  });
+const FollowersList = () => {
+  const { followers, isLoading, isModalVisible, handleManagePress, handleCloseModal } =
+    useFollowersList({
+      onManagePress: () => {
+        // Will implement later
+      }
+    });
 
   return (
     <>
@@ -27,11 +25,17 @@ const FollowersList = ({ followers, onManagePress }: FollowersListProps) => {
           onActionPress={handleManagePress}
         />
 
-        <Table>
-          {followers.map((follower, index) => (
-            <FollowerRow key={follower.id} follower={follower} isFirstRow={index === 0} />
-          ))}
-        </Table>
+        {isLoading ? (
+          <View style={tw`py-8 items-center`}>
+            <ActivityIndicator size="large" color={tw.color('primary-500')} />
+          </View>
+        ) : (
+          <Table>
+            {followers.map((follower, index) => (
+              <FollowerRow key={follower.id} follower={follower} isFirstRow={index === 0} />
+            ))}
+          </Table>
+        )}
       </View>
 
       <Modal visible={isModalVisible} onClose={handleCloseModal} title="Manage Followers">
