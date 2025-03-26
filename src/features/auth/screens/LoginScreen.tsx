@@ -4,27 +4,20 @@ import {
   Pressable,
   KeyboardAvoidingView,
   Platform,
-  ScrollView,
-} from "react-native";
-import { Typography } from "@/shared/components/base/Typography";
-import tw from "twrnc";
-import { Button } from "@/shared/components/base/Button";
-import { useLoginScreen } from "./useLoginScreen";
+  ScrollView
+} from 'react-native';
+import { Typography } from '@/shared/components/base/Typography';
+import tw from 'twrnc';
+import { Button } from '@/shared/components/base/Button';
+import { useLoginScreen } from './useLoginScreen';
 
 export const LoginScreen = () => {
-  const {
-    email,
-    setEmail,
-    password,
-    setPassword,
-    loading,
-    handleLogin,
-    handleForgotPassword,
-  } = useLoginScreen();
+  const { email, setEmail, password, setPassword, loading, handleLogin, handleForgotPassword } =
+    useLoginScreen();
 
   return (
     <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={tw`flex-1`}
       testID="login-screen"
     >
@@ -113,10 +106,10 @@ export const LoginScreen = () => {
             disabled={loading}
             testID="login-button"
             accessibilityRole="button"
-            accessibilityLabel={loading ? "Signing in..." : "Log in"}
+            accessibilityLabel={loading ? 'Signing in...' : 'Log in'}
             accessibilityState={{ disabled: loading }}
           >
-            {loading ? "Signing in..." : "Log In"}
+            {loading ? 'Signing in...' : 'Log In'}
           </Button>
         </View>
       </ScrollView>

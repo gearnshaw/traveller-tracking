@@ -1,8 +1,8 @@
-import { Stack, useRouter, useSegments } from "expo-router";
-import { useEffect, useState } from "react";
-import { FirebaseAuthTypes } from "@react-native-firebase/auth";
-import { auth } from "@/services/firebase";
-import { View, ActivityIndicator } from "react-native";
+import { Stack, useRouter, useSegments } from 'expo-router';
+import { useEffect, useState } from 'react';
+import { FirebaseAuthTypes } from '@react-native-firebase/auth';
+import { auth } from '@/services/firebase';
+import { View, ActivityIndicator } from 'react-native';
 
 export default function RootLayout() {
   const [initializing, setInitializing] = useState(true);
@@ -23,12 +23,12 @@ export default function RootLayout() {
   useEffect(() => {
     if (initializing) return;
 
-    const inAuthGroup = segments[0] === "(auth)";
+    const inAuthGroup = segments[0] === '(auth)';
 
     if (user && !inAuthGroup) {
-      router.replace("/(auth)/home");
+      router.replace('/(auth)/home');
     } else if (!user && inAuthGroup) {
-      router.replace("/");
+      router.replace('/');
     }
   }, [user, initializing]);
 
@@ -36,9 +36,9 @@ export default function RootLayout() {
     return (
       <View
         style={{
-          alignItems: "center",
-          justifyContent: "center",
-          flex: 1,
+          alignItems: 'center',
+          justifyContent: 'center',
+          flex: 1
         }}
       >
         <ActivityIndicator size="large" />

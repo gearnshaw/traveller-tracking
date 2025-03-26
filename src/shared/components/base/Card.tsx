@@ -1,5 +1,5 @@
-import { View, ViewProps } from "react-native";
-import { tw } from "@/shared/utils/tw";
+import { View, ViewProps } from 'react-native';
+import { tw } from '@/shared/utils/tw';
 
 export type CardProps = ViewProps;
 

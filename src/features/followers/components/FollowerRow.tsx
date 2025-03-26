@@ -1,8 +1,8 @@
-import React from "react";
-import { tw } from "@/shared/utils/tw";
-import { Follower } from "../types";
-import { TableRow } from "@/shared/components/base/TableRow";
-import { Typography } from "@/shared/components/base/Typography";
+import React from 'react';
+import { tw } from '@/shared/utils/tw';
+import { Follower } from '../types';
+import { TableRow } from '@/shared/components/base/TableRow';
+import { Typography } from '@/shared/components/base/Typography';
 
 type FollowerRowProps = {
   follower: Follower;
@@ -15,11 +15,9 @@ export const FollowerRow = ({ follower, isFirstRow }: FollowerRowProps) => {
       <Typography variant="body">{follower.name}</Typography>
       <Typography
         variant="body"
-        style={tw`${
-          follower.status === "active" ? "text-green-500" : "text-amber-500"
-        }`}
+        style={tw`${follower.status === 'active' ? 'text-green-500' : 'text-amber-500'}`}
       >
-        {follower.status === "active" ? "Active" : "Pending"}
+        {follower.status === 'active' ? 'Active' : 'Pending'}
       </Typography>
     </TableRow>
   );
