@@ -1,7 +1,7 @@
 import { Stack, useRouter, useSegments } from 'expo-router';
 import { useEffect } from 'react';
 import { View, ActivityIndicator } from 'react-native';
-import { useAuth } from '@/shared/hooks/useAuth';
+import { useAuth } from '@/features/auth/hooks/useAuth';
 
 export default function RootLayout() {
   const { user, isLoading } = useAuth();
