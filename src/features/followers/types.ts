@@ -1,7 +1,6 @@
 export enum FollowerStatus {
   Active = 'active',
-  Pending = 'pending',
-  Unknown = 'unknown'
+  Pending = 'pending'
 }
 
 export type Follower = {
