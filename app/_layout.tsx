@@ -1,30 +1,15 @@
 import { Stack, useRouter, useSegments } from 'expo-router';
-import { useEffect, useState, useCallback } from 'react';
-import { FirebaseAuthTypes } from '@react-native-firebase/auth';
-import { auth } from '@/services/firebase';
+import { useEffect } from 'react';
 import { View, ActivityIndicator } from 'react-native';
+import { useAuth } from '@/shared/hooks/useAuth';
 
 export default function RootLayout() {
-  const [initializing, setInitializing] = useState(true);
-  const [user, setUser] = useState<FirebaseAuthTypes.User | null>();
+  const { user, isLoading } = useAuth();
   const router = useRouter();
   const segments = useSegments();
 
-  const onAuthStateChanged = useCallback(
-    (user: FirebaseAuthTypes.User | null) => {
-      setUser(user);
-      if (initializing) setInitializing(false);
-    },
-    [initializing]
-  );
-
   useEffect(() => {
-    const subscriber = auth.onAuthStateChanged(onAuthStateChanged);
-    return subscriber;
-  }, [onAuthStateChanged]);
-
-  useEffect(() => {
-    if (initializing) return;
+    if (isLoading) return;
 
     const inAuthGroup = segments[0] === '(auth)';
 
@@ -33,9 +18,9 @@ export default function RootLayout() {
     } else if (!user && inAuthGroup) {
       router.replace('/');
     }
-  }, [user, initializing, router, segments]);
+  }, [user, isLoading, router, segments]);
 
-  if (initializing)
+  if (isLoading)
     return (
       <View
         style={{

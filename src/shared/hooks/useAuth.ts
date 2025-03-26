@@ -1,35 +1,24 @@
 import { useState, useEffect } from 'react';
-import { FirebaseAuthTypes } from '@react-native-firebase/auth';
-import { auth } from '@/services/firebase';
-import { User } from '../types';
+import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 
 export const useAuth = () => {
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState<FirebaseAuthTypes.User | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((firebaseUser: FirebaseAuthTypes.User | null) => {
-      if (firebaseUser) {
-        setUser({
-          id: firebaseUser.uid,
-          email: firebaseUser.email!,
-          displayName: firebaseUser.displayName,
-          photoURL: firebaseUser.photoURL,
-          createdAt: new Date(firebaseUser.metadata.creationTime!),
-          updatedAt: new Date()
-        });
-      } else {
-        setUser(null);
-      }
-      setLoading(false);
+    // Subscribe to auth state changes
+    const unsubscribe = auth().onAuthStateChanged((user: FirebaseAuthTypes.User | null) => {
+      setUser(user);
+      setIsLoading(false);
     });
 
-    return () => unsubscribe();
+    // Cleanup subscription on unmount
+    return unsubscribe;
   }, []);
 
   return {
     user,
-    loading,
+    isLoading,
     isAuthenticated: !!user
   };
 };
