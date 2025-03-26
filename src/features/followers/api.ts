@@ -1,4 +1,6 @@
 import { Follower } from './types';
+import { db } from '@/services/firebase';
+import { mapFollower, RawFollower } from './utils';
 
 // This would typically come from Firestore
 const sampleFollowers: Follower[] = [
@@ -8,9 +10,28 @@ const sampleFollowers: Follower[] = [
 ];
 
 export const followersApi = {
-  getFollowers: async (): Promise<Follower[]> => {
+  getFollowersTest: async (): Promise<Follower[]> => {
     // Simulate API delay
     await new Promise((resolve) => setTimeout(resolve, 500));
     return sampleFollowers;
+  },
+
+  observeFollowers: async (
+    userId: string,
+    callback: (followers: Follower[]) => void
+  ): Promise<() => void> => {
+    const unsubscribe = db.collection(`users/${userId}/followers`).onSnapshot(
+      (snapshot) => {
+        const followers = snapshot.docs.map((doc) =>
+          mapFollower(doc.id, doc.data() as RawFollower)
+        );
+        callback(followers);
+      },
+      (error) => {
+        console.error(error);
+        callback([]);
+      }
+    );
+    return unsubscribe;
   }
 };

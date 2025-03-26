@@ -1,4 +1,8 @@
-export type FollowerStatus = 'active' | 'pending';
+export enum FollowerStatus {
+  Active = 'active',
+  Pending = 'pending',
+  Unknown = 'unknown'
+}
 
 export type Follower = {
   id: string;
