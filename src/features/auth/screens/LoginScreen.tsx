@@ -4,22 +4,40 @@ import {
   Pressable,
   KeyboardAvoidingView,
   Platform,
-  ScrollView
+  ScrollView,
+  Alert
 } from 'react-native';
 import { Typography } from '@/shared/components/base/Typography';
 import tw from 'twrnc';
 import { Button } from '@/shared/components/base/Button';
 import { useLoginScreen } from './useLoginScreen';
+import { useEffect } from 'react';
 
 export const LoginScreen = () => {
-  const { email, setEmail, password, setPassword, loading, handleLogin, handleForgotPassword } =
-    useLoginScreen();
+  const {
+    email,
+    setEmail,
+    password,
+    setPassword,
+    loading,
+    alert,
+    handleLogin,
+    handleForgotPassword,
+    dismissAlert
+  } = useLoginScreen();
+
+  useEffect(() => {
+    if (alert.visible) {
+      Alert.alert(alert.title, alert.message, [{ text: 'OK', onPress: dismissAlert }]);
+    }
+  }, [alert, dismissAlert]);
 
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={tw`flex-1`}
       testID="login-screen"
+      accessibilityLabel="Login screen"
     >
       <ScrollView
         style={tw`flex-1 bg-white`}
@@ -106,7 +124,7 @@ export const LoginScreen = () => {
             disabled={loading}
             testID="login-button"
             accessibilityRole="button"
-            accessibilityLabel={loading ? 'Signing in...' : 'Log in'}
+            accessibilityLabel="Log in"
             accessibilityState={{ disabled: loading }}
           >
             {loading ? 'Signing in...' : 'Log In'}

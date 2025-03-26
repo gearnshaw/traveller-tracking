@@ -1,22 +1,38 @@
 import { useState } from 'react';
-import { Alert } from 'react-native';
 import { auth } from '@/services/firebase';
+
+type AlertState = {
+  title: string;
+  message: string;
+  visible: boolean;
+};
 
 export const useLoginScreen = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [alert, setAlert] = useState<AlertState>({
+    title: '',
+    message: '',
+    visible: false
+  });
 
   const handleForgotPassword = () => {
-    Alert.alert(
-      'Forgot Password',
-      'This feature is not yet implemented. Please contact support if you need to reset your password.'
-    );
+    setAlert({
+      title: 'Forgot Password',
+      message:
+        'This feature is not yet implemented. Please contact support if you need to reset your password.',
+      visible: true
+    });
   };
 
   const handleLogin = async () => {
     if (!email || !password) {
-      Alert.alert('Sign in failed', 'Please enter both email and password');
+      setAlert({
+        title: 'Sign in failed',
+        message: 'Please enter both email and password',
+        visible: true
+      });
       return;
     }
 
@@ -37,11 +53,19 @@ export const useLoginScreen = () => {
         message = 'Invalid password';
       }
 
-      Alert.alert('Sign in failed', message);
+      setAlert({
+        title: 'Sign in failed',
+        message,
+        visible: true
+      });
       console.info(error);
     } finally {
       setLoading(false);
     }
+  };
+
+  const dismissAlert = () => {
+    setAlert((prev) => ({ ...prev, visible: false }));
   };
 
   return {
@@ -50,7 +74,9 @@ export const useLoginScreen = () => {
     password,
     setPassword,
     loading,
+    alert,
     handleLogin,
-    handleForgotPassword
+    handleForgotPassword,
+    dismissAlert
   };
 };
