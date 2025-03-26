@@ -4,16 +4,33 @@ import {
   Pressable,
   KeyboardAvoidingView,
   Platform,
-  ScrollView
+  ScrollView,
+  Alert
 } from 'react-native';
 import { Typography } from '@/shared/components/base/Typography';
 import tw from 'twrnc';
 import { Button } from '@/shared/components/base/Button';
 import { useLoginScreen } from './useLoginScreen';
+import { useEffect } from 'react';
 
 export const LoginScreen = () => {
-  const { email, setEmail, password, setPassword, loading, handleLogin, handleForgotPassword } =
-    useLoginScreen();
+  const {
+    email,
+    setEmail,
+    password,
+    setPassword,
+    loading,
+    alert,
+    handleLogin,
+    handleForgotPassword,
+    dismissAlert
+  } = useLoginScreen();
+
+  useEffect(() => {
+    if (alert.visible) {
+      Alert.alert(alert.title, alert.message, [{ text: 'OK', onPress: dismissAlert }]);
+    }
+  }, [alert, dismissAlert]);
 
   return (
     <KeyboardAvoidingView

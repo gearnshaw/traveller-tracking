@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from '@testing-library/react-native';
-import { View, Text } from 'react-native';
+import { View, Text, Alert } from 'react-native';
 import { LoginScreen } from './LoginScreen';
 
 // Mock functions
@@ -7,6 +7,7 @@ const mockSetEmail = jest.fn();
 const mockSetPassword = jest.fn();
 const mockHandleLogin = jest.fn();
 const mockHandleForgotPassword = jest.fn();
+const mockDismissAlert = jest.fn();
 
 // Default mock implementation
 const defaultMock = {
@@ -15,8 +16,14 @@ const defaultMock = {
   password: '',
   setPassword: mockSetPassword,
   loading: false,
+  alert: {
+    title: '',
+    message: '',
+    visible: false
+  },
   handleLogin: mockHandleLogin,
-  handleForgotPassword: mockHandleForgotPassword
+  handleForgotPassword: mockHandleForgotPassword,
+  dismissAlert: mockDismissAlert
 };
 
 // Helper function to create mock implementation
@@ -33,10 +40,18 @@ jest.mock('./useLoginScreen', () => ({
     password: '',
     setPassword: mockSetPassword,
     loading: false,
+    alert: {
+      title: '',
+      message: '',
+      visible: false
+    },
     handleLogin: mockHandleLogin,
-    handleForgotPassword: mockHandleForgotPassword
+    handleForgotPassword: mockHandleForgotPassword,
+    dismissAlert: mockDismissAlert
   })
 }));
+
+jest.spyOn(Alert, 'alert');
 
 describe('LoginScreen', () => {
   beforeEach(() => {
@@ -180,6 +195,38 @@ describe('LoginScreen', () => {
 
       // Assert
       expect(mockHandleForgotPassword).toHaveBeenCalled();
+    });
+  });
+
+  // Alert State Tests
+  describe('Alert State', () => {
+    it('should not show alert when visible is false', () => {
+      // Arrange
+      render(<LoginScreen />);
+
+      // Assert
+      expect(screen.queryByTestId('alert-modal')).toBeNull();
+    });
+
+    it('should show alert with correct title and message when visible is true', () => {
+      // Arrange
+      const alertTitle = 'Error';
+      const alertMessage = 'Invalid credentials';
+      jest.spyOn(require('./useLoginScreen'), 'useLoginScreen').mockImplementation(() =>
+        createMockImplementation({
+          alert: {
+            title: alertTitle,
+            message: alertMessage,
+            visible: true
+          }
+        })
+      );
+
+      // Act
+      render(<LoginScreen />);
+
+      // Assert
+      expect(Alert.alert).toHaveBeenCalledWith(alertTitle, alertMessage, expect.any(Array));
     });
   });
 
