@@ -2,12 +2,30 @@ import { render, screen, fireEvent } from '@testing-library/react-native';
 import { View, Text } from 'react-native';
 import { LoginScreen } from './LoginScreen';
 
+// Mock functions
 const mockSetEmail = jest.fn();
 const mockSetPassword = jest.fn();
 const mockHandleLogin = jest.fn();
 const mockHandleForgotPassword = jest.fn();
 
-// Mock the hook with a default implementation
+// Default mock implementation
+const defaultMock = {
+  email: '',
+  setEmail: mockSetEmail,
+  password: '',
+  setPassword: mockSetPassword,
+  loading: false,
+  handleLogin: mockHandleLogin,
+  handleForgotPassword: mockHandleForgotPassword
+};
+
+// Helper function to create mock implementation
+const createMockImplementation = (overrides = {}) => ({
+  ...defaultMock,
+  ...overrides
+});
+
+// Mock the hook
 jest.mock('./useLoginScreen', () => ({
   useLoginScreen: () => ({
     email: '',
@@ -77,15 +95,9 @@ describe('LoginScreen', () => {
   describe('Button States', () => {
     it('should disable login button when loading', () => {
       // Arrange
-      jest.spyOn(require('./useLoginScreen'), 'useLoginScreen').mockImplementation(() => ({
-        email: '',
-        setEmail: mockSetEmail,
-        password: '',
-        setPassword: mockSetPassword,
-        loading: true,
-        handleLogin: mockHandleLogin,
-        handleForgotPassword: mockHandleForgotPassword
-      }));
+      jest
+        .spyOn(require('./useLoginScreen'), 'useLoginScreen')
+        .mockImplementation(() => createMockImplementation({ loading: true }));
 
       // Act
       render(<LoginScreen />);
@@ -96,15 +108,9 @@ describe('LoginScreen', () => {
 
     it('should show loading text on button when loading', () => {
       // Arrange
-      jest.spyOn(require('./useLoginScreen'), 'useLoginScreen').mockImplementation(() => ({
-        email: '',
-        setEmail: mockSetEmail,
-        password: '',
-        setPassword: mockSetPassword,
-        loading: true,
-        handleLogin: mockHandleLogin,
-        handleForgotPassword: mockHandleForgotPassword
-      }));
+      jest
+        .spyOn(require('./useLoginScreen'), 'useLoginScreen')
+        .mockImplementation(() => createMockImplementation({ loading: true }));
 
       // Act
       render(<LoginScreen />);
@@ -115,15 +121,12 @@ describe('LoginScreen', () => {
 
     it('should enable login button when form is valid', () => {
       // Arrange
-      jest.spyOn(require('./useLoginScreen'), 'useLoginScreen').mockImplementation(() => ({
-        email: 'test@example.com',
-        setEmail: mockSetEmail,
-        password: 'password123',
-        setPassword: mockSetPassword,
-        loading: false,
-        handleLogin: mockHandleLogin,
-        handleForgotPassword: mockHandleForgotPassword
-      }));
+      jest.spyOn(require('./useLoginScreen'), 'useLoginScreen').mockImplementation(() =>
+        createMockImplementation({
+          email: 'test@example.com',
+          password: 'password123'
+        })
+      );
 
       // Act
       render(<LoginScreen />);
@@ -147,19 +150,11 @@ describe('LoginScreen', () => {
       expect(mockHandleLogin).toHaveBeenCalled();
     });
 
-    // it('should show error message on failed login', () => {});
-    // it('should clear form after successful login', () => {});
     it('should prevent multiple submissions while loading', () => {
       // Arrange
-      jest.spyOn(require('./useLoginScreen'), 'useLoginScreen').mockImplementation(() => ({
-        email: 'test@example.com',
-        setEmail: mockSetEmail,
-        password: 'password123',
-        setPassword: mockSetPassword,
-        loading: true,
-        handleLogin: mockHandleLogin,
-        handleForgotPassword: mockHandleForgotPassword
-      }));
+      jest
+        .spyOn(require('./useLoginScreen'), 'useLoginScreen')
+        .mockImplementation(() => createMockImplementation({ loading: true }));
 
       render(<LoginScreen />);
       const loginButton = screen.getByTestId('login-button');
