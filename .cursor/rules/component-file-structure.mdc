@@ -133,3 +133,99 @@ alwaysApply: false
    src/features/followers/utils/
    └── useFollowerStatus.ts
    ```
+
+### Accessibility Guidelines
+
+1. **Required Accessibility Properties**
+   - Every interactive element must have:
+     ```typescript
+     accessibilityRole="button" | "text" | "header" | "link" | etc.
+     accessibilityLabel="Clear, concise description"
+     accessibilityHint="Additional context when needed"
+     ```
+   - Dynamic elements must include:
+     ```typescript
+     accessibilityState={{ disabled: boolean }}
+     accessibilityState={{ selected: boolean }}
+     ```
+
+2. **Accessibility Roles**
+   - Use semantic roles that match the element's purpose:
+     - `header` for titles and section headers
+     - `button` for pressable elements
+     - `text` for non-interactive text
+     - `link` for navigation elements
+     - `searchbox` for search inputs
+     - `textbox` for text inputs
+
+3. **Accessibility Labels**
+   - Must be clear and concise
+   - Should describe the element's purpose
+   - For buttons, use action-oriented labels
+   - For inputs, include the expected input type
+   Example:
+   ```typescript
+   // ✅ Good
+   accessibilityLabel="Log in"
+   accessibilityLabel="Email input"
+   
+   // ❌ Avoid
+   accessibilityLabel="Click here"
+   accessibilityLabel="Input field"
+   ```
+
+4. **Accessibility Hints**
+   - Provide additional context when needed
+   - Explain the result of an action
+   - Include format requirements for inputs
+   Example:
+   ```typescript
+   accessibilityHint="Enter your email address"
+   accessibilityHint="Tap to reset your password"
+   ```
+
+### Test ID Guidelines
+
+1. **When to Add Test IDs**
+   - Add test IDs only when writing tests
+   - Use test IDs for elements that need to be queried in tests
+   - Follow a consistent naming pattern:
+     ```typescript
+     testID="feature-element-purpose"
+     ```
+   Example:
+   ```typescript
+   testID="login-button"
+   testID="email-input"
+   testID="forgot-password-link"
+   ```
+
+2. **Test ID Naming Convention**
+   - Use kebab-case for test IDs
+   - Include the feature name
+   - Include the element type
+   - Include the purpose if needed
+   ```typescript
+   // ✅ Good
+   testID="login-email-input"
+   testID="profile-edit-button"
+   
+   // ❌ Avoid
+   testID="email"
+   testID="button1"
+   ```
+
+3. **Test ID Scope**
+   - Add test IDs to:
+     - Interactive elements (buttons, inputs, links)
+     - Containers that need to be queried
+     - Dynamic content that needs verification
+   - Do not add test IDs to:
+     - Static text that doesn't need testing
+     - Decorative elements
+     - Elements that can be queried by accessibility labels
+
+4. **Test ID Maintenance**
+   - Remove test IDs when tests are removed
+   - Update test IDs when component purpose changes
+   - Document test ID dependencies in test files

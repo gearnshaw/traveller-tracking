@@ -1,6 +1,6 @@
-import { View } from "react-native";
-import { tw } from "@/shared/utils/tw";
-import { Typography } from "@/shared/components/base/Typography";
+import { View } from 'react-native';
+import { tw } from '@/shared/utils/tw';
+import { Typography } from '@/shared/components/base/Typography';
 
 const TripsScreen = () => {
   return (

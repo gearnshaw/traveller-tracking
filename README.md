@@ -5,6 +5,7 @@ A modern React Native application for tracking travel experiences, built with Ex
 ## Getting Started
 
 1. Install dependencies
+
    ```bash
    npm install
    ```
@@ -15,6 +16,7 @@ A modern React Native application for tracking travel experiences, built with Ex
    ```
 
 You can run the app in:
+
 - [Development build](https://docs.expo.dev/develop/development-builds/introduction/)
 - [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
 - [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
@@ -28,7 +30,7 @@ The project follows a feature-based architecture:
 src/
   app/              # Expo Router pages and layouts
   features/         # Feature-specific code
-    {feature}/      
+    {feature}/
       components/   # Feature UI components
       hooks/        # Feature hooks
       api.ts        # Feature API calls
@@ -41,6 +43,7 @@ src/
 ```
 
 ### Key Features
+
 - File-based routing with Expo Router
 - Feature-based organization
 - Shared component library
@@ -49,16 +52,19 @@ src/
 ## Tech Stack
 
 ### Core
+
 - **React Native** with Expo
 - **TypeScript** for type safety
 - **Expo Router** for navigation
 
 ### State Management
+
 - **Zustand** for state management
 - **Firebase/Firestore** for data persistence
 - **Firebase Analytics** for user tracking
 
 ### UI & Styling
+
 - **TWRNC** (Tailwind React Native Classnames)
 - Custom design system with component hierarchy:
   - Base components (fundamental UI blocks)
@@ -67,6 +73,7 @@ src/
   - Feature components (feature-specific UI)
 
 ### Testing
+
 - **Jest** for unit testing
 - **React Native Testing Library** for component testing
 - **Maestro** for E2E testing

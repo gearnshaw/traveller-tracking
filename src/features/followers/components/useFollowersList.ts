@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState } from 'react';
 
 type UseFollowersListProps = {
   onManagePress: () => void;
@@ -19,6 +19,6 @@ export const useFollowersList = ({ onManagePress }: UseFollowersListProps) => {
   return {
     isModalVisible,
     handleManagePress,
-    handleCloseModal,
+    handleCloseModal
   };
 };

@@ -1,6 +1,6 @@
-import { View, Pressable } from "react-native";
-import { tw } from "@/shared/utils/tw";
-import { Typography } from "./Typography";
+import { View, Pressable } from 'react-native';
+import { tw } from '@/shared/utils/tw';
+import { Typography } from './Typography';
 
 export type TableSectionHeaderProps = {
   title: string;
@@ -11,7 +11,7 @@ export type TableSectionHeaderProps = {
 export const TableSectionHeader = ({
   title,
   actionText,
-  onActionPress,
+  onActionPress
 }: TableSectionHeaderProps) => {
   return (
     <View style={tw`px-4 py-3 flex-row justify-between items-center`}>
