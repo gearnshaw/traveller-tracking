@@ -1,6 +1,5 @@
 import React from 'react';
 import { ViewProps } from 'react-native';
-import { tw } from '@/shared/utils/tw';
 import { Card } from '../base/Card';
 
 export type TableProps = ViewProps & {
