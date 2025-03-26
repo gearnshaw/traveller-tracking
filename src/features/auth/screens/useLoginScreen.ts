@@ -7,9 +7,17 @@ export const useLoginScreen = () => {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const handleForgotPassword = () => {
+    Alert.alert(
+      "Forgot Password",
+      "This feature is not yet implemented. Please contact support if you need to reset your password.",
+      [{ text: "OK" }]
+    );
+  };
+
   const handleLogin = async () => {
     if (!email || !password) {
-      Alert.alert("Error", "Please enter both email and password");
+      Alert.alert("Sign in failed", "Please enter both email and password");
       return;
     }
 
@@ -30,7 +38,7 @@ export const useLoginScreen = () => {
         message = "Invalid password";
       }
 
-      Alert.alert("Error", message);
+      Alert.alert("Sign in failed", message);
       console.info(error);
     } finally {
       setLoading(false);
@@ -44,5 +52,6 @@ export const useLoginScreen = () => {
     setPassword,
     loading,
     handleLogin,
+    handleForgotPassword,
   };
 };

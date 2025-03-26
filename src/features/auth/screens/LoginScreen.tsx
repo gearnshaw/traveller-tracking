@@ -12,23 +12,37 @@ import { Button } from "@/shared/components/base/Button";
 import { useLoginScreen } from "./useLoginScreen";
 
 export const LoginScreen = () => {
-  const { email, setEmail, password, setPassword, loading, handleLogin } =
-    useLoginScreen();
+  const {
+    email,
+    setEmail,
+    password,
+    setPassword,
+    loading,
+    handleLogin,
+    handleForgotPassword,
+  } = useLoginScreen();
 
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={tw`flex-1`}
+      testID="login-screen"
     >
       <ScrollView
         style={tw`flex-1 bg-white`}
         contentContainerStyle={tw`min-h-full justify-center px-4`}
         keyboardShouldPersistTaps="handled"
         bounces={false}
+        testID="login-scroll-view"
       >
         <View style={tw`flex-1 justify-center`}>
           {/* Title */}
-          <Typography variant="pageTitle" style={tw`text-center mb-12`}>
+          <Typography
+            variant="pageTitle"
+            style={tw`text-center mb-12`}
+            testID="login-title"
+            accessibilityRole="header"
+          >
             Welcome Back
           </Typography>
 
@@ -37,6 +51,8 @@ export const LoginScreen = () => {
             <Typography
               variant="body"
               style={tw`mb-2 text-gray-700 font-medium`}
+              testID="email-label"
+              accessibilityRole="text"
             >
               Email
             </Typography>
@@ -47,6 +63,9 @@ export const LoginScreen = () => {
               onChangeText={setEmail}
               keyboardType="email-address"
               autoCapitalize="none"
+              testID="email-input"
+              accessibilityLabel="Email input"
+              accessibilityHint="Enter your email address"
             />
           </View>
 
@@ -55,6 +74,8 @@ export const LoginScreen = () => {
             <Typography
               variant="body"
               style={tw`mb-2 text-gray-700 font-medium`}
+              testID="password-label"
+              accessibilityRole="text"
             >
               Password
             </Typography>
@@ -64,11 +85,21 @@ export const LoginScreen = () => {
               value={password}
               onChangeText={setPassword}
               secureTextEntry
+              testID="password-input"
+              accessibilityLabel="Password input"
+              accessibilityHint="Enter your password"
             />
           </View>
 
           {/* Forgot Password */}
-          <Pressable style={tw`self-end mb-8`}>
+          <Pressable
+            style={tw`self-end mb-8`}
+            onPress={handleForgotPassword}
+            testID="forgot-password-button"
+            accessibilityRole="button"
+            accessibilityLabel="Forgot password"
+            accessibilityHint="Tap to reset your password"
+          >
             <Typography variant="body" style={tw`text-blue-500`}>
               Forgot Password?
             </Typography>
@@ -80,6 +111,10 @@ export const LoginScreen = () => {
             style={tw`w-full py-4`}
             onPress={handleLogin}
             disabled={loading}
+            testID="login-button"
+            accessibilityRole="button"
+            accessibilityLabel={loading ? "Signing in..." : "Log in"}
+            accessibilityState={{ disabled: loading }}
           >
             {loading ? "Signing in..." : "Log In"}
           </Button>
