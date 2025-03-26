@@ -20,6 +20,7 @@ export const LoginScreen = () => {
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={tw`flex-1`}
       testID="login-screen"
+      accessibilityLabel="Login screen"
     >
       <ScrollView
         style={tw`flex-1 bg-white`}
@@ -106,7 +107,7 @@ export const LoginScreen = () => {
             disabled={loading}
             testID="login-button"
             accessibilityRole="button"
-            accessibilityLabel={loading ? 'Signing in...' : 'Log in'}
+            accessibilityLabel="Log in"
             accessibilityState={{ disabled: loading }}
           >
             {loading ? 'Signing in...' : 'Log In'}
