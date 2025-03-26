@@ -10,8 +10,7 @@ export const useLoginScreen = () => {
   const handleForgotPassword = () => {
     Alert.alert(
       'Forgot Password',
-      'This feature is not yet implemented. Please contact support if you need to reset your password.',
-      [{ text: 'OK' }]
+      'This feature is not yet implemented. Please contact support if you need to reset your password.'
     );
   };
 
