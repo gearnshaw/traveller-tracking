@@ -26,7 +26,7 @@ export const TravellersList = () => {
       {travellers.map((traveller) => (
         <View key={traveller.id} style={tw`bg-white p-4 rounded-lg shadow-sm mb-4`}>
           <Text style={tw`text-lg font-semibold`}>{traveller.name}</Text>
-          <Text style={tw`text-gray-600`}>{traveller.email}</Text>
+          <Text style={tw`text-gray-600`}>Placeholder text</Text>
         </View>
       ))}
     </View>

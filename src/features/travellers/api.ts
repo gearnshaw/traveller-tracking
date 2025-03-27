@@ -1,23 +1,26 @@
 import { Traveller } from './types';
+import { db } from '@/services/firebase';
+import { mapTraveller, RawTraveller } from './utils';
+
+const getTravellersPath = (userId: string) => `users/${userId}/travellers`;
 
 export const travellersApi = {
-  getTravellers: async (): Promise<Traveller[]> => {
-    // Placeholder data
-    return [
-      {
-        id: '1',
-        name: 'John Smith',
-        email: 'john.smith@example.com',
-        createdAt: new Date('2024-01-01'),
-        updatedAt: new Date('2024-01-01')
+  observeTravellers: async (
+    userId: string,
+    callback: (travellers: Traveller[]) => void
+  ): Promise<() => void> => {
+    const unsubscribe = db.collection(getTravellersPath(userId)).onSnapshot(
+      (snapshot) => {
+        const travellers = snapshot.docs.map((doc) =>
+          mapTraveller(doc.id, doc.data() as RawTraveller)
+        );
+        callback(travellers);
       },
-      {
-        id: '2',
-        name: 'Jane Doe',
-        email: 'jane.doe@example.com',
-        createdAt: new Date('2024-01-02'),
-        updatedAt: new Date('2024-01-02')
+      (error) => {
+        console.error(error);
+        callback([]);
       }
-    ];
+    );
+    return unsubscribe;
   }
 };
