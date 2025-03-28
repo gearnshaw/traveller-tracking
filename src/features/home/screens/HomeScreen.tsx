@@ -4,7 +4,6 @@ import FollowersList from '@/features/followers/components/FollowersList';
 import { TravellersList } from '@/features/travellers/components/TravellersList';
 import { useHomeScreen } from './useHomeScreen';
 import { Button } from '@/shared/components/base/Button';
-import { ScreenInfo } from '@/shared/components/dev/ScreenInfo';
 
 export const HomeScreen = () => {
   const { handleLogout } = useHomeScreen();
