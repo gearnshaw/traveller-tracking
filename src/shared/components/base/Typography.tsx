@@ -2,7 +2,13 @@ import React from 'react';
 import { Text, TextProps } from 'react-native';
 import { tw } from '@/shared/utils/tw';
 
-export type TypographyVariant = 'pageTitle' | 'cardTitle' | 'sectionHeader' | 'body' | 'secondary';
+export type TypographyVariant =
+  | 'pageTitle'
+  | 'cardTitle'
+  | 'sectionHeader'
+  | 'cardSubheader'
+  | 'body'
+  | 'secondary';
 
 interface TypographyProps extends TextProps {
   variant?: TypographyVariant;
@@ -10,8 +16,9 @@ interface TypographyProps extends TextProps {
 
 const variantStyles: Record<TypographyVariant, string> = {
   pageTitle: 'text-4xl font-bold',
-  cardTitle: 'text-2xl font-bold',
   sectionHeader: 'text-xl font-semibold',
+  cardTitle: 'text-lg font-bold',
+  cardSubheader: 'text-base font-semibold',
   body: 'text-base',
   secondary: 'text-sm'
 };
