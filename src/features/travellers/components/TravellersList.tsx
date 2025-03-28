@@ -1,5 +1,6 @@
 import { View, Text, ActivityIndicator } from 'react-native';
 import { useTravellers } from '../hooks/useTravellers';
+import { TravellerCard } from './TravellerCard';
 import tw from 'twrnc';
 
 export const TravellersList = () => {
@@ -24,10 +25,7 @@ export const TravellersList = () => {
   return (
     <View style={tw`flex-1 p-4`}>
       {travellers.map((traveller) => (
-        <View key={traveller.id} style={tw`bg-white p-4 rounded-lg shadow-sm mb-4`}>
-          <Text style={tw`text-lg font-semibold`}>{traveller.name}</Text>
-          <Text style={tw`text-gray-600`}>Placeholder text</Text>
-        </View>
+        <TravellerCard key={traveller.id} traveller={traveller} />
       ))}
     </View>
   );
