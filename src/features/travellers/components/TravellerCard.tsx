@@ -1,21 +1,21 @@
 import { View, Text } from 'react-native';
 import tw from 'twrnc';
 import { Traveller } from '../types';
+import { Card } from '@/shared/components/base/Card';
+import { CardHeader } from '@/shared/components/common/CardHeader';
+import { Typography } from '@/shared/components/base/Typography';
 
-interface TravellerCardProps {
+type TravellerCardProps = {
   traveller: Traveller;
-}
+};
 
 export const TravellerCard = ({ traveller }: TravellerCardProps) => {
   // Get first letter of name for avatar
   const initial = traveller.name.charAt(0);
 
   return (
-    <View style={tw`bg-white rounded-lg shadow-sm mb-4 overflow-hidden`}>
-      {/* Header */}
-      <View style={tw`bg-blue-500 p-4`}>
-        <Text style={tw`text-white text-xl font-bold`}>{traveller.name}</Text>
-      </View>
+    <Card style={tw`px-0 overflow-hidden`}>
+      <CardHeader title={traveller.name} />
 
       {/* Content */}
       <View style={tw`p-4 flex-row`}>
@@ -26,11 +26,15 @@ export const TravellerCard = ({ traveller }: TravellerCardProps) => {
 
         {/* Info */}
         <View style={tw`flex-1`}>
-          <Text style={tw`text-xl font-bold`}>Tokyo, Japan</Text>
-          <Text style={tw`text-lg mt-1`}>10:45 PM • 16°C, Clear Night</Text>
-          <Text style={tw`text-gray-500 mt-2`}>Updated 2 hours ago</Text>
+          <Typography variant="cardSubheader">Tokyo, Japan</Typography>
+          <Typography variant="body" style={tw`mt-1`}>
+            10:45 PM • 16°C, Clear Night
+          </Typography>
+          <Typography variant="secondary" style={tw`mt-2 text-gray-500`}>
+            Updated 2 hours ago
+          </Typography>
         </View>
       </View>
-    </View>
+    </Card>
   );
 };
