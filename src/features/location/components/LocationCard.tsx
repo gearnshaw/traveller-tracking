@@ -5,7 +5,7 @@ import { useLocationTrackingStatus } from '../hooks/useLocationTrackingStatus';
 import { Typography } from '@/shared/components/base/Typography';
 import { Card } from '@/shared/components/base/Card';
 import { TableSectionHeader } from '@/shared/components/base/TableSectionHeader';
-import { LocationEmptyState } from './LocationEmptyState';
+import { LocationRequired } from './LocationRequired';
 
 type LocationCardProps = {
   onUpdate?: () => void;
@@ -27,7 +27,7 @@ export const LocationCard = ({ onUpdate }: LocationCardProps) => {
       <TableSectionHeader title="My Location" />
       <Card style={tw`p-4`}>
         {trackingStatus === 'required' ? (
-          <LocationEmptyState onEnableLocation={handleUpdate} />
+          <LocationRequired onUpdate={onUpdate} />
         ) : (
           <View style={tw`flex-row justify-between items-center`}>
             <View style={tw`flex-1`}>

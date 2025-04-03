@@ -7,5 +7,13 @@ import { LocationTrackingStatus } from '../types';
 export const useLocationTrackingStatus = (): LocationTrackingStatus => {
   // TODO: Implement real tracking status logic
   // For now, return a hardcoded value
-  return 'active';
+
+  // Expect it will be something like:
+  // - 'active' if the user has location tracking enabled
+  // - 'not-required' if the user has no followers
+  // - 'required' if the user has followers
+
+  // return 'active';
+  return 'required';
+  // return 'not-required';
 };

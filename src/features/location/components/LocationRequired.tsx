@@ -1,12 +1,15 @@
 import { View, Text, Pressable } from 'react-native';
 import { tw } from '@/shared/utils/tw';
 import { Typography } from '@/shared/components/base/Typography';
+import { useLocationEnabling } from '../hooks/useLocationEnabling';
 
-type LocationEmptyStateProps = {
-  onEnableLocation: () => void;
+type LocationRequiredProps = {
+  onUpdate?: () => void;
 };
 
-export const LocationEmptyState = ({ onEnableLocation }: LocationEmptyStateProps) => {
+export const LocationRequired = ({ onUpdate }: LocationRequiredProps) => {
+  const { enableLocation } = useLocationEnabling(onUpdate);
+
   return (
     <View style={tw`items-center py-2`}>
       <Typography variant="cardSubheader" style={tw`text-center`}>
@@ -16,7 +19,7 @@ export const LocationEmptyState = ({ onEnableLocation }: LocationEmptyStateProps
         Do you want your followers to see your current city, time and weather?
       </Typography>
       <Pressable
-        onPress={onEnableLocation}
+        onPress={enableLocation}
         style={tw`mt-4 bg-blue-500 rounded-lg px-4 py-2`}
         accessibilityRole="button"
         accessibilityLabel="Share my city"
