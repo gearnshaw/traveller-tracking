@@ -13,7 +13,7 @@ export const useLocationTrackingStatus = (): LocationTrackingStatus => {
   // - 'not-required' if the user has no followers
   // - 'required' if the user has followers
 
-  // return 'active';
-  return 'required';
+  return 'active';
+  // return 'required';
   // return 'not-required';
 };

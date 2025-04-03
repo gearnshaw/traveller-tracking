@@ -1,10 +1,11 @@
-import { View, Text, Pressable, ActivityIndicator } from 'react-native';
+import { View, ActivityIndicator } from 'react-native';
 import { tw } from '@/shared/utils/tw';
 import { useLocation } from '../hooks/useLocation';
 import { useLocationTrackingStatus } from '../hooks/useLocationTrackingStatus';
 import { Typography } from '@/shared/components/base/Typography';
 import { Card } from '@/shared/components/base/Card';
 import { TableSectionHeader } from '@/shared/components/base/TableSectionHeader';
+import { Button } from '@/shared/components/base/Button';
 import { LocationRequired } from './LocationRequired';
 
 type LocationCardProps = {
@@ -39,20 +40,15 @@ export const LocationCard = ({ onUpdate }: LocationCardProps) => {
                 Updated just now
               </Typography>
             </View>
-            <Pressable
+            <Button
               onPress={handleUpdate}
               disabled={isLoading}
-              style={tw`bg-blue-500 rounded-lg px-4 py-2`}
-              accessibilityRole="button"
+              style={tw`min-w-[80px]`}
               accessibilityLabel="Update location"
               accessibilityState={{ disabled: isLoading }}
             >
-              {isLoading ? (
-                <ActivityIndicator color="white" size="small" />
-              ) : (
-                <Text style={tw`text-white font-medium`}>Update</Text>
-              )}
-            </Pressable>
+              {isLoading ? <ActivityIndicator color="white" size="small" /> : 'Update'}
+            </Button>
           </View>
         )}
       </Card>
