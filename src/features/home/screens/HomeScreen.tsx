@@ -4,6 +4,7 @@ import FollowersList from '@/features/followers/components/FollowersList';
 import { TravellersList } from '@/features/travellers/components/TravellersList';
 import { useHomeScreen } from './useHomeScreen';
 import { Button } from '@/shared/components/base/Button';
+import { LocationCard } from '@/features/location/components/LocationCard';
 
 export const HomeScreen = () => {
   const { handleLogout } = useHomeScreen();
@@ -15,7 +16,11 @@ export const HomeScreen = () => {
       showsVerticalScrollIndicator={false}
     >
       <View style={tw`mx-4`}>
-        <FollowersList />
+        <LocationCard />
+
+        <View style={tw`mt-8`}>
+          <FollowersList />
+        </View>
 
         <View style={tw`mt-8`}>
           <TravellersList />
