@@ -1,6 +1,7 @@
 import { View, Text, Pressable, ActivityIndicator } from 'react-native';
 import { tw } from '@/shared/utils/tw';
 import { useLocation } from '../hooks/useLocation';
+import { useLocationTrackingStatus } from '../hooks/useLocationTrackingStatus';
 import { Typography } from '@/shared/components/base/Typography';
 import { Card } from '@/shared/components/base/Card';
 import { TableSectionHeader } from '@/shared/components/base/TableSectionHeader';
@@ -11,16 +12,21 @@ type LocationCardProps = {
 };
 
 export const LocationCard = ({ onUpdate }: LocationCardProps) => {
-  const { location, time, temperature, weather, isLoading, isLocationEnabled, handleUpdate } =
-    useLocation({
-      onUpdate
-    });
+  const trackingStatus = useLocationTrackingStatus();
+  const { location, time, temperature, weather, isLoading, handleUpdate } = useLocation({
+    onUpdate
+  });
+
+  // Don't render anything if tracking is not required
+  if (trackingStatus === 'not-required') {
+    return null;
+  }
 
   return (
     <View>
       <TableSectionHeader title="My Location" />
       <Card style={tw`p-4`}>
-        {!isLocationEnabled ? (
+        {trackingStatus === 'required' ? (
           <LocationEmptyState onEnableLocation={handleUpdate} />
         ) : (
           <View style={tw`flex-row justify-between items-center`}>
