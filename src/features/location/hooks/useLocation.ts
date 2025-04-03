@@ -11,7 +11,8 @@ const DUMMY_LOCATION: LocationState = {
   temperature: '23°C',
   weather: 'Sunny',
   isLoading: false,
-  error: null
+  error: null,
+  isLocationEnabled: false
 };
 
 export const useLocation = ({ onUpdate }: UseLocationProps = {}) => {

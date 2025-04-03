@@ -8,4 +8,5 @@ export type LocationInfo = {
 export type LocationState = LocationInfo & {
   isLoading: boolean;
   error: string | null;
+  isLocationEnabled: boolean;
 };
