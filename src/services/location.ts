@@ -16,5 +16,20 @@ export const locationService = {
       console.error('Error requesting location permissions:', error);
       return false;
     }
+  },
+
+  /**
+   * Check if location permissions are enabled
+   * @returns Promise<boolean> - Whether permissions are currently granted
+   */
+  checkPermissions: async (): Promise<boolean> => {
+    try {
+      const { status } = await Location.getBackgroundPermissionsAsync();
+      console.log('Location status:', status);
+      return status === 'granted';
+    } catch (error) {
+      console.error('Error checking location permissions:', error);
+      return false;
+    }
   }
 };
