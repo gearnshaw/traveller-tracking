@@ -49,7 +49,7 @@ src/shared/components/
 import { Pressable, Text } from 'react-native';
 import tw from 'twrnc';
 
-export interface ButtonProps {
+export type ButtonProps = {
   variant?: 'primary' | 'secondary' | 'outline';
   size?: 'sm' | 'md' | 'lg';
   children: React.ReactNode;
@@ -101,7 +101,7 @@ import { View } from 'react-native';
 import { Text, Input } from '../base';
 import tw from 'twrnc';
 
-export interface FormFieldProps {
+export type FormFieldProps = {
   label: string;
   error?: string;
   [key: string]: any; // Additional input props
@@ -145,7 +145,7 @@ import { FormField } from '@/shared/components/common';
 import { Button } from '@/shared/components/base';
 import tw from 'twrnc';
 
-export interface LoginFormProps {
+export type LoginFormProps = {
   onSubmit: (data: { email: string; password: string }) => void;
 }
 
@@ -182,7 +182,7 @@ export const LoginForm = ({ onSubmit }: LoginFormProps) => {
 Example of preferred component export:
 ```typescript
 // src/shared/components/base/Button.tsx
-export interface ButtonProps {
+export type ButtonProps = {
   // ... props definition
 }
 
@@ -222,8 +222,8 @@ import { FormField, Card } from '@/shared/components/common';
    - Platform-specific styles using TWRNC modifiers
 
 3. **Props and Types**
-   - Always define TypeScript interfaces for props
-   - Export interfaces for reuse
+   - Always define TypeScript types for props
+   - Export types for reuse
    - Use sensible defaults for optional props
    - Document complex props with JSDoc comments
 
