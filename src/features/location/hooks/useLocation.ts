@@ -27,12 +27,13 @@ export const useLocation = ({ onUpdate }: UseLocationProps = {}) => {
 
       setLocationState(DUMMY_LOCATION);
       onUpdate?.();
-    } catch (error) {
+    } catch (error: unknown) {
       setLocationState((prev) => ({
         ...prev,
         isLoading: false,
-        error: 'Failed to update location'
+        error: error instanceof Error ? error.message : 'Failed to update location'
       }));
+      throw error; // Re-throw to be handled by the caller
     }
   }, [onUpdate]);
 
