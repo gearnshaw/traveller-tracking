@@ -1,4 +1,5 @@
 import * as Location from 'expo-location';
+import { ReverseGeocodeCity } from '@/features/location/types';
 
 /**
  * Location service for handling location-related operations
@@ -51,6 +52,41 @@ export const locationService = {
       };
     } catch (error) {
       console.error('Error getting current position:', error);
+      return null;
+    }
+  },
+
+  /**
+   * Reverse geocode coordinates to get the city information
+   * @param latitude - The latitude coordinate
+   * @param longitude - The longitude coordinate
+   * @returns Promise<ReverseGeocodeCity | null> - The city information or null if unavailable
+   */
+  getCityFromCoordinates: async (
+    latitude: number,
+    longitude: number
+  ): Promise<ReverseGeocodeCity | null> => {
+    try {
+      const address = await Location.reverseGeocodeAsync({
+        latitude,
+        longitude
+      });
+
+      if (address && address.length > 0) {
+        const result = address[0];
+        if (result.city && result.region && result.isoCountryCode && result.timezone) {
+          return {
+            city: result.city,
+            region: result.region,
+            isoCountryCode: result.isoCountryCode,
+            timezone: result.timezone
+          };
+        }
+      }
+
+      return null;
+    } catch (error) {
+      console.error('Error reverse geocoding location:', error);
       return null;
     }
   }

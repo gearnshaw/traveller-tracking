@@ -5,9 +5,15 @@ export type LocationInfo = {
   weather: string;
 };
 
-export type Location = {
+export type ReverseGeocodeCity = {
+  city: string;
+  isoCountryCode: string;
+  region: string | null;
+  timezone: string;
+};
+
+export type Location = ReverseGeocodeCity & {
   id: string;
-  description: string;
   dtCreated: Date;
 };
 

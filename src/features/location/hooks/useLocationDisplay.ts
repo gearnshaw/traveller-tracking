@@ -3,9 +3,12 @@ import { LocationInfo, Location } from '../types';
 import { useCurrentUser } from '@/features/auth/hooks/useCurrentUser';
 import { locationApi } from '../api';
 
-const DUMMY_LOCATION: LocationInfo = {
+const DUMMY_LOCATION = {
   location: 'Unknown 🤔',
-  time: '3:45 PM',
+  time: '3:45 PM'
+};
+
+const weatherInfo = {
   temperature: '23°C',
   weather: 'Sunny'
 };
@@ -15,7 +18,11 @@ type UseLocationDisplayProps = {
 };
 
 export const useLocationDisplay = ({ onLocationChange }: UseLocationDisplayProps = {}) => {
-  const [locationState, setLocationState] = useState<LocationInfo>(DUMMY_LOCATION);
+  const [locationState, setLocationState] = useState<LocationInfo>({
+    location: 'Unknown',
+    time: '3:45 PM',
+    ...weatherInfo
+  });
   const userId = useCurrentUser()?.userUid;
 
   useEffect(() => {
@@ -27,7 +34,8 @@ export const useLocationDisplay = ({ onLocationChange }: UseLocationDisplayProps
       if (location) {
         setLocationState({
           ...DUMMY_LOCATION,
-          location: location.description
+          location: location.city + ', ' + location.isoCountryCode,
+          ...weatherInfo
         });
         onLocationChange?.(location);
       }

@@ -27,7 +27,10 @@ jest.mock('@/services/firebase', () => ({
 describe('locationApi', () => {
   const mockUserId = 'test-user-123';
   const mockLocation: Omit<Location, 'id'> = {
-    description: '37.7749, -122.4194',
+    city: 'San Francisco',
+    isoCountryCode: 'US',
+    region: 'California',
+    timezone: 'America/Los_Angeles',
     dtCreated: new Date('2024-01-01T00:00:00.000Z')
   };
 
@@ -113,7 +116,10 @@ describe('locationApi', () => {
       const onLocationUpdate = jest.fn();
       const mockDate = new Date('2024-01-01T00:00:00.000Z');
       const mockLocationData = {
-        description: '37.7749, -122.4194',
+        city: 'San Francisco',
+        isoCountryCode: 'US',
+        region: 'California',
+        timezone: 'America/Los_Angeles',
         dtCreated: mockDate
       };
 

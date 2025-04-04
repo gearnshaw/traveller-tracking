@@ -17,6 +17,7 @@ src/
       components/     # Feature-specific UI components
       hooks/         # Feature-specific hooks
       screens/      # Feature-owned screen, if it only uses this feature
+      actions.ts    # Business operations that coordinate different parts of the application
       api.ts         # API calls for this feature
       types.ts       # TypeScript types for this feature
       utils.ts       # Feature-specific utilities
@@ -290,7 +291,6 @@ New code should be testable and tested.
 2. Include necessary subdirectories (components, hooks, etc.)
 3. Create `types.ts` for feature-specific types
 4. Create `api.ts` for API calls
-5. Export public API through `index.ts`
 
 ## Shared Code Guidelines
 
