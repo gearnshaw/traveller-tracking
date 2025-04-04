@@ -74,7 +74,7 @@ export const locationService = {
 
       if (address && address.length > 0) {
         const result = address[0];
-        if (result.city && result.region && result.isoCountryCode) {
+        if (result.city && result.isoCountryCode && result.timezone) {
           return {
             city: result.city,
             region: result.region,
