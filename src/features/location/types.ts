@@ -5,6 +5,12 @@ export type LocationInfo = {
   weather: string;
 };
 
+export type Location = {
+  id: string;
+  description: string;
+  dtLastUpdated: Date;
+};
+
 export type LocationState = LocationInfo & {
   isLoading: boolean;
   error: string | null;

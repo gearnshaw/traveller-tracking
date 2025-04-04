@@ -1,6 +1,8 @@
 import { useState, useCallback } from 'react';
 import { LocationState } from '../types';
 import { locationService } from '@/services/location';
+import { savePositionAsLocation } from '../operations';
+import { useCurrentUser } from '@/features/auth/hooks/useCurrentUser';
 
 type UseLocationProps = {
   onUpdate?: () => void;
@@ -17,22 +19,30 @@ const DUMMY_LOCATION: LocationState = {
 
 export const useLocation = ({ onUpdate }: UseLocationProps = {}) => {
   const [locationState, setLocationState] = useState<LocationState>(DUMMY_LOCATION);
+  const userId = useCurrentUser()?.userUid;
 
   const handleUpdate = useCallback(async () => {
+    if (!userId) {
+      setLocationState((prev) => ({
+        ...prev,
+        error: 'User not authenticated'
+      }));
+      return;
+    }
+
     try {
       setLocationState((prev) => ({ ...prev, isLoading: true, error: null }));
 
       const position = await locationService.getCurrentPosition();
-
       if (!position) {
         throw new Error('Failed to get current position');
       }
 
-      const formattedLocation = `${position.latitude.toFixed(3)}, ${position.longitude.toFixed(3)}`;
+      const savedLocation = await savePositionAsLocation(position, userId);
 
       setLocationState({
         ...DUMMY_LOCATION,
-        location: formattedLocation,
+        location: savedLocation.description,
         isLoading: false
       });
 
@@ -45,7 +55,7 @@ export const useLocation = ({ onUpdate }: UseLocationProps = {}) => {
       }));
       throw error; // Re-throw to be handled by the caller
     }
-  }, [onUpdate]);
+  }, [onUpdate, userId]);
 
   return {
     ...locationState,
