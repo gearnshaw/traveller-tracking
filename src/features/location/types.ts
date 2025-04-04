@@ -8,7 +8,7 @@ export type LocationInfo = {
 export type Location = {
   id: string;
   description: string;
-  dtLastUpdated: Date;
+  dtCreated: Date;
 };
 
 export type LocationState = LocationInfo & {

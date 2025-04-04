@@ -25,7 +25,7 @@ describe('savePositionAsLocation', () => {
     };
     const expectedLocation: Omit<Location, 'id'> = {
       description: '51.507, -0.128',
-      dtLastUpdated: expect.any(Date)
+      dtCreated: expect.any(Date)
     };
     const mockSavedLocation = { id: mockId, ...expectedLocation };
 
@@ -39,7 +39,7 @@ describe('savePositionAsLocation', () => {
       userId,
       expect.objectContaining({
         description: expectedLocation.description,
-        dtLastUpdated: expect.any(Date)
+        dtCreated: expect.any(Date)
       })
     );
     expect(result).toEqual(mockSavedLocation);
@@ -53,7 +53,7 @@ describe('savePositionAsLocation', () => {
     };
     const expectedLocation: Omit<Location, 'id'> = {
       description: '12.346, 98.765',
-      dtLastUpdated: expect.any(Date)
+      dtCreated: expect.any(Date)
     };
     const mockSavedLocation = { id: mockId, ...expectedLocation };
 
@@ -67,7 +67,7 @@ describe('savePositionAsLocation', () => {
       userId,
       expect.objectContaining({
         description: expectedLocation.description,
-        dtLastUpdated: expect.any(Date)
+        dtCreated: expect.any(Date)
       })
     );
     expect(result).toEqual(mockSavedLocation);

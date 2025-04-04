@@ -17,7 +17,7 @@ describe('locationApi', () => {
   const mockUserId = 'test-user-123';
   const mockLocation: Omit<Location, 'id'> = {
     description: '37.7749, -122.4194',
-    dtLastUpdated: new Date('2024-01-01T00:00:00.000Z')
+    dtCreated: new Date('2024-01-01T00:00:00.000Z')
   };
 
   beforeEach(() => {
