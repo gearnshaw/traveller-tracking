@@ -11,9 +11,4 @@ export type Location = {
   dtCreated: Date;
 };
 
-export type LocationState = LocationInfo & {
-  isLoading: boolean;
-  error: string | null;
-};
-
 export type LocationTrackingStatus = 'active' | 'required' | 'not-required';

@@ -1,6 +1,7 @@
 import { View, ActivityIndicator } from 'react-native';
 import { tw } from '@/shared/utils/tw';
-import { useLocation } from '../hooks/useLocation';
+import { useLocationDisplay } from '../hooks/useLocationDisplay';
+import { useLocationUpdater } from '../hooks/useLocationUpdater';
 import { useLocationTrackingStatus } from '../hooks/useLocationTrackingStatus';
 import { Typography } from '@/shared/components/base/Typography';
 import { Card } from '@/shared/components/base/Card';
@@ -14,9 +15,8 @@ type LocationCardProps = {
 
 export const LocationCard = ({ onUpdate }: LocationCardProps) => {
   const trackingStatus = useLocationTrackingStatus();
-  const { location, time, temperature, weather, isLoading, handleUpdate } = useLocation({
-    onUpdate
-  });
+  const { location, time, temperature, weather } = useLocationDisplay();
+  const { isLoading, handleUpdate } = useLocationUpdater({ onUpdate });
 
   // Don't render anything if tracking is not required
   if (trackingStatus === 'not-required') {
