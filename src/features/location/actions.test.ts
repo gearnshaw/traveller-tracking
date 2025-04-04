@@ -1,5 +1,5 @@
 import { locationApi } from './api';
-import { savePositionAsLocation } from './operations';
+import { savePositionAsLocation } from './actions';
 import { Location } from './types';
 
 // Mock the locationApi

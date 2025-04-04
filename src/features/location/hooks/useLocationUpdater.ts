@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import { locationService } from '@/services/location';
-import { savePositionAsLocation } from '../operations';
+import { savePositionAsLocation } from '../actions';
 import { useCurrentUser } from '@/features/auth/hooks/useCurrentUser';
 
 type UseLocationUpdaterProps = {
