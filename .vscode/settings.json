@@ -5,5 +5,5 @@
     "source.fixAll.eslint": "explicit"
   },
   "cSpell.language": "en-gb",
-  "cSpell.words": ["twrnc", "Earnshaw", "pressable"]
+  "cSpell.words": ["twrnc", "Earnshaw", "pressable", "firestore"]
 }

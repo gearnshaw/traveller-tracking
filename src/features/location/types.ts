@@ -8,12 +8,7 @@ export type LocationInfo = {
 export type Location = {
   id: string;
   description: string;
-  dtLastUpdated: Date;
-};
-
-export type LocationState = LocationInfo & {
-  isLoading: boolean;
-  error: string | null;
+  dtCreated: Date;
 };
 
 export type LocationTrackingStatus = 'active' | 'required' | 'not-required';

@@ -14,7 +14,7 @@ export const savePositionAsLocation = async (
 ): Promise<Location> => {
   const location: Omit<Location, 'id'> = {
     description: `${position.latitude.toFixed(3)}, ${position.longitude.toFixed(3)}`,
-    dtLastUpdated: new Date()
+    dtCreated: new Date()
   };
 
   return locationApi.saveLocation(userId, location);

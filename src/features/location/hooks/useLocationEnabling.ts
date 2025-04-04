@@ -1,9 +1,9 @@
 import { useCallback } from 'react';
-import { useLocation } from './useLocation';
+import { useLocationUpdater } from './useLocationUpdater';
 import { locationService } from '@/services/location';
 
 export const useLocationEnabling = (onUpdate?: () => void) => {
-  const { handleUpdate } = useLocation({ onUpdate });
+  const { handleUpdate } = useLocationUpdater({ onUpdate });
 
   const enableLocation = useCallback(async () => {
     try {
