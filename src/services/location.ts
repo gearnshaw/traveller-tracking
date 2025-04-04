@@ -31,5 +31,27 @@ export const locationService = {
       console.error('Error checking location permissions:', error);
       return false;
     }
+  },
+
+  /**
+   * Get the current position of the device
+   * @returns Promise<{ latitude: number; longitude: number } | null> - The current coordinates or null if unavailable
+   */
+  getCurrentPosition: async (): Promise<{ latitude: number; longitude: number } | null> => {
+    try {
+      const location = await Location.getCurrentPositionAsync({
+        accuracy: Location.Accuracy.Lowest
+      });
+
+      console.log(`👾👾👾👾 ${JSON.stringify(location)}`); // TODO: GLE remove
+
+      return {
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude
+      };
+    } catch (error) {
+      console.error('Error getting current position:', error);
+      return null;
+    }
   }
 };
