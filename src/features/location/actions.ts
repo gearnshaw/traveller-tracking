@@ -1,3 +1,4 @@
+import { locationService } from '@/services/location';
 import { locationApi } from './api';
 import { Location } from './types';
 
@@ -12,9 +13,16 @@ export const savePositionAsLocation = async (
   },
   userId: string
 ): Promise<Location> => {
+  const cityInfo = await locationService.getCityFromCoordinates(
+    position.latitude,
+    position.longitude
+  );
+
   const location: Omit<Location, 'id'> = {
-    description: `${position.latitude.toFixed(3)}, ${position.longitude.toFixed(3)}`,
-    dtCreated: new Date()
+    dtCreated: new Date(),
+    city: cityInfo?.city ?? 'Unknown City',
+    region: cityInfo?.region ?? 'Unknown Region',
+    isoCountryCode: cityInfo?.isoCountryCode ?? 'Unknown'
   };
 
   return locationApi.saveLocation(userId, location);
