@@ -1,4 +1,4 @@
-import { View, Text } from 'react-native';
+import { View } from 'react-native';
 import { tw } from '@/shared/utils/tw';
 import { Typography } from '@/shared/components/base/Typography';
 import { Button } from '@/shared/components/base/Button';
