@@ -7,10 +7,7 @@ const getLocationsPath = (userId: string) => `users/${userId}/locations`;
 export const locationApi = {
   saveLocation: async (userId: string, location: Omit<Location, 'id'>): Promise<Location> => {
     const locationsRef = collection(db, getLocationsPath(userId));
-    const docRef = await addDoc(locationsRef, {
-      ...location,
-      dtLastUpdated: new Date()
-    });
+    const docRef = await addDoc(locationsRef, location);
 
     return {
       id: docRef.id,
