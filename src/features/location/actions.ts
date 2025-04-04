@@ -22,7 +22,8 @@ export const savePositionAsLocation = async (
     dtCreated: new Date(),
     city: cityInfo?.city ?? 'Unknown City',
     region: cityInfo?.region ?? 'Unknown Region',
-    isoCountryCode: cityInfo?.isoCountryCode ?? 'Unknown'
+    isoCountryCode: cityInfo?.isoCountryCode ?? 'Unknown',
+    timezone: cityInfo?.timezone ?? 'Unknown'
   };
 
   return locationApi.saveLocation(userId, location);

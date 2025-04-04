@@ -9,6 +9,7 @@ export type ReverseGeocodeCity = {
   city: string;
   isoCountryCode: string;
   region: string | null;
+  timezone: string;
 };
 
 export type Location = ReverseGeocodeCity & {

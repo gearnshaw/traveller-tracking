@@ -78,7 +78,8 @@ export const locationService = {
           return {
             city: result.city,
             region: result.region,
-            isoCountryCode: result.isoCountryCode
+            isoCountryCode: result.isoCountryCode,
+            timezone: result.timezone
           };
         }
       }
