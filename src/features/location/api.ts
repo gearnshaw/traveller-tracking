@@ -8,7 +8,7 @@ import {
 } from '@react-native-firebase/firestore';
 import { db } from '@/services/firebase';
 import { Location } from './types';
-
+import { mapLocation, RawLocation } from './utils';
 const getLocationsPath = (userId: string) => `users/${userId}/locations`;
 
 export const locationApi = {
@@ -36,10 +36,7 @@ export const locationApi = {
       }
 
       const doc = snapshot.docs[0];
-      onLocationUpdate({
-        id: doc.id,
-        ...(doc.data() as Omit<Location, 'id'>)
-      });
+      onLocationUpdate(mapLocation(doc.id, doc.data() as RawLocation));
     });
   }
 };
