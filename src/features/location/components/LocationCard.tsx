@@ -8,6 +8,7 @@ import { Card } from '@/shared/components/base/Card';
 import { TableSectionHeader } from '@/shared/components/base/TableSectionHeader';
 import { Button } from '@/shared/components/base/Button';
 import { LocationRequired } from './LocationRequired';
+import { useRelativeTime } from '@/shared/hooks/useRelativeTime';
 
 type LocationCardProps = {
   onUpdate?: () => void;
@@ -15,8 +16,9 @@ type LocationCardProps = {
 
 export const LocationCard = ({ onUpdate }: LocationCardProps) => {
   const trackingStatus = useLocationTrackingStatus();
-  const { location, time, temperature, weather } = useLocationDisplay();
+  const { location, time, temperature, weather, timestamp } = useLocationDisplay();
   const { isLoading, handleUpdate } = useLocationUpdater({ onUpdate });
+  const relativeTime = useRelativeTime(timestamp);
 
   // Don't render anything if tracking is not required
   if (trackingStatus === 'not-required') {
@@ -37,7 +39,7 @@ export const LocationCard = ({ onUpdate }: LocationCardProps) => {
                 {time} • {temperature}, {weather}
               </Typography>
               <Typography variant="secondary" style={tw`mt-2 text-gray-500`}>
-                Updated just now
+                Updated {relativeTime}
               </Typography>
             </View>
             <Button
