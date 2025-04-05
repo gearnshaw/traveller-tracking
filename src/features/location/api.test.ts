@@ -17,7 +17,15 @@ jest.mock('@react-native-firebase/firestore', () => ({
   onSnapshot: jest.fn(),
   query: jest.fn(),
   orderBy: jest.fn(),
-  limit: jest.fn()
+  limit: jest.fn(),
+  Timestamp: {
+    fromDate: jest.fn().mockImplementation((date) => ({
+      toDate: () => date,
+      toMillis: () => date.getTime(),
+      seconds: Math.floor(date.getTime() / 1000),
+      nanoseconds: (date.getTime() % 1000) * 1000000
+    }))
+  }
 }));
 
 jest.mock('@/services/firebase', () => ({
@@ -26,12 +34,13 @@ jest.mock('@/services/firebase', () => ({
 
 describe('locationApi', () => {
   const mockUserId = 'test-user-123';
+  const mockDate = new Date('2024-01-01T00:00:00.000Z');
   const mockLocation: Omit<Location, 'id'> = {
     city: 'San Francisco',
     isoCountryCode: 'US',
     region: 'California',
     timezone: 'America/Los_Angeles',
-    dtCreated: new Date('2024-01-01T00:00:00.000Z')
+    dtCreated: mockDate
   };
 
   beforeEach(() => {
@@ -114,13 +123,17 @@ describe('locationApi', () => {
 
     it('should handle snapshot with location data', () => {
       const onLocationUpdate = jest.fn();
-      const mockDate = new Date('2024-01-01T00:00:00.000Z');
       const mockLocationData = {
         city: 'San Francisco',
         isoCountryCode: 'US',
         region: 'California',
         timezone: 'America/Los_Angeles',
-        dtCreated: mockDate
+        dtCreated: {
+          toDate: () => mockDate,
+          toMillis: () => mockDate.getTime(),
+          seconds: Math.floor(mockDate.getTime() / 1000),
+          nanoseconds: (mockDate.getTime() % 1000) * 1000000
+        }
       };
 
       locationApi.observeLatestLocation(mockUserId, onLocationUpdate);
@@ -139,7 +152,11 @@ describe('locationApi', () => {
 
       expect(onLocationUpdate).toHaveBeenCalledWith({
         id: 'test-doc-123',
-        ...mockLocationData
+        city: 'San Francisco',
+        isoCountryCode: 'US',
+        region: 'California',
+        timezone: 'America/Los_Angeles',
+        dtCreated: mockDate
       });
     });
 
