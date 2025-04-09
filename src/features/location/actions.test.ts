@@ -106,7 +106,6 @@ describe('savePositionAsLocation', () => {
   });
 
   const userId = 'test-user-id';
-  const mockId = 'test-id';
 
   const position = {
     latitude: 51.5074,

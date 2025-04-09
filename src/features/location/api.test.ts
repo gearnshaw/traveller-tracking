@@ -106,7 +106,6 @@ describe('locationApi', () => {
     it('should update location and return the updated location', async () => {
       const mockUpdate = jest.fn().mockResolvedValue(undefined);
       const mockDoc = jest.fn().mockReturnValue({ update: mockUpdate });
-      const mockCollection = jest.fn().mockReturnValue({ doc: mockDoc });
 
       // Mock the db.collection chain
       (db.collection as jest.Mock).mockImplementation((path) => {
@@ -124,8 +123,9 @@ describe('locationApi', () => {
       // Verify document reference is created with correct ID
       expect(mockDoc).toHaveBeenCalledWith(mockLocation.id);
 
-      // Verify document is updated with correct data
-      expect(mockUpdate).toHaveBeenCalledWith(mockLocation);
+      // Verify document is updated with correct data (excluding id)
+      const { id, ...locationWithoutId } = mockLocation;
+      expect(mockUpdate).toHaveBeenCalledWith(locationWithoutId);
 
       // Verify returned data structure
       expect(result).toEqual(mockLocation);
