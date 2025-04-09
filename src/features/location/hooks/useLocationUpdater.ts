@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import { locationService } from '@/services/location';
-import { savePositionAsLocation } from '../actions';
+import { saveOrUpdateLocation } from '../actions';
 import { useCurrentUser } from '@/features/auth/hooks/useCurrentUser';
 
 type UseLocationUpdaterProps = {
@@ -27,7 +27,7 @@ export const useLocationUpdater = ({ onUpdate }: UseLocationUpdaterProps = {}) =
         throw new Error('Failed to get current position');
       }
 
-      await savePositionAsLocation(position, userId);
+      await saveOrUpdateLocation(position, userId);
       onUpdate?.();
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : 'Failed to update location';
