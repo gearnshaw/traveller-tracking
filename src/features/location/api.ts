@@ -29,6 +29,17 @@ export const locationApi = {
     };
   },
 
+  updateLocation: async (userId: string, location: Location): Promise<Location> => {
+    const locationPath = getLocationsPath(userId);
+    try {
+      await db.collection(locationPath).doc(location.id).update(location);
+      return location;
+    } catch (error) {
+      console.error(`Error updating location: ${error}`); // TODO: GLE remove
+      throw error;
+    }
+  },
+
   observeLatestLocation: (
     userId: string,
     onLocationUpdate: (location: Location | null) => void
@@ -54,6 +65,7 @@ export const locationApi = {
       return null;
     }
 
-    return snapshot.docs[0].data() as Location;
+    const firstDoc = snapshot.docs[0];
+    return mapLocation(firstDoc.id, firstDoc.data() as RawLocation);
   }
 };

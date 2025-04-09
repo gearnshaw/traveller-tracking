@@ -44,8 +44,6 @@ export const locationService = {
         accuracy: Location.Accuracy.Lowest
       });
 
-      console.log(`👾👾👾👾 ${JSON.stringify(location)}`); // TODO: GLE remove
-
       return {
         latitude: location.coords.latitude,
         longitude: location.coords.longitude
