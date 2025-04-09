@@ -3,6 +3,10 @@ import { saveOrUpdateLocation } from './actions';
 import { Location, ReverseGeocodeCity } from './types';
 import { locationService } from '@/services/location';
 
+// Mock Date to return a consistent timestamp
+const mockDate = new Date('2024-01-01T00:00:00.000Z');
+jest.spyOn(global, 'Date').mockImplementation(() => mockDate);
+
 class CityInfoBuilder {
   private city = 'London';
   private region = 'England';
@@ -26,8 +30,8 @@ class CityInfoBuilder {
 
 class LocationBuilder {
   private id: string = 'test-id';
-  private dtCreated = new Date();
-  private dtLastUpdated = new Date();
+  private dtCreated = mockDate;
+  private dtLastUpdated = mockDate;
   private city = 'London';
   private region = 'England';
   private isoCountryCode = 'GB';
