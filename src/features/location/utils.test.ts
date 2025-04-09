@@ -22,7 +22,8 @@ describe('mapLocation', () => {
       isoCountryCode: 'US',
       region: 'California',
       timezone: 'America/Los_Angeles',
-      dtCreated: mockTimestamp
+      dtCreated: mockTimestamp,
+      dtLastUpdated: mockTimestamp
     };
 
     // Act
@@ -35,7 +36,8 @@ describe('mapLocation', () => {
       isoCountryCode: 'US',
       region: 'California',
       timezone: 'America/Los_Angeles',
-      dtCreated: mockTimestamp.toDate()
+      dtCreated: mockTimestamp.toDate(),
+      dtLastUpdated: mockTimestamp.toDate()
     });
   });
 
@@ -46,7 +48,8 @@ describe('mapLocation', () => {
       isoCountryCode: 'US',
       region: null,
       timezone: 'America/Los_Angeles',
-      dtCreated: mockTimestamp
+      dtCreated: mockTimestamp,
+      dtLastUpdated: mockTimestamp
     };
 
     // Act
@@ -59,7 +62,8 @@ describe('mapLocation', () => {
       isoCountryCode: 'US',
       region: null,
       timezone: 'America/Los_Angeles',
-      dtCreated: mockTimestamp.toDate()
+      dtCreated: mockTimestamp.toDate(),
+      dtLastUpdated: mockTimestamp.toDate()
     });
   });
 
@@ -70,7 +74,8 @@ describe('mapLocation', () => {
       isoCountryCode: '',
       region: '',
       timezone: '',
-      dtCreated: mockTimestamp
+      dtCreated: mockTimestamp,
+      dtLastUpdated: mockTimestamp
     };
 
     // Act
@@ -83,7 +88,8 @@ describe('mapLocation', () => {
       isoCountryCode: '',
       region: '',
       timezone: '',
-      dtCreated: mockTimestamp.toDate()
+      dtCreated: mockTimestamp.toDate(),
+      dtLastUpdated: mockTimestamp.toDate()
     });
   });
 });

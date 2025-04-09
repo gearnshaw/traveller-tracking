@@ -184,7 +184,12 @@ describe('locationApi', () => {
           seconds: Math.floor(mockDate.getTime() / 1000),
           nanoseconds: (mockDate.getTime() % 1000) * 1000000
         },
-        dtLastUpdated: mockDate
+        dtLastUpdated: {
+          toDate: () => mockDate,
+          toMillis: () => mockDate.getTime(),
+          seconds: Math.floor(mockDate.getTime() / 1000),
+          nanoseconds: (mockDate.getTime() % 1000) * 1000000
+        }
       };
 
       const mockSnapshot = {
@@ -278,6 +283,12 @@ describe('locationApi', () => {
           toMillis: () => mockDate.getTime(),
           seconds: Math.floor(mockDate.getTime() / 1000),
           nanoseconds: (mockDate.getTime() % 1000) * 1000000
+        },
+        dtLastUpdated: {
+          toDate: () => mockDate,
+          toMillis: () => mockDate.getTime(),
+          seconds: Math.floor(mockDate.getTime() / 1000),
+          nanoseconds: (mockDate.getTime() % 1000) * 1000000
         }
       };
 
@@ -301,7 +312,8 @@ describe('locationApi', () => {
         isoCountryCode: 'US',
         region: 'California',
         timezone: 'America/Los_Angeles',
-        dtCreated: mockDate
+        dtCreated: mockDate,
+        dtLastUpdated: mockDate
       });
     });
 

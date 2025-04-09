@@ -25,8 +25,9 @@ export const locationService = {
    */
   checkPermissions: async (): Promise<boolean> => {
     try {
-      const { status } = await Location.getBackgroundPermissionsAsync();
-      console.log('Location status:', status);
+      const result = await Location.getBackgroundPermissionsAsync();
+      console.log(`👾👾👾👾 ${JSON.stringify(result)}`); // TODO: GLE remove
+      const { status } = result;
       return status === 'granted';
     } catch (error) {
       console.error('Error checking location permissions:', error);
