@@ -1,8 +1,9 @@
 /**
  * Formats a date into a simple relative time string (e.g. "2 hours ago", "just now", etc.)
+ * @param date The date to format
+ * @param now Optional reference time (defaults to current time)
  */
-export const formatRelativeTime = (date: Date | number): string => {
-  const now = Date.now();
+export const formatRelativeTime = (date: Date | number, now: number = Date.now()): string => {
   const timestamp = date instanceof Date ? date.getTime() : date;
   const seconds = Math.floor((now - timestamp) / 1000);
 
