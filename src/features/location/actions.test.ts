@@ -88,9 +88,17 @@ jest.mock('./api', () => ({
 
 jest.mock('@/services/location', () => ({
   locationService: {
-    getCityFromCoordinates: jest.fn()
+    getCityFromCoordinates: jest.fn(),
+    requestPermissions: jest.fn()
   }
 }));
+
+// Reset all mocks before each test
+beforeEach(() => {
+  jest.clearAllMocks();
+  // Reset the Date mock
+  jest.spyOn(global, 'Date').mockImplementation(() => mockDate);
+});
 
 describe('savePositionAsLocation', () => {
   beforeEach(() => {

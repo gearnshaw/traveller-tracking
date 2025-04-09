@@ -31,7 +31,13 @@ jest.mock('@react-native-firebase/firestore', () => ({
 }));
 
 jest.mock('@/services/firebase', () => ({
-  db: {}
+  db: {
+    collection: jest.fn().mockReturnValue({
+      doc: jest.fn().mockReturnValue({
+        update: jest.fn()
+      })
+    })
+  }
 }));
 
 describe('locationApi', () => {
@@ -82,6 +88,68 @@ describe('locationApi', () => {
     });
   });
 
+  describe('updateLocation', () => {
+    const mockLocation: Location = {
+      id: 'test-doc-123',
+      city: 'San Francisco',
+      isoCountryCode: 'US',
+      region: 'California',
+      timezone: 'America/Los_Angeles',
+      dtCreated: mockDate,
+      dtLastUpdated: mockDate
+    };
+
+    beforeEach(() => {
+      jest.clearAllMocks();
+    });
+
+    it('should update location and return the updated location', async () => {
+      const mockUpdate = jest.fn().mockResolvedValue(undefined);
+      const mockDoc = jest.fn().mockReturnValue({ update: mockUpdate });
+      const mockCollection = jest.fn().mockReturnValue({ doc: mockDoc });
+
+      // Mock the db.collection chain
+      (db.collection as jest.Mock).mockImplementation((path) => {
+        if (path === `users/${mockUserId}/locations`) {
+          return { doc: mockDoc };
+        }
+        throw new Error('Unexpected collection path');
+      });
+
+      const result = await locationApi.updateLocation(mockUserId, mockLocation);
+
+      // Verify collection path is correct
+      expect(db.collection).toHaveBeenCalledWith(`users/${mockUserId}/locations`);
+
+      // Verify document reference is created with correct ID
+      expect(mockDoc).toHaveBeenCalledWith(mockLocation.id);
+
+      // Verify document is updated with correct data
+      expect(mockUpdate).toHaveBeenCalledWith(mockLocation);
+
+      // Verify returned data structure
+      expect(result).toEqual(mockLocation);
+    });
+
+    it('should throw error when Firestore operation fails', async () => {
+      const mockError = new Error('Firestore error');
+      const mockUpdate = jest.fn().mockRejectedValue(mockError);
+      const mockDoc = jest.fn().mockReturnValue({ update: mockUpdate });
+
+      // Mock the db.collection chain
+      (db.collection as jest.Mock).mockImplementation((path) => {
+        if (path === `users/${mockUserId}/locations`) {
+          return { doc: mockDoc };
+        }
+        throw new Error('Unexpected collection path');
+      });
+
+      await expect(locationApi.updateLocation(mockUserId, mockLocation)).rejects.toThrow(
+        'Firestore error'
+      );
+    });
+  });
+
   describe('getLatestLocation', () => {
     beforeEach(() => {
       jest.clearAllMocks();
@@ -110,7 +178,12 @@ describe('locationApi', () => {
         isoCountryCode: 'US',
         region: 'California',
         timezone: 'America/Los_Angeles',
-        dtCreated: mockDate,
+        dtCreated: {
+          toDate: () => mockDate,
+          toMillis: () => mockDate.getTime(),
+          seconds: Math.floor(mockDate.getTime() / 1000),
+          nanoseconds: (mockDate.getTime() % 1000) * 1000000
+        },
         dtLastUpdated: mockDate
       };
 
@@ -132,7 +205,15 @@ describe('locationApi', () => {
       expect(limit).toHaveBeenCalledWith(1);
       expect(query).toHaveBeenCalled();
       expect(getDocs).toHaveBeenCalledWith('query-ref');
-      expect(result).toEqual(mockLocationData);
+      expect(result).toEqual({
+        id: 'test-doc-123',
+        city: 'San Francisco',
+        isoCountryCode: 'US',
+        region: 'California',
+        timezone: 'America/Los_Angeles',
+        dtCreated: mockDate,
+        dtLastUpdated: mockDate
+      });
     });
 
     it('should throw error when Firestore operation fails', async () => {
