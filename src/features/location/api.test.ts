@@ -4,7 +4,8 @@ import {
   onSnapshot,
   query,
   orderBy,
-  limit
+  limit,
+  getDocs
 } from '@react-native-firebase/firestore';
 import { locationApi } from './api';
 import { db } from '@/services/firebase';
@@ -18,6 +19,7 @@ jest.mock('@react-native-firebase/firestore', () => ({
   query: jest.fn(),
   orderBy: jest.fn(),
   limit: jest.fn(),
+  getDocs: jest.fn(),
   Timestamp: {
     fromDate: jest.fn().mockImplementation((date) => ({
       toDate: () => date,
@@ -77,6 +79,67 @@ describe('locationApi', () => {
       await expect(locationApi.saveLocation(mockUserId, mockLocation)).rejects.toThrow(
         'Firestore error'
       );
+    });
+  });
+
+  describe('getLatestLocation', () => {
+    beforeEach(() => {
+      jest.clearAllMocks();
+      (query as jest.Mock).mockReturnValue('query-ref');
+      (orderBy as jest.Mock).mockReturnValue('order-ref');
+      (limit as jest.Mock).mockReturnValue('limit-ref');
+    });
+
+    it('should return null when no location exists', async () => {
+      const mockSnapshot = { empty: true, docs: [] };
+      (getDocs as jest.Mock).mockResolvedValue(mockSnapshot);
+
+      const result = await locationApi.getLatestLocation(mockUserId);
+
+      expect(collection).toHaveBeenCalledWith(db, `users/${mockUserId}/locations`);
+      expect(orderBy).toHaveBeenCalledWith('dtLastUpdated', 'desc');
+      expect(limit).toHaveBeenCalledWith(1);
+      expect(query).toHaveBeenCalled();
+      expect(getDocs).toHaveBeenCalledWith('query-ref');
+      expect(result).toBeNull();
+    });
+
+    it('should return the latest location when it exists', async () => {
+      const mockLocationData = {
+        city: 'San Francisco',
+        isoCountryCode: 'US',
+        region: 'California',
+        timezone: 'America/Los_Angeles',
+        dtCreated: mockDate,
+        dtLastUpdated: mockDate
+      };
+
+      const mockSnapshot = {
+        empty: false,
+        docs: [
+          {
+            id: 'test-doc-123',
+            data: () => mockLocationData
+          }
+        ]
+      };
+      (getDocs as jest.Mock).mockResolvedValue(mockSnapshot);
+
+      const result = await locationApi.getLatestLocation(mockUserId);
+
+      expect(collection).toHaveBeenCalledWith(db, `users/${mockUserId}/locations`);
+      expect(orderBy).toHaveBeenCalledWith('dtLastUpdated', 'desc');
+      expect(limit).toHaveBeenCalledWith(1);
+      expect(query).toHaveBeenCalled();
+      expect(getDocs).toHaveBeenCalledWith('query-ref');
+      expect(result).toEqual(mockLocationData);
+    });
+
+    it('should throw error when Firestore operation fails', async () => {
+      const mockError = new Error('Firestore error');
+      (getDocs as jest.Mock).mockRejectedValue(mockError);
+
+      await expect(locationApi.getLatestLocation(mockUserId)).rejects.toThrow('Firestore error');
     });
   });
 
