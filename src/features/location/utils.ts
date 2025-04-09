@@ -1,8 +1,9 @@
 import { Location } from './types';
 import { Timestamp } from '@react-native-firebase/firestore';
 
-export type RawLocation = Omit<Location, 'id' | 'dtCreated'> & {
+export type RawLocation = Omit<Location, 'id' | 'dtCreated' | 'dtLastUpdated'> & {
   dtCreated: Timestamp;
+  dtLastUpdated: Timestamp;
 };
 
 /**
@@ -15,6 +16,7 @@ export const mapLocation = (id: string, data: RawLocation): Location => {
   return {
     id,
     ...data,
-    dtCreated: data.dtCreated.toDate()
+    dtCreated: data.dtCreated.toDate(),
+    dtLastUpdated: data.dtLastUpdated.toDate()
   };
 };

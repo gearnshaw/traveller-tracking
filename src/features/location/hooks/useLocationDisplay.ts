@@ -37,7 +37,7 @@ export const useLocationDisplay = ({ onLocationChange }: UseLocationDisplayProps
         setLocationState({
           ...DUMMY_LOCATION,
           location: location.city + ', ' + location.isoCountryCode,
-          timestamp: location.dtCreated.getTime(),
+          timestamp: location.dtLastUpdated.getTime(),
           ...weatherInfo
         });
         onLocationChange?.(location);
