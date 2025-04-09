@@ -38,7 +38,8 @@ describe('savePositionAsLocation', () => {
     };
     const expectedLocation: Omit<Location, 'id'> = {
       ...cityInfo,
-      dtCreated: expect.any(Date)
+      dtCreated: expect.any(Date),
+      dtLastUpdated: expect.any(Date)
     };
     const mockSavedLocation = { id: mockId, ...expectedLocation };
 
@@ -60,7 +61,8 @@ describe('savePositionAsLocation', () => {
         region: cityInfo.region,
         isoCountryCode: cityInfo.isoCountryCode,
         timezone: cityInfo.timezone,
-        dtCreated: expect.any(Date)
+        dtCreated: expect.any(Date),
+        dtLastUpdated: expect.any(Date)
       })
     );
     expect(result).toEqual(mockSavedLocation);
@@ -77,7 +79,8 @@ describe('savePositionAsLocation', () => {
       region: 'Unknown Region',
       isoCountryCode: 'Unknown',
       timezone: 'Unknown',
-      dtCreated: expect.any(Date)
+      dtCreated: expect.any(Date),
+      dtLastUpdated: expect.any(Date)
     };
     const mockSavedLocation = { id: mockId, ...expectedLocation };
 
@@ -99,7 +102,8 @@ describe('savePositionAsLocation', () => {
         region: 'Unknown Region',
         isoCountryCode: 'Unknown',
         timezone: 'Unknown',
-        dtCreated: expect.any(Date)
+        dtCreated: expect.any(Date),
+        dtLastUpdated: expect.any(Date)
       })
     );
     expect(result).toEqual(mockSavedLocation);

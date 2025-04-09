@@ -27,7 +27,7 @@ export const locationApi = {
     onLocationUpdate: (location: Location | null) => void
   ) => {
     const locationsRef = collection(db, getLocationsPath(userId));
-    const latestLocationQuery = query(locationsRef, orderBy('dtCreated', 'desc'), limit(1));
+    const latestLocationQuery = query(locationsRef, orderBy('dtLastUpdated', 'desc'), limit(1));
 
     return onSnapshot(latestLocationQuery, (snapshot) => {
       if (snapshot.empty) {

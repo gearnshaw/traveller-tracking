@@ -40,7 +40,8 @@ describe('locationApi', () => {
     isoCountryCode: 'US',
     region: 'California',
     timezone: 'America/Los_Angeles',
-    dtCreated: mockDate
+    dtCreated: mockDate,
+    dtLastUpdated: mockDate
   };
 
   beforeEach(() => {
@@ -101,7 +102,7 @@ describe('locationApi', () => {
 
       // Verify query setup
       expect(collection).toHaveBeenCalledWith(db, `users/${mockUserId}/locations`);
-      expect(orderBy).toHaveBeenCalledWith('dtCreated', 'desc');
+      expect(orderBy).toHaveBeenCalledWith('dtLastUpdated', 'desc');
       expect(limit).toHaveBeenCalledWith(1);
       expect(query).toHaveBeenCalled();
       expect(onSnapshot).toHaveBeenCalled();

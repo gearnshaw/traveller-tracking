@@ -20,6 +20,7 @@ export const savePositionAsLocation = async (
 
   const location: Omit<Location, 'id'> = {
     dtCreated: new Date(),
+    dtLastUpdated: new Date(),
     city: cityInfo?.city ?? 'Unknown City',
     region: cityInfo?.region ?? 'Unknown Region',
     isoCountryCode: cityInfo?.isoCountryCode ?? 'Unknown',
