@@ -4,6 +4,7 @@ import { Traveller } from '../types';
 import { Card } from '@/shared/components/base/Card';
 import { CardHeader } from '@/shared/components/common/CardHeader';
 import { Typography } from '@/shared/components/base/Typography';
+import Clock from '@/shared/components/base/Clock';
 
 type TravellerCardProps = {
   traveller: Traveller;
@@ -28,7 +29,7 @@ export const TravellerCard = ({ traveller }: TravellerCardProps) => {
         <View style={tw`flex-1`}>
           <Typography variant="cardSubheader">Tokyo, Japan</Typography>
           <Typography variant="body" style={tw`mt-1`}>
-            10:45 PM • 16°C, Clear Night
+            <Clock /> • 16°C, Clear Night
           </Typography>
           <Typography variant="secondary" style={tw`mt-2 text-gray-500`}>
             Updated 2 hours ago
