@@ -35,11 +35,7 @@ const Clock = ({ style }: ClockProps) => {
   }, []);
 
   return (
-    <Text
-      style={[tw`text-lg font-medium`, style]}
-      accessibilityRole="text"
-      accessibilityLabel={`Current time is ${time}`}
-    >
+    <Text style={style} accessibilityRole="text" accessibilityLabel={`Current time is ${time}`}>
       {time}
     </Text>
   );

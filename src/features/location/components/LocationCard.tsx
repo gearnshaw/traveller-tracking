@@ -9,6 +9,7 @@ import { TableSectionHeader } from '@/shared/components/base/TableSectionHeader'
 import { Button } from '@/shared/components/base/Button';
 import { LocationRequired } from './LocationRequired';
 import { useRelativeTime } from '@/shared/hooks/useRelativeTime';
+import Clock from '@/shared/components/base/Clock';
 
 type LocationCardProps = {
   onUpdate?: () => void;
@@ -16,7 +17,7 @@ type LocationCardProps = {
 
 export const LocationCard = ({ onUpdate }: LocationCardProps) => {
   const trackingStatus = useLocationTrackingStatus();
-  const { location, time, temperature, weather, timestamp } = useLocationDisplay();
+  const { location, temperature, weather, timestamp } = useLocationDisplay();
   const { isLoading, handleUpdate } = useLocationUpdater({ onUpdate });
   const relativeTime = useRelativeTime(timestamp);
 
@@ -36,7 +37,7 @@ export const LocationCard = ({ onUpdate }: LocationCardProps) => {
             <View style={tw`flex-1`}>
               <Typography variant="cardSubheader">{location}</Typography>
               <Typography variant="body" style={tw`mt-1`}>
-                {time} • {temperature}, {weather}
+                <Clock /> • {temperature}, {weather}
               </Typography>
               <Typography variant="secondary" style={tw`mt-2 text-gray-500`}>
                 Updated {relativeTime}
