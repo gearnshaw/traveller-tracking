@@ -22,16 +22,20 @@ const Clock = ({ style }: ClockProps) => {
       const formattedMinutes = minutes.toString().padStart(2, '0');
 
       setTime(`${formattedHours}:${formattedMinutes} ${ampm}`);
+
+      // Calculate time until next minute
+      const secondsUntilNextMinute = 60 - now.getSeconds();
+      const millisecondsUntilNextMinute = secondsUntilNextMinute * 1000;
+
+      // Schedule next update for the start of the next minute
+      const timeoutId = setTimeout(updateTime, millisecondsUntilNextMinute);
+
+      // Clean up timeout on unmount
+      return () => clearTimeout(timeoutId);
     };
 
-    // Update time immediately
+    // Initial update
     updateTime();
-
-    // Set up interval to update every minute
-    const intervalId = setInterval(updateTime, 60000);
-
-    // Clean up interval on unmount
-    return () => clearInterval(intervalId);
   }, []);
 
   return (
