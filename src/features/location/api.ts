@@ -36,7 +36,7 @@ export const locationApi = {
       await db.collection(locationPath).doc(id).update(locationWithoutId);
       return location;
     } catch (error) {
-      console.error(`Error updating location: ${error}`); // TODO: GLE remove
+      console.error('Error updating location:', error);
       throw error;
     }
   },

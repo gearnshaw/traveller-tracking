@@ -17,7 +17,7 @@ export const travellersApi = {
         callback(travellers);
       },
       (error) => {
-        console.error(error);
+        console.error('Error observing travellers:', error);
         callback([]);
       }
     );
