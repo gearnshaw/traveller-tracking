@@ -17,7 +17,7 @@ export const followersApi = {
         callback(followers);
       },
       (error) => {
-        console.error(error);
+        console.error('Error observing followers:', error);
         callback([]);
       }
     );
