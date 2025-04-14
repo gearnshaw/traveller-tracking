@@ -1,5 +1,7 @@
 import * as Location from 'expo-location';
 import { ReverseGeocodeCity } from '@/features/location/types';
+import * as TaskManager from 'expo-task-manager';
+import { BACKGROUND_LOCATION_TASK } from '@/features/location/tasks/backgroundLocationTask';
 
 /**
  * Location service for handling location-related operations
@@ -31,6 +33,19 @@ export const locationService = {
       return status === 'granted';
     } catch (error) {
       console.error('Error checking location permissions:', error);
+      return false;
+    }
+  },
+
+  /**
+   * Check if background location tracking is active
+   * @returns Promise<boolean> - Whether background tracking is active
+   */
+  isBackgroundTrackingActive: async (): Promise<boolean> => {
+    try {
+      return await TaskManager.isTaskRegisteredAsync(BACKGROUND_LOCATION_TASK);
+    } catch (error) {
+      console.error('Error checking background tracking status:', error);
       return false;
     }
   },
