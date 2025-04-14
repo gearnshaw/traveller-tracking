@@ -17,6 +17,7 @@ src/
       components/     # Feature-specific UI components
       hooks/         # Feature-specific hooks
       screens/      # Feature-owned screen, if it only uses this feature
+      tasks/         # Background tasks and long-running operations
       actions.ts    # Business operations that coordinate different parts of the application
       api.ts         # API calls for this feature
       types.ts       # TypeScript types for this feature
@@ -46,6 +47,13 @@ Note: Navigation is handled through Expo Router's file-based routing system in t
 - If a screen is **owned by a single feature** and only uses data/components from that feature, colocate it inside the relevant feature folder.
 - If a screen **composes from multiple features**, place it in the `screens/` directory.
 - Avoid putting screens in `shared/` — that's reserved for UI primitives and utils.
+
+## The tasks directory should be used for:
+
+- Background tasks (like location tracking)
+- Periodic tasks (like data synchronization)
+- Long-running operations
+- Task definitions and handlers
 
 ## API Organization
 
