@@ -1,4 +1,4 @@
-export type Traveller = {
+export type Connection = {
   id: string;
   name: string;
 };

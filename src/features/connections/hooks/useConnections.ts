@@ -1,17 +1,17 @@
 import { useState, useEffect } from 'react';
-import { Traveller } from '../types';
-import { travellersApi } from '../api';
+import { Connection } from '../types';
+import { connectionsApi } from '../api';
 import { useCurrentUser } from '@/features/auth/hooks/useCurrentUser';
 
-export const useTravellers = () => {
-  const [travellers, setTravellers] = useState<Traveller[]>([]);
+export const useConnections = () => {
+  const [connections, setConnections] = useState<Connection[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
   const userId = useCurrentUser()?.userUid;
 
   useEffect(() => {
     if (!userId) {
-      setTravellers([]);
+      setConnections([]);
       setIsLoading(false);
       return;
     }
@@ -20,12 +20,12 @@ export const useTravellers = () => {
 
     const setupObserver = async () => {
       try {
-        unsubscribe = await travellersApi.observeTravellers(userId, (travellers) => {
-          setTravellers(travellers);
+        unsubscribe = await connectionsApi.observeConnections(userId, (connections) => {
+          setConnections(connections);
           setIsLoading(false);
         });
       } catch (err) {
-        setError(err instanceof Error ? err : new Error('Failed to observe travellers'));
+        setError(err instanceof Error ? err : new Error('Failed to observe connections'));
         setIsLoading(false);
       }
     };
@@ -39,5 +39,5 @@ export const useTravellers = () => {
     };
   }, [userId]);
 
-  return { travellers, isLoading, error };
+  return { connections, isLoading, error };
 };

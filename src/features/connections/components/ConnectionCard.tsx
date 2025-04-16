@@ -1,22 +1,22 @@
 import { View, Text } from 'react-native';
 import tw from 'twrnc';
-import { Traveller } from '../types';
+import { Connection } from '../types';
 import { Card } from '@/shared/components/base/Card';
 import { CardHeader } from '@/shared/components/common/CardHeader';
 import { Typography } from '@/shared/components/base/Typography';
 import Clock from '@/shared/components/base/Clock';
 
-type TravellerCardProps = {
-  traveller: Traveller;
+type ConnectionCardProps = {
+  connection: Connection;
 };
 
-export const TravellerCard = ({ traveller }: TravellerCardProps) => {
+export const ConnectionCard = ({ connection }: ConnectionCardProps) => {
   // Get first letter of name for avatar
-  const initial = traveller.name.charAt(0);
+  const initial = connection.name.charAt(0);
 
   return (
     <Card style={tw`px-0 overflow-hidden`}>
-      <CardHeader title={traveller.name} />
+      <CardHeader title={connection.name} />
 
       {/* Content */}
       <View style={tw`p-4 flex-row`}>

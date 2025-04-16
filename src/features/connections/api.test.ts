@@ -1,6 +1,6 @@
-import { travellersApi } from './api';
+import { connectionsApi } from './api';
 import { db } from '@/services/firebase';
-import { TravellerBuilder } from './builders';
+import { ConnectionBuilder } from './builders';
 
 // Mock Firebase
 jest.mock('@/services/firebase', () => ({
@@ -28,7 +28,7 @@ describe('travellersApi', () => {
     return mockCollection;
   };
 
-  describe(travellersApi.observeTravellers.name, () => {
+  describe(connectionsApi.observeConnections.name, () => {
     it('should set up a snapshot listener and return unsubscribe function', async () => {
       // Arrange
       const mockUnsubscribe = jest.fn();
@@ -36,7 +36,7 @@ describe('travellersApi', () => {
       createMockCollection(mockOnSnapshot);
 
       // Act
-      const unsubscribe = await travellersApi.observeTravellers(mockUserId, jest.fn());
+      const unsubscribe = await connectionsApi.observeConnections(mockUserId, jest.fn());
 
       // Assert
       expect(db.collection).toHaveBeenCalledWith(`users/${mockUserId}/travellers`);
@@ -52,8 +52,8 @@ describe('travellersApi', () => {
       ]);
 
       const expectedTravellers = [
-        new TravellerBuilder().withId('1').withName('John').build(),
-        new TravellerBuilder().withId('2').withName('Jane').build()
+        new ConnectionBuilder().withId('1').withName('John').build(),
+        new ConnectionBuilder().withId('2').withName('Jane').build()
       ];
 
       const mockOnSnapshot = jest.fn().mockImplementation((successCallback) => {
@@ -63,7 +63,7 @@ describe('travellersApi', () => {
       const callback = jest.fn();
 
       // Act
-      await travellersApi.observeTravellers(mockUserId, callback);
+      await connectionsApi.observeConnections(mockUserId, callback);
 
       // Assert
       expect(callback).toHaveBeenCalledWith(expectedTravellers);
@@ -81,7 +81,7 @@ describe('travellersApi', () => {
       const callback = jest.fn();
 
       // Act
-      await travellersApi.observeTravellers(mockUserId, callback);
+      await connectionsApi.observeConnections(mockUserId, callback);
 
       // Assert
       expect(consoleSpy).toHaveBeenCalledWith(mockError);

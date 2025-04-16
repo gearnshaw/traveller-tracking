@@ -1,7 +1,7 @@
 import { ScrollView, View } from 'react-native';
 import { tw } from '@/shared/utils/tw';
 import FollowersList from '@/features/followers/components/FollowersList';
-import { TravellersList } from '@/features/travellers/components/TravellersList';
+import { ConnectionsList } from '@/features/connections/components/ConnectionsList';
 import { useHomeScreen } from './useHomeScreen';
 import { Button } from '@/shared/components/base/Button';
 import { LocationCard } from '@/features/location/components/LocationCard';
@@ -19,11 +19,11 @@ export const HomeScreen = () => {
         <LocationCard />
 
         <View style={tw`mt-8`}>
-          <FollowersList />
+          <ConnectionsList />
         </View>
 
         <View style={tw`mt-8`}>
-          <TravellersList />
+          <FollowersList />
         </View>
 
         <View style={tw`mt-8`}>

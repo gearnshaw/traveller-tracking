@@ -1,12 +1,12 @@
 import { View, ActivityIndicator } from 'react-native';
-import { useTravellers } from '../hooks/useTravellers';
-import { TravellerCard } from './TravellerCard';
+import { useConnections } from '../hooks/useConnections';
+import { ConnectionCard } from './ConnectionCard';
 import { TableSectionHeader } from '@/shared/components/base/TableSectionHeader';
 import { Typography } from '@/shared/components/base/Typography';
 import tw from 'twrnc';
 
-export const TravellersList = () => {
-  const { travellers, isLoading, error } = useTravellers();
+export const ConnectionsList = () => {
+  const { connections, isLoading, error } = useConnections();
 
   if (isLoading) {
     return (
@@ -29,15 +29,15 @@ export const TravellersList = () => {
   return (
     <View style={tw`flex-1`}>
       <TableSectionHeader
-        title="Following"
+        title="Connections"
         actionText="Manage"
         onActionPress={() => {
           // TODO: Implement traveller management
         }}
       />
-      {travellers.map((traveller) => (
-        <View key={traveller.id} style={tw`mb-4 last:mb-0`}>
-          <TravellerCard traveller={traveller} />
+      {connections.map((connection) => (
+        <View key={connection.id} style={tw`mb-4 last:mb-0`}>
+          <ConnectionCard connection={connection} />
         </View>
       ))}
     </View>

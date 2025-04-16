@@ -1,6 +1,6 @@
-import { Traveller } from './types';
+import { Connection } from './types';
 
-export type RawTraveller = {
+export type RawConnection = {
   name: string;
 };
 
@@ -10,7 +10,7 @@ export type RawTraveller = {
  * @param data - The raw traveller data from Firestore
  * @returns A properly typed Traveller entity
  */
-export const mapTraveller = (id: string, data: RawTraveller): Traveller => {
+export const mapConnection = (id: string, data: RawConnection): Connection => {
   return {
     id,
     name: data.name
