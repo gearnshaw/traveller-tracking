@@ -6,7 +6,8 @@ import { locationApi } from '../api';
 const DUMMY_LOCATION = {
   location: 'Unknown 🤷‍♀️',
   time: '3:45 PM',
-  timestamp: Date.now()
+  timestamp: Date.now(),
+  timezone: 'UTC'
 };
 
 const weatherInfo = {
@@ -23,6 +24,7 @@ export const useLocationDisplay = ({ onLocationChange }: UseLocationDisplayProps
     location: 'Unknown',
     time: '3:45 PM',
     timestamp: Date.now(),
+    timezone: 'UTC',
     ...weatherInfo
   });
   const userId = useCurrentUser()?.userUid;
@@ -38,6 +40,7 @@ export const useLocationDisplay = ({ onLocationChange }: UseLocationDisplayProps
           ...DUMMY_LOCATION,
           location: location.city + ', ' + location.isoCountryCode,
           timestamp: location.dtLastUpdated.getTime(),
+          timezone: location.timezone,
           ...weatherInfo
         });
         onLocationChange?.(location);

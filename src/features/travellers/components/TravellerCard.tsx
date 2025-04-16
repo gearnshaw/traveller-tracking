@@ -35,6 +35,7 @@ export const TravellerCard = ({ traveller }: TravellerCardProps) => {
           ) : location ? (
             <LocationInfo
               location={`${location.city}, ${location.isoCountryCode}`}
+              timezone={location.timezone}
               temperature="15°C"
               weather="Cloudy"
               timestamp={location.dtLastUpdated?.getTime() ?? Date.now()}
