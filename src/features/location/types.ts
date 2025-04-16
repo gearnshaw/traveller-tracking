@@ -4,6 +4,7 @@ export type LocationInfo = {
   temperature: string;
   weather: string;
   timestamp: number; // Unix timestamp in milliseconds
+  timezone: string;
 };
 
 export type ReverseGeocodeCity = {

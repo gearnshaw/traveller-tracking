@@ -1,21 +1,30 @@
 import { useState, useEffect } from 'react';
+import { toZonedTime, format } from 'date-fns-tz';
 
-export const useClock = () => {
+export const useClock = (timezone?: string) => {
   const [time, setTime] = useState<string>('');
 
   useEffect(() => {
     // Function to update time
     const updateTime = () => {
       const now = new Date();
+      let formattedTime: string;
 
-      // Format time according to user's locale settings
-      const timeFormatter = new Intl.DateTimeFormat(undefined, {
-        hour: 'numeric',
-        minute: '2-digit',
-        hour12: undefined // Let the locale decide 12/24 hour format
-      });
+      if (timezone) {
+        // Convert to the specified timezone
+        const zonedDate = toZonedTime(now, timezone);
+        formattedTime = format(zonedDate, 'HH:mm', { timeZone: timezone });
+      } else {
+        // Use local time if no timezone specified
+        const timeFormatter = new Intl.DateTimeFormat(undefined, {
+          hour: 'numeric',
+          minute: '2-digit',
+          hour12: undefined // Let the locale decide 12/24 hour format
+        });
+        formattedTime = timeFormatter.format(now);
+      }
 
-      setTime(timeFormatter.format(now));
+      setTime(formattedTime);
 
       // Calculate time until next minute
       const secondsUntilNextMinute = 60 - now.getSeconds();
@@ -30,7 +39,7 @@ export const useClock = () => {
 
     // Initial update
     updateTime();
-  }, []);
+  }, [timezone]);
 
   return time;
 };

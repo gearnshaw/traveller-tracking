@@ -16,7 +16,7 @@ type LocationCardProps = {
 
 export const LocationCard = ({ onUpdate }: LocationCardProps) => {
   const trackingStatus = useLocationTrackingStatus();
-  const { location, temperature, weather, timestamp } = useLocationDisplay();
+  const { location, temperature, weather, timestamp, timezone } = useLocationDisplay();
   const { isLoading, handleUpdate } = useLocationUpdater({ onUpdate });
 
   // Don't render anything if tracking is not required
@@ -35,6 +35,7 @@ export const LocationCard = ({ onUpdate }: LocationCardProps) => {
             <View style={tw`flex-row justify-between items-center`}>
               <LocationInfo
                 location={location}
+                timezone={timezone}
                 temperature={temperature}
                 weather={weather}
                 timestamp={timestamp}
