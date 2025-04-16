@@ -3,14 +3,12 @@ import { tw } from '@/shared/utils/tw';
 import { useLocationDisplay } from '../hooks/useLocationDisplay';
 import { useLocationUpdater } from '../hooks/useLocationUpdater';
 import { useLocationTrackingStatus } from '../hooks/useLocationTrackingStatus';
-import { Typography } from '@/shared/components/base/Typography';
 import { Card } from '@/shared/components/base/Card';
 import { TableSectionHeader } from '@/shared/components/base/TableSectionHeader';
 import { Button } from '@/shared/components/base/Button';
 import { LocationRequired } from './LocationRequired';
 import { LocationTrackingButton } from './LocationTrackingButton';
-import { useRelativeTime } from '@/shared/hooks/useRelativeTime';
-import Clock from '@/shared/components/base/Clock';
+import { LocationInfo } from '@/shared/components/common/LocationInfo';
 
 type LocationCardProps = {
   onUpdate?: () => void;
@@ -20,7 +18,6 @@ export const LocationCard = ({ onUpdate }: LocationCardProps) => {
   const trackingStatus = useLocationTrackingStatus();
   const { location, temperature, weather, timestamp } = useLocationDisplay();
   const { isLoading, handleUpdate } = useLocationUpdater({ onUpdate });
-  const relativeTime = useRelativeTime(timestamp);
 
   // Don't render anything if tracking is not required
   if (trackingStatus === 'not-required') {
@@ -36,15 +33,12 @@ export const LocationCard = ({ onUpdate }: LocationCardProps) => {
         ) : (
           <View>
             <View style={tw`flex-row justify-between items-center`}>
-              <View style={tw`flex-1`}>
-                <Typography variant="cardSubheader">{location}</Typography>
-                <Typography variant="body" style={tw`mt-1`}>
-                  <Clock /> • {temperature}, {weather}
-                </Typography>
-                <Typography variant="secondary" style={tw`mt-2 text-gray-500`}>
-                  Updated {relativeTime}
-                </Typography>
-              </View>
+              <LocationInfo
+                location={location}
+                temperature={temperature}
+                weather={weather}
+                timestamp={timestamp}
+              />
               <Button
                 onPress={handleUpdate}
                 disabled={isLoading}

@@ -5,9 +5,8 @@ import { Traveller } from '../types';
 import { Card } from '@/shared/components/base/Card';
 import { CardHeader } from '@/shared/components/common/CardHeader';
 import { Typography } from '@/shared/components/base/Typography';
-import Clock from '@/shared/components/base/Clock';
 import { useTravellerLocation } from '../hooks/useTravellerLocation';
-import { useRelativeTime } from '@/shared/hooks/useRelativeTime';
+import { LocationInfo } from '@/shared/components/common/LocationInfo';
 
 type TravellerCardProps = {
   traveller: Traveller;
@@ -17,7 +16,6 @@ export const TravellerCard = ({ traveller }: TravellerCardProps) => {
   // Get first letter of name for avatar
   const initial = traveller.name.charAt(0);
   const { location, isLoading } = useTravellerLocation(traveller.userId);
-  const relativeTime = useRelativeTime(location?.dtLastUpdated?.getTime() ?? Date.now());
 
   return (
     <Card style={tw`px-0 overflow-hidden`}>
@@ -35,17 +33,12 @@ export const TravellerCard = ({ traveller }: TravellerCardProps) => {
           {isLoading ? (
             <ActivityIndicator size="small" color={tw.color('primary-500')} />
           ) : location ? (
-            <>
-              <Typography variant="cardSubheader">
-                {location.city}, {location.isoCountryCode}
-              </Typography>
-              <Typography variant="body" style={tw`mt-1`}>
-                <Clock /> • {location.region || 'Unknown Region'}
-              </Typography>
-              <Typography variant="secondary" style={tw`mt-2 text-gray-500`}>
-                Updated {relativeTime}
-              </Typography>
-            </>
+            <LocationInfo
+              location={`${location.city}, ${location.isoCountryCode}`}
+              temperature="15°C"
+              weather="Cloudy"
+              timestamp={location.dtLastUpdated?.getTime() ?? Date.now()}
+            />
           ) : (
             <Typography variant="secondary">Location unavailable</Typography>
           )}
