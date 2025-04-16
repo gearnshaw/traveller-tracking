@@ -1,10 +1,12 @@
-import { View, Text } from 'react-native';
+import React from 'react';
+import { View, Text, ActivityIndicator } from 'react-native';
 import tw from 'twrnc';
 import { Traveller } from '../types';
 import { Card } from '@/shared/components/base/Card';
 import { CardHeader } from '@/shared/components/common/CardHeader';
 import { Typography } from '@/shared/components/base/Typography';
-import Clock from '@/shared/components/base/Clock';
+import { useTravellerLocation } from '../hooks/useTravellerLocation';
+import { LocationInfo } from '@/shared/components/common/LocationInfo';
 
 type TravellerCardProps = {
   traveller: Traveller;
@@ -13,6 +15,7 @@ type TravellerCardProps = {
 export const TravellerCard = ({ traveller }: TravellerCardProps) => {
   // Get first letter of name for avatar
   const initial = traveller.name.charAt(0);
+  const { location, isLoading } = useTravellerLocation(traveller.userId);
 
   return (
     <Card style={tw`px-0 overflow-hidden`}>
@@ -27,13 +30,18 @@ export const TravellerCard = ({ traveller }: TravellerCardProps) => {
 
         {/* Info */}
         <View style={tw`flex-1`}>
-          <Typography variant="cardSubheader">Tokyo, Japan</Typography>
-          <Typography variant="body" style={tw`mt-1`}>
-            <Clock /> • 16°C, Clear Night
-          </Typography>
-          <Typography variant="secondary" style={tw`mt-2 text-gray-500`}>
-            Updated 2 hours ago
-          </Typography>
+          {isLoading ? (
+            <ActivityIndicator size="small" color={tw.color('primary-500')} />
+          ) : location ? (
+            <LocationInfo
+              location={`${location.city}, ${location.isoCountryCode}`}
+              temperature="15°C"
+              weather="Cloudy"
+              timestamp={location.dtLastUpdated?.getTime() ?? Date.now()}
+            />
+          ) : (
+            <Typography variant="secondary">Location unavailable</Typography>
+          )}
         </View>
       </View>
     </Card>

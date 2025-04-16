@@ -47,13 +47,13 @@ describe('travellersApi', () => {
     it('should map and return travellers when snapshot is received', async () => {
       // Arrange
       const mockSnapshot = createMockSnapshot([
-        { id: '1', data: () => ({ name: 'John' }) },
-        { id: '2', data: () => ({ name: 'Jane' }) }
+        { id: '1', data: () => ({ name: 'John', userId: '123' }) },
+        { id: '2', data: () => ({ name: 'Jane', userId: '456' }) }
       ]);
 
       const expectedTravellers = [
-        new TravellerBuilder().withId('1').withName('John').build(),
-        new TravellerBuilder().withId('2').withName('Jane').build()
+        new TravellerBuilder().withId('1').withName('John').withUserId('123').build(),
+        new TravellerBuilder().withId('2').withName('Jane').withUserId('456').build()
       ];
 
       const mockOnSnapshot = jest.fn().mockImplementation((successCallback) => {
@@ -84,7 +84,7 @@ describe('travellersApi', () => {
       await travellersApi.observeTravellers(mockUserId, callback);
 
       // Assert
-      expect(consoleSpy).toHaveBeenCalledWith(mockError);
+      expect(consoleSpy).toHaveBeenCalledWith('Error observing travellers:', mockError);
       expect(callback).toHaveBeenCalledWith([]);
 
       consoleSpy.mockRestore();
