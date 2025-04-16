@@ -1,8 +1,34 @@
 import { useState, useEffect } from 'react';
-import { toZonedTime, format } from 'date-fns-tz';
+import { toZonedTime } from 'date-fns-tz';
+
+// Get local timezone once when the module loads
+const localTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+// Shared time formatter that respects device preferences
+const timeFormatter = new Intl.DateTimeFormat(undefined, {
+  hour: 'numeric',
+  minute: '2-digit',
+  hour12: undefined // Let the locale decide 12/24 hour format
+});
 
 export const useClock = (timezone?: string) => {
   const [time, setTime] = useState<string>('');
+  const [timezoneOffset, setTimezoneOffset] = useState<string>('');
+
+  // Calculate timezone offset when timezone changes
+  useEffect(() => {
+    if (timezone) {
+      const now = new Date();
+      const localDate = toZonedTime(now, localTimezone);
+      const targetDate = toZonedTime(now, timezone);
+      const hoursOffset = Math.round(
+        (targetDate.getTime() - localDate.getTime()) / (60 * 60 * 1000)
+      );
+      setTimezoneOffset(hoursOffset !== 0 ? ` (${hoursOffset > 0 ? '+' : ''}${hoursOffset})` : '');
+    } else {
+      setTimezoneOffset('');
+    }
+  }, [timezone]);
 
   useEffect(() => {
     // Function to update time
@@ -13,14 +39,9 @@ export const useClock = (timezone?: string) => {
       if (timezone) {
         // Convert to the specified timezone
         const zonedDate = toZonedTime(now, timezone);
-        formattedTime = format(zonedDate, 'HH:mm', { timeZone: timezone });
+        formattedTime = timeFormatter.format(zonedDate) + timezoneOffset;
       } else {
         // Use local time if no timezone specified
-        const timeFormatter = new Intl.DateTimeFormat(undefined, {
-          hour: 'numeric',
-          minute: '2-digit',
-          hour12: undefined // Let the locale decide 12/24 hour format
-        });
         formattedTime = timeFormatter.format(now);
       }
 
@@ -39,7 +60,7 @@ export const useClock = (timezone?: string) => {
 
     // Initial update
     updateTime();
-  }, [timezone]);
+  }, [timezone, timezoneOffset]);
 
   return time;
 };
