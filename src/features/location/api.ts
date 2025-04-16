@@ -48,7 +48,7 @@ export const locationApi = {
     const latestLocationQuery = getLatestLocationQuery(userId);
 
     return onSnapshot(latestLocationQuery, (snapshot) => {
-      if (snapshot.empty) {
+      if (!snapshot || snapshot.empty) {
         onLocationUpdate(null);
         return;
       }

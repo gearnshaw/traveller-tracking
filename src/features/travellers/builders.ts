@@ -3,7 +3,7 @@ import { Traveller } from './types';
 export class TravellerBuilder {
   private id = 'someId';
   private name = 'John Doe';
-
+  private userId = 'someUserId';
   withId(id: string): TravellerBuilder {
     this.id = id;
     return this;
@@ -17,7 +17,8 @@ export class TravellerBuilder {
   build(): Traveller {
     return {
       id: this.id,
-      name: this.name
+      name: this.name,
+      userId: this.userId
     };
   }
 }

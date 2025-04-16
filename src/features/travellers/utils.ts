@@ -2,6 +2,7 @@ import { Traveller } from './types';
 
 export type RawTraveller = {
   name: string;
+  userId: string;
 };
 
 /**
@@ -13,6 +14,7 @@ export type RawTraveller = {
 export const mapTraveller = (id: string, data: RawTraveller): Traveller => {
   return {
     id,
-    name: data.name
+    name: data.name,
+    userId: data.userId
   };
 };
