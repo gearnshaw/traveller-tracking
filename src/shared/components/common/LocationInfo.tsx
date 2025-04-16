@@ -2,7 +2,7 @@ import { View } from 'react-native';
 import { tw } from '@/shared/utils/tw';
 import { Typography } from '@/shared/components/base/Typography';
 import Clock from '@/shared/components/base/Clock';
-import { useRelativeTime } from '@/shared/hooks/useRelativeTime';
+import { useAutoUpdatingRelativeTime } from '@/shared/hooks/useAutoUpdatingRelativeTime';
 
 type LocationInfoProps = {
   location: string;
@@ -19,7 +19,7 @@ export const LocationInfo = ({
   weather,
   timestamp
 }: LocationInfoProps) => {
-  const relativeTime = useRelativeTime(timestamp);
+  const relativeTime = useAutoUpdatingRelativeTime(timestamp);
 
   return (
     <View style={tw`flex-1`}>
