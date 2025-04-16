@@ -10,7 +10,11 @@ describe(mapTraveller.name, () => {
     };
     const id = '123';
 
-    const expected = new TravellerBuilder().withId(id).withName(rawTraveller.name).build();
+    const expected = new TravellerBuilder()
+      .withId(id)
+      .withName(rawTraveller.name)
+      .withUserId(rawTraveller.userId)
+      .build();
 
     // Act
     const result = mapTraveller(id, rawTraveller);

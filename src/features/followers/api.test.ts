@@ -84,7 +84,7 @@ describe('followersApi', () => {
       await followersApi.observeFollowers(mockUserId, callback);
 
       // Assert
-      expect(consoleSpy).toHaveBeenCalledWith(mockError);
+      expect(consoleSpy).toHaveBeenCalledWith('Error observing followers:', mockError);
       expect(callback).toHaveBeenCalledWith([]);
 
       consoleSpy.mockRestore();

@@ -14,6 +14,11 @@ export class TravellerBuilder {
     return this;
   }
 
+  withUserId(userId: string): TravellerBuilder {
+    this.userId = userId;
+    return this;
+  }
+
   build(): Traveller {
     return {
       id: this.id,
