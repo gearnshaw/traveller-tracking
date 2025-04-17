@@ -5,25 +5,42 @@ import { locationApi } from '../api';
 
 export const useLocationError = () => {
   const [hasError, setHasError] = useState(false);
+  const [dtLastLocationError, setDtLastLocationError] = useState<Date | null>(null);
+  const [lastUpdateTime, setLastUpdateTime] = useState<Date | null>(null);
   const userId = useCurrentUser()?.userUid;
 
   useEffect(() => {
     if (!userId) return;
 
-    const unsubscribe = userDocumentApi.observeUser(userId, async (user) => {
-      if (!user?.dtLastLocationError) {
-        setHasError(false);
-        return;
-      }
-
-      const latestLocation = await locationApi.getLatestLocation(userId);
-      const lastUpdateTime = latestLocation?.dtLastUpdated;
-
-      setHasError(lastUpdateTime ? user.dtLastLocationError > lastUpdateTime : true);
+    // Set up user document observer
+    const userUnsubscribe = userDocumentApi.observeUser(userId, (user) => {
+      const newDtLastLocationError = user?.dtLastLocationError;
+      setDtLastLocationError(newDtLastLocationError || null);
     });
 
-    return () => unsubscribe();
+    // Set up location observer
+    const locationUnsubscribe = locationApi.observeLatestLocation(userId, (latestLocation) => {
+      setLastUpdateTime(latestLocation?.dtLastUpdated || null);
+    });
+
+    return () => {
+      userUnsubscribe();
+      locationUnsubscribe();
+    };
   }, [userId]);
+
+  // Update error state whenever either timestamp changes
+  useEffect(() => {
+    setHasError(
+      dtLastLocationError
+        ? lastUpdateTime
+          ? dtLastLocationError > lastUpdateTime
+            ? true
+            : false
+          : true
+        : true
+    );
+  }, [dtLastLocationError, lastUpdateTime]);
 
   return hasError;
 };
