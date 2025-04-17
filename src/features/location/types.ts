@@ -18,6 +18,7 @@ export type Location = ReverseGeocodeCity & {
   id: string;
   dtCreated: Date;
   dtLastUpdated: Date;
+  dtLocationCollected: Date;
 };
 
 export type LocationTrackingStatus = 'active' | 'required' | 'not-required';

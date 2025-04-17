@@ -26,10 +26,11 @@ TaskManager.defineTask(BACKGROUND_LOCATION_TASK, async ({ data, error }) => {
       // Process each location update
       for (const location of locations) {
         const { latitude, longitude } = location.coords;
+        const { timestamp } = location;
 
         // Save or update the location
         console.log(`👾👾👾👾 calling saveOrUpdateLocation from background location task`); // TODO: GLE remove
-        await saveOrUpdateLocation({ latitude, longitude }, userId);
+        await saveOrUpdateLocation({ latitude, longitude }, timestamp, userId);
       }
     } catch (error) {
       console.error('Error processing background location:', error);

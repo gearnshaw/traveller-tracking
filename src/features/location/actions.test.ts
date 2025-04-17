@@ -32,6 +32,7 @@ class LocationBuilder {
   private id: string = 'test-id';
   private dtCreated = mockDate;
   private dtLastUpdated = mockDate;
+  private dtLocationCollected = mockDate;
   private city = 'London';
   private region = 'England';
   private isoCountryCode = 'GB';
@@ -58,6 +59,7 @@ class LocationBuilder {
       id: this.id,
       dtCreated: this.dtCreated,
       dtLastUpdated: this.dtLastUpdated,
+      dtLocationCollected: this.dtLocationCollected,
       city: this.city,
       region: this.region,
       isoCountryCode: this.isoCountryCode,
@@ -69,6 +71,7 @@ class LocationBuilder {
     return {
       dtCreated: this.dtCreated,
       dtLastUpdated: this.dtLastUpdated,
+      dtLocationCollected: this.dtLocationCollected,
       city: this.city,
       region: this.region,
       isoCountryCode: this.isoCountryCode,
@@ -106,7 +109,7 @@ describe('savePositionAsLocation', () => {
   });
 
   const userId = 'test-user-id';
-
+  const timestamp = mockDate.getTime();
   const position = {
     latitude: 51.5074,
     longitude: -0.1278
@@ -126,7 +129,7 @@ describe('savePositionAsLocation', () => {
       });
 
       it('should save a new location', async () => {
-        await saveOrUpdateLocation(position, userId);
+        await saveOrUpdateLocation(position, timestamp, userId);
 
         expect(locationApi.saveLocation).toHaveBeenCalledWith(
           userId,
@@ -150,12 +153,12 @@ describe('savePositionAsLocation', () => {
         });
 
         it('should update the location', async () => {
-          await saveOrUpdateLocation(position, userId);
+          await saveOrUpdateLocation(position, timestamp, userId);
           expect(locationApi.updateLocation).toHaveBeenCalledWith(userId, existingLocation);
         });
 
         it('should NOT save a new location', async () => {
-          await saveOrUpdateLocation(position, userId);
+          await saveOrUpdateLocation(position, timestamp, userId);
           expect(locationApi.saveLocation).not.toHaveBeenCalled();
         });
       });
@@ -171,7 +174,7 @@ describe('savePositionAsLocation', () => {
         });
 
         it('should save a new location', async () => {
-          await saveOrUpdateLocation(position, userId);
+          await saveOrUpdateLocation(position, timestamp, userId);
 
           expect(locationApi.saveLocation).toHaveBeenCalledWith(
             userId,
@@ -185,7 +188,7 @@ describe('savePositionAsLocation', () => {
         });
 
         it('should NOT update the location', async () => {
-          await saveOrUpdateLocation(position, userId);
+          await saveOrUpdateLocation(position, timestamp, userId);
           expect(locationApi.updateLocation).not.toHaveBeenCalled();
         });
       });
@@ -198,7 +201,7 @@ describe('savePositionAsLocation', () => {
     });
 
     it('should save a new location with unknown city information', async () => {
-      await saveOrUpdateLocation(position, userId);
+      await saveOrUpdateLocation(position, timestamp, userId);
       const expectedLocation = new LocationBuilder().makeForUnknownCity().buildWithoutId();
       expect(locationApi.saveLocation).toHaveBeenCalledWith(userId, expectedLocation);
     });
