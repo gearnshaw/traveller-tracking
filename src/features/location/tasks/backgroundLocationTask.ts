@@ -40,7 +40,6 @@ TaskManager.defineTask(BACKGROUND_LOCATION_TASK, async ({ data, error }) => {
         const { timestamp } = location;
 
         // Save or update the location
-        console.log(`👾👾👾👾 calling saveOrUpdateLocation from background location task`); // TODO: GLE remove
         await saveOrUpdateLocation({ latitude, longitude }, timestamp, userId);
       }
     } catch (error) {
@@ -64,7 +63,7 @@ export const registerBackgroundLocationTask = async (): Promise<boolean> => {
     // Register the task
     await Location.startLocationUpdatesAsync(BACKGROUND_LOCATION_TASK, {
       accuracy: Location.Accuracy.Lowest,
-      deferredUpdatesInterval: 3 * 60 * 60 * 1000, // 3 hours
+      deferredUpdatesInterval: 60 * 60 * 1000, // 1 hour
       distanceInterval: 1000, // 1km
       pausesUpdatesAutomatically: true,
       foregroundService: {
