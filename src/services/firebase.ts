@@ -1,6 +1,6 @@
-// import { initializeApp } from "firebase/app";
 import RNAuth from '@react-native-firebase/auth';
 import RNFirestore from '@react-native-firebase/firestore';
+import RNAnalytics from '@react-native-firebase/analytics';
 
 // Suppress the deprecation warning for Firebase
 declare global {
@@ -12,3 +12,4 @@ globalThis.RNFB_SILENCE_MODULAR_DEPRECATION_WARNINGS = true;
 
 export const auth = RNAuth();
 export const db = RNFirestore();
+export const analytics = RNAnalytics();

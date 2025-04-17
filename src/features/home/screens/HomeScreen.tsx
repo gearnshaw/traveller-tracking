@@ -5,8 +5,11 @@ import { TravellersList } from '@/features/travellers/components/TravellersList'
 import { useHomeScreen } from './useHomeScreen';
 import { Button } from '@/shared/components/base/Button';
 import { LocationCard } from '@/features/location/components/LocationCard';
+import { useScreenAnalytics } from '@/shared/hooks/useScreenAnalytics';
 
 export const HomeScreen = () => {
+  useScreenAnalytics('HomeScreen', 'Main');
+
   const { handleLogout } = useHomeScreen();
 
   return (

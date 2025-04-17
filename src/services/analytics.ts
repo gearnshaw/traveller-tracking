@@ -1,96 +1,67 @@
-// import { analyticsInstance } from "./firebase";
+import { analytics } from './firebase';
+import { ErrorEvent } from '@/shared/analytics/types';
 
-export type AnalyticsParams = {
-  [key: string]: any;
+// Helper function to log screen views
+const logScreen = async (screenName: string, screenClass?: string) => {
+  try {
+    await analytics.logScreenView({
+      screen_name: screenName,
+      screen_class: screenClass || screenName
+    });
+  } catch (error) {
+    console.error('Error logging screen view:', error);
+  }
 };
 
-export interface AnalyticsService {
-  // Screen tracking
-  logScreen(screenName: string, screenClass?: string): Promise<void>;
+// Synchronous wrapper for screen logging
+export const logScreenSync = (screenName: string, screenClass?: string) => {
+  logScreen(screenName, screenClass).catch((error) => {
+    console.error('Error in async screen logging:', error);
+  });
+};
 
-  // User properties
-  setUserProperties(properties: AnalyticsParams): Promise<void>;
+// Helper function to log custom events
+const logEvent = async (eventName: string, params?: Record<string, any>) => {
+  try {
+    await analytics.logEvent(eventName, {
+      timestamp: Date.now(),
+      ...params
+    });
+  } catch (error) {
+    console.error('Error logging event:', error);
+  }
+};
 
-  // Custom events
-  logEvent(eventName: string, params?: AnalyticsParams): Promise<void>;
+// Synchronous wrapper for fire-and-forget analytics
+export const logEventSync = (eventName: string, params?: Record<string, any>) => {
+  logEvent(eventName, params).catch((error) => {
+    console.error('Error in async analytics event:', error);
+  });
+};
 
-  // Trip-related events
-  logTripCreated(tripId: string, tripName: string): Promise<void>;
-  logTripUpdated(tripId: string, tripName: string): Promise<void>;
-  logTripDeleted(tripId: string, tripName: string): Promise<void>;
+// Helper function to log errors
+const logError = async (errorEvent: ErrorEvent) => {
+  try {
+    await analytics.logEvent('error_occurred', {
+      timestamp: Date.now(),
+      ...errorEvent
+    });
+  } catch (error) {
+    console.error('Error logging error event:', error);
+  }
+};
 
-  // Authentication events
-  logLogin(method: string): Promise<void>;
-  logSignUp(method: string): Promise<void>;
+export const logErrorSync = (errorEvent: ErrorEvent) => {
+  logError(errorEvent).catch((error) => {
+    console.error('Error in async error logging:', error);
+  });
+};
 
-  // Error tracking
-  logError(error: Error, additionalParams?: AnalyticsParams): Promise<void>;
-}
-
-// const createAnalyticsService = (
-//   analytics = analyticsInstance
-// ): AnalyticsService => {
-//   // Private functions in closure scope
-//   const validateEventName = (name: string) => {
-//     if (!name) throw new Error("Event name is required");
-//   };
-
-//   return {
-//     async logScreen(screenName: string, screenClass?: string) {
-//       await analytics.logScreenView({
-//         screen_name: screenName,
-//         screen_class: screenClass || screenName,
-//       });
-//     },
-
-//     async setUserProperties(properties: AnalyticsParams) {
-//       Object.entries(properties).forEach(([key, value]) => {
-//         analytics.setUserProperty(key, value?.toString());
-//       });
-//     },
-
-//     async logEvent(eventName: string, params?: AnalyticsParams) {
-//       validateEventName(eventName); // Private function usage
-//       await analytics.logEvent(eventName, params);
-//     },
-
-//     async logTripCreated(tripId: string, tripName: string) {
-//       await this.logEvent("trip_created", {
-//         trip_id: tripId,
-//         trip_name: tripName,
-//       });
-//     },
-
-//     async logTripUpdated(tripId: string, tripName: string) {
-//       await this.logEvent("trip_updated", {
-//         trip_id: tripId,
-//         trip_name: tripName,
-//       });
-//     },
-
-//     async logTripDeleted(tripId: string, tripName: string) {
-//       await this.logEvent("trip_deleted", {
-//         trip_id: tripId,
-//         trip_name: tripName,
-//       });
-//     },
-
-//     async logLogin(method: string) {
-//       await this.logEvent("login", { method });
-//     },
-
-//     async logSignUp(method: string) {
-//       await this.logEvent("sign_up", { method });
-//     },
-
-//     async logError(error: Error, additionalParams?: AnalyticsParams) {
-//       await this.logEvent("error", {
-//         error_name: error.name,
-//         error_message: error.message,
-//         ...additionalParams,
-//       });
-//     },
-//   };
+// Helper function to set user properties
+// export const setUserProperties = async (properties: Record<string, string>) => {
+//   try {
+//     await analytics.setUserProperties(properties);
+//   } catch (error) {
+//     console.error('Error setting user properties:', error);
+//   }
 // };
-
-// export const analytics = createAnalyticsService();

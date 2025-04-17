@@ -3,11 +3,16 @@ import * as Location from 'expo-location';
 import { saveOrUpdateLocation } from '../actions';
 import { authService } from '@/services/auth';
 import { BACKGROUND_LOCATION_TASK } from './taskNames';
+import { trackBackgroundLocationError, trackBackgroundLocationStarted } from '../analytics';
 
 // Define the task handler
 TaskManager.defineTask(BACKGROUND_LOCATION_TASK, async ({ data, error }) => {
   if (error) {
     console.error('Background location task error:', error);
+    trackBackgroundLocationError(error.message, {
+      source: 'background_location_task',
+      code: error.code
+    });
     return;
   }
 
@@ -60,6 +65,8 @@ export const registerBackgroundLocationTask = async (): Promise<boolean> => {
           'Traveller Tracking is monitoring your location to share your city with your followers'
       }
     });
+
+    trackBackgroundLocationStarted();
 
     return true;
   } catch (error) {
