@@ -4,21 +4,29 @@ import { saveOrUpdateLocation } from '../actions';
 import { authService } from '@/services/auth';
 import { BACKGROUND_LOCATION_TASK } from './taskNames';
 import { trackBackgroundLocationError, trackBackgroundLocationStarted } from '../analytics';
+import { userDocumentApi } from '@/shared/api/userDocument';
 
 // Define the task handler
 TaskManager.defineTask(BACKGROUND_LOCATION_TASK, async ({ data, error }) => {
+  const userId = authService.getCurrentUserId();
   if (error) {
     console.error('Background location task error:', error);
     trackBackgroundLocationError(error.message, {
       source: 'background_location_task',
       code: error.code
     });
+
+    // Update user's last error timestamp
+    if (userId) {
+      await userDocumentApi.updateUser(userId, {
+        dtLastLocationError: new Date()
+      });
+    }
     return;
   }
 
   if (data) {
     const { locations } = data as { locations: Location.LocationObject[] };
-    const userId = authService.getCurrentUserId();
 
     if (!userId) {
       console.error('No user ID available for background location task');
