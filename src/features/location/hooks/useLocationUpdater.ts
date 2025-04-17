@@ -2,6 +2,7 @@ import { useState, useCallback } from 'react';
 import { locationService } from '@/services/location';
 import { saveOrUpdateLocation } from '../actions';
 import { useCurrentUser } from '@/features/auth/hooks/useCurrentUser';
+import { trackLocationUpdatedManually } from '../analytics';
 
 type UseLocationUpdaterProps = {
   onUpdate?: () => void;
@@ -35,6 +36,7 @@ export const useLocationUpdater = ({ onUpdate }: UseLocationUpdaterProps = {}) =
         Date.now(),
         userId
       );
+      trackLocationUpdatedManually();
       onUpdate?.();
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : 'Failed to update location';

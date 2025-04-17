@@ -1,0 +1,9 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+
+# AI assistant instructions
+
+- At the start of a new conversion, always confirm the plan BEFORE making any code changes.
