@@ -10,30 +10,36 @@ export const saveOrUpdateLocation = async (
     latitude: number;
     longitude: number;
   },
+  timestamp: number,
   userId: string
 ): Promise<Location> => {
-  const cityInfo = await locationService.getCityFromCoordinates(
-    position.latitude,
-    position.longitude
-  );
+  const { latitude, longitude } = position;
+
+  const cityInfo = await locationService.getCityFromCoordinates(latitude, longitude);
 
   const existingLocation = await locationApi.getLatestLocation(userId);
 
   if (existingLocation) {
     if (existingLocation.city === cityInfo?.city) {
-      return updateLocation(userId, existingLocation);
+      return updateLocation(userId, existingLocation, timestamp);
     } else {
-      return saveLocation(userId, cityInfo);
+      return saveLocation(userId, cityInfo, timestamp);
     }
   } else {
-    return saveLocation(userId, cityInfo);
+    return saveLocation(userId, cityInfo, timestamp);
   }
 };
 
-const saveLocation = async (userId: string, cityInfo: ReverseGeocodeCity | null) => {
+const saveLocation = async (
+  userId: string,
+  cityInfo: ReverseGeocodeCity | null,
+  timestamp: number
+) => {
+  const now = new Date();
   const location: Omit<Location, 'id'> = {
-    dtCreated: new Date(),
-    dtLastUpdated: new Date(),
+    dtCreated: now,
+    dtLastUpdated: now,
+    dtLocationCollected: new Date(timestamp),
     city: cityInfo?.city ?? 'Unknown City',
     region: cityInfo?.region ?? 'Unknown Region',
     isoCountryCode: cityInfo?.isoCountryCode ?? 'Unknown',
@@ -43,10 +49,12 @@ const saveLocation = async (userId: string, cityInfo: ReverseGeocodeCity | null)
   return locationApi.saveLocation(userId, location);
 };
 
-const updateLocation = async (userId: string, location: Location) => {
+const updateLocation = async (userId: string, location: Location, timestamp: number) => {
+  const now = new Date();
   const updatedLocation = {
     ...location,
-    dtLastUpdated: new Date()
+    dtLastUpdated: now,
+    dtLocationCollected: new Date(timestamp)
   };
   return locationApi.updateLocation(userId, updatedLocation);
 };

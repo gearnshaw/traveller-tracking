@@ -2,9 +2,7 @@ import * as TaskManager from 'expo-task-manager';
 import * as Location from 'expo-location';
 import { saveOrUpdateLocation } from '../actions';
 import { authService } from '@/services/auth';
-
-// Define the task name
-export const BACKGROUND_LOCATION_TASK = 'background-location-task';
+import { BACKGROUND_LOCATION_TASK } from './taskNames';
 
 // Define the task handler
 TaskManager.defineTask(BACKGROUND_LOCATION_TASK, async ({ data, error }) => {
@@ -26,10 +24,11 @@ TaskManager.defineTask(BACKGROUND_LOCATION_TASK, async ({ data, error }) => {
       // Process each location update
       for (const location of locations) {
         const { latitude, longitude } = location.coords;
+        const { timestamp } = location;
 
         // Save or update the location
         console.log(`👾👾👾👾 calling saveOrUpdateLocation from background location task`); // TODO: GLE remove
-        await saveOrUpdateLocation({ latitude, longitude }, userId);
+        await saveOrUpdateLocation({ latitude, longitude }, timestamp, userId);
       }
     } catch (error) {
       console.error('Error processing background location:', error);

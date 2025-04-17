@@ -49,7 +49,8 @@ describe('locationApi', () => {
     region: 'California',
     timezone: 'America/Los_Angeles',
     dtCreated: mockDate,
-    dtLastUpdated: mockDate
+    dtLastUpdated: mockDate,
+    dtLocationCollected: mockDate
   };
 
   beforeEach(() => {
@@ -96,7 +97,8 @@ describe('locationApi', () => {
       region: 'California',
       timezone: 'America/Los_Angeles',
       dtCreated: mockDate,
-      dtLastUpdated: mockDate
+      dtLastUpdated: mockDate,
+      dtLocationCollected: mockDate
     };
 
     beforeEach(() => {
@@ -189,6 +191,12 @@ describe('locationApi', () => {
           toMillis: () => mockDate.getTime(),
           seconds: Math.floor(mockDate.getTime() / 1000),
           nanoseconds: (mockDate.getTime() % 1000) * 1000000
+        },
+        dtLocationCollected: {
+          toDate: () => mockDate,
+          toMillis: () => mockDate.getTime(),
+          seconds: Math.floor(mockDate.getTime() / 1000),
+          nanoseconds: (mockDate.getTime() % 1000) * 1000000
         }
       };
 
@@ -217,7 +225,8 @@ describe('locationApi', () => {
         region: 'California',
         timezone: 'America/Los_Angeles',
         dtCreated: mockDate,
-        dtLastUpdated: mockDate
+        dtLastUpdated: mockDate,
+        dtLocationCollected: mockDate
       });
     });
 
@@ -289,6 +298,12 @@ describe('locationApi', () => {
           toMillis: () => mockDate.getTime(),
           seconds: Math.floor(mockDate.getTime() / 1000),
           nanoseconds: (mockDate.getTime() % 1000) * 1000000
+        },
+        dtLocationCollected: {
+          toDate: () => mockDate,
+          toMillis: () => mockDate.getTime(),
+          seconds: Math.floor(mockDate.getTime() / 1000),
+          nanoseconds: (mockDate.getTime() % 1000) * 1000000
         }
       };
 
@@ -313,7 +328,8 @@ describe('locationApi', () => {
         region: 'California',
         timezone: 'America/Los_Angeles',
         dtCreated: mockDate,
-        dtLastUpdated: mockDate
+        dtLastUpdated: mockDate,
+        dtLocationCollected: mockDate
       });
     });
 

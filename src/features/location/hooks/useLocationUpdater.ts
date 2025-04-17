@@ -27,7 +27,14 @@ export const useLocationUpdater = ({ onUpdate }: UseLocationUpdaterProps = {}) =
         throw new Error('Failed to get current position');
       }
 
-      await saveOrUpdateLocation(position, userId);
+      await saveOrUpdateLocation(
+        {
+          latitude: position.latitude,
+          longitude: position.longitude
+        },
+        Date.now(),
+        userId
+      );
       onUpdate?.();
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : 'Failed to update location';
