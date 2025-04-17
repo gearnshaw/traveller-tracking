@@ -1,7 +1,7 @@
 import * as Location from 'expo-location';
 import { ReverseGeocodeCity } from '@/features/location/types';
 import * as TaskManager from 'expo-task-manager';
-import { BACKGROUND_LOCATION_TASK } from '@/features/location/tasks/backgroundLocationTask';
+import { BACKGROUND_LOCATION_TASK } from '@/features/location/tasks/taskNames';
 
 /**
  * Location service for handling location-related operations

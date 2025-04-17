@@ -2,9 +2,7 @@ import * as TaskManager from 'expo-task-manager';
 import * as Location from 'expo-location';
 import { saveOrUpdateLocation } from '../actions';
 import { authService } from '@/services/auth';
-
-// Define the task name
-export const BACKGROUND_LOCATION_TASK = 'background-location-task';
+import { BACKGROUND_LOCATION_TASK } from './taskNames';
 
 // Define the task handler
 TaskManager.defineTask(BACKGROUND_LOCATION_TASK, async ({ data, error }) => {
