@@ -12,8 +12,11 @@ import tw from 'twrnc';
 import { Button } from '@/shared/components/base/Button';
 import { useLoginScreen } from './useLoginScreen';
 import { useEffect } from 'react';
+import { useScreenAnalytics } from '@/shared/hooks/useScreenAnalytics';
 
 export const LoginScreen = () => {
+  useScreenAnalytics('LoginScreen', 'Auth');
+
   const {
     email,
     setEmail,

@@ -2,16 +2,23 @@ import { analytics } from './firebase';
 import { ErrorEvent } from '@/shared/analytics/types';
 
 // Helper function to log screen views
-// export const logScreen = async (screenName: string, screenClass?: string) => {
-//   try {
-//     await analytics.logScreenView({
-//       screen_name: screenName,
-//       screen_class: screenClass || screenName
-//     });
-//   } catch (error) {
-//     console.error('Error logging screen view:', error);
-//   }
-// };
+const logScreen = async (screenName: string, screenClass?: string) => {
+  try {
+    await analytics.logScreenView({
+      screen_name: screenName,
+      screen_class: screenClass || screenName
+    });
+  } catch (error) {
+    console.error('Error logging screen view:', error);
+  }
+};
+
+// Synchronous wrapper for screen logging
+export const logScreenSync = (screenName: string, screenClass?: string) => {
+  logScreen(screenName, screenClass).catch((error) => {
+    console.error('Error in async screen logging:', error);
+  });
+};
 
 // Helper function to log custom events
 const logEvent = async (eventName: string, params?: Record<string, any>) => {
