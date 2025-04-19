@@ -83,9 +83,7 @@ describe('locationApi', () => {
       (collection as jest.Mock).mockReturnValue('locations-collection-ref');
       (addDoc as jest.Mock).mockRejectedValue(mockError);
 
-      await expect(locationApi.saveLocation(mockUserId, mockLocation)).rejects.toThrow(
-        'Firestore error'
-      );
+      await expect(locationApi.saveLocation(mockUserId, mockLocation)).rejects.toThrow(mockError);
     });
   });
 
@@ -146,9 +144,7 @@ describe('locationApi', () => {
         throw new Error('Unexpected collection path');
       });
 
-      await expect(locationApi.updateLocation(mockUserId, mockLocation)).rejects.toThrow(
-        'Firestore error'
-      );
+      await expect(locationApi.updateLocation(mockUserId, mockLocation)).rejects.toThrow(mockError);
     });
   });
 
