@@ -31,15 +31,20 @@ export const useLocationError = () => {
 
   // Update error state whenever either timestamp changes
   useEffect(() => {
-    setHasError(
-      dtLastLocationError
-        ? lastUpdateTime
-          ? dtLastLocationError > lastUpdateTime
-            ? true
-            : false
-          : true
-        : true
-    );
+    // If there's no error timestamp, there's no error
+    if (!dtLastLocationError) {
+      setHasError(false);
+      return;
+    }
+
+    // If there's an error timestamp but no update, there's an error
+    if (!lastUpdateTime) {
+      setHasError(true);
+      return;
+    }
+
+    // If the error is more recent than the last update, there's an error
+    setHasError(dtLastLocationError > lastUpdateTime);
   }, [dtLastLocationError, lastUpdateTime]);
 
   return hasError;
