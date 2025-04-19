@@ -1,5 +1,5 @@
 export default () => ({
-  logEvent: jest.fn(),
-  setUserProperties: jest.fn(),
-  setUserId: jest.fn()
+  logScreenView: jest.fn().mockResolvedValue(undefined),
+  logEvent: jest.fn().mockResolvedValue(undefined),
+  setUserProperties: jest.fn().mockResolvedValue(undefined)
 });
