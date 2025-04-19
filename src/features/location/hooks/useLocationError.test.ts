@@ -1,4 +1,4 @@
-import { renderHook, act } from '@testing-library/react-native';
+import { renderHook } from '@testing-library/react-native';
 import { useLocationError } from './useLocationError';
 import { useCurrentUser } from '@/features/auth/hooks/useCurrentUser';
 import { userDocumentApi } from '@/shared/api/userDocument';

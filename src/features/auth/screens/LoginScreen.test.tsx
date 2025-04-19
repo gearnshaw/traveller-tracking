@@ -1,6 +1,7 @@
 import { render, screen, fireEvent } from '@testing-library/react-native';
 import { LoginScreen } from './LoginScreen';
 import { Alert } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
 
 // Mock functions
 const mockSetEmail = jest.fn();
@@ -51,7 +52,22 @@ jest.mock('./useLoginScreen', () => ({
   })
 }));
 
+// Mock useFocusEffect
+jest.mock('expo-router', () => ({
+  useFocusEffect: jest.fn((callback) => callback()),
+  useRouter: () => ({
+    push: jest.fn(),
+    replace: jest.fn(),
+    back: jest.fn()
+  })
+}));
+
 jest.spyOn(Alert, 'alert');
+
+// Helper function to render the screen with navigation
+const renderWithNavigation = (component: React.ReactElement) => {
+  return render(<NavigationContainer>{component}</NavigationContainer>);
+};
 
 describe('LoginScreen', () => {
   beforeEach(() => {
@@ -60,7 +76,7 @@ describe('LoginScreen', () => {
 
   // Basic Rendering Tests
   it('should render all main elements', () => {
-    render(<LoginScreen />);
+    renderWithNavigation(<LoginScreen />);
 
     // Check for main container
     expect(screen.getByTestId('login-screen')).toBeTruthy();
@@ -84,7 +100,7 @@ describe('LoginScreen', () => {
       const expectedEmail = 'test@example.com';
 
       // Act
-      render(<LoginScreen />);
+      renderWithNavigation(<LoginScreen />);
       const emailInput = screen.getByTestId('email-input');
       fireEvent.changeText(emailInput, expectedEmail);
 
@@ -97,7 +113,7 @@ describe('LoginScreen', () => {
       const expectedPassword = 'password123';
 
       // Act
-      render(<LoginScreen />);
+      renderWithNavigation(<LoginScreen />);
       const passwordInput = screen.getByTestId('password-input');
       fireEvent.changeText(passwordInput, expectedPassword);
 
@@ -115,7 +131,7 @@ describe('LoginScreen', () => {
         .mockImplementation(() => createMockImplementation({ loading: true }));
 
       // Act
-      render(<LoginScreen />);
+      renderWithNavigation(<LoginScreen />);
 
       // Assert
       expect(screen.getByTestId('login-button')).toBeDisabled();
@@ -128,7 +144,7 @@ describe('LoginScreen', () => {
         .mockImplementation(() => createMockImplementation({ loading: true }));
 
       // Act
-      render(<LoginScreen />);
+      renderWithNavigation(<LoginScreen />);
 
       // Assert
       expect(screen.getByTestId('login-button')).toHaveTextContent('Signing in...');
@@ -144,7 +160,7 @@ describe('LoginScreen', () => {
       );
 
       // Act
-      render(<LoginScreen />);
+      renderWithNavigation(<LoginScreen />);
 
       // Assert
       expect(screen.getByTestId('login-button')).toBeEnabled();
@@ -155,7 +171,7 @@ describe('LoginScreen', () => {
   describe('Form Submission', () => {
     it('should call handleLogin when form is submitted', () => {
       // Arrange
-      render(<LoginScreen />);
+      renderWithNavigation(<LoginScreen />);
 
       // Act
       const loginButton = screen.getByTestId('login-button');
@@ -171,7 +187,7 @@ describe('LoginScreen', () => {
         .spyOn(require('./useLoginScreen'), 'useLoginScreen')
         .mockImplementation(() => createMockImplementation({ loading: true }));
 
-      render(<LoginScreen />);
+      renderWithNavigation(<LoginScreen />);
       const loginButton = screen.getByTestId('login-button');
 
       // Act
@@ -187,7 +203,7 @@ describe('LoginScreen', () => {
   describe('Forgot Password', () => {
     it('should call handleForgotPassword when forgot password is clicked', () => {
       // Arrange
-      render(<LoginScreen />);
+      renderWithNavigation(<LoginScreen />);
 
       // Act
       const forgotPasswordButton = screen.getByTestId('forgot-password-button');
@@ -202,7 +218,7 @@ describe('LoginScreen', () => {
   describe('Alert State', () => {
     it('should not show alert when visible is false', () => {
       // Arrange
-      render(<LoginScreen />);
+      renderWithNavigation(<LoginScreen />);
 
       // Assert
       expect(screen.queryByTestId('alert-modal')).toBeNull();
@@ -223,7 +239,7 @@ describe('LoginScreen', () => {
       );
 
       // Act
-      render(<LoginScreen />);
+      renderWithNavigation(<LoginScreen />);
 
       // Assert
       expect(Alert.alert).toHaveBeenCalledWith(alertTitle, alertMessage, expect.any(Array));
@@ -272,7 +288,7 @@ describe('LoginScreen', () => {
 
     it('should have correct accessibility labels for all elements', () => {
       // Arrange
-      render(<LoginScreen />);
+      renderWithNavigation(<LoginScreen />);
 
       // Assert
       accessibilityTestCases.forEach(({ testId, expectedLabel }) => {
@@ -282,7 +298,7 @@ describe('LoginScreen', () => {
 
     it('should test accessibility for all elements with test IDs', () => {
       // Arrange
-      render(<LoginScreen />);
+      renderWithNavigation(<LoginScreen />);
 
       // Get all elements with test IDs
       const allTestIds = accessibilityTestCases.map(({ testId }) => testId);
