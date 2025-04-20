@@ -1,0 +1,143 @@
+---
+description: 
+globs: *.test.*
+alwaysApply: false
+---
+# Automated Testing Guidelines
+
+## Test File Structure
+
+### File Location and Naming
+- Place test files next to the code they test
+- Use `.test.ts` or `.test.tsx` extension
+- Name test files to match the file they're testing (e.g., `useLocationError.test.ts` for `useLocationError.ts`)
+
+### Test File Organization
+1. **Imports Section**
+   ```typescript
+   import { renderHook } from '@testing-library/react-native';
+   import { useLocationError } from './useLocationError';
+   import { useCurrentUser } from '@/features/auth/hooks/useCurrentUser';
+   import { userDocumentApi } from '@/shared/api/userDocument';
+   import { locationApi } from '../api';
+   ```
+
+2. **Mock Setup**
+   ```typescript
+   // Mock dependencies
+   jest.mock('@/features/auth/hooks/useCurrentUser');
+   jest.mock('@/shared/api/userDocument');
+   jest.mock('../api');
+   ```
+
+3. **Test Suite Structure**
+   ```typescript
+   describe('ComponentName', () => {
+     // Common setup
+     beforeEach(() => {
+       jest.clearAllMocks();
+     });
+
+     describe('when [condition]', () => {
+       // Setup specific to this condition
+       beforeEach(() => {
+         // Mock setup
+       });
+
+       it('should [expected behavior]', () => {
+         // Test implementation
+       });
+     });
+   });
+   ```
+
+### Best Practices
+
+1. **Test Organization**
+   - Use nested `describe` blocks to group related tests
+   - Start each `describe` with "when" to describe the condition
+   - Start each `it` with "should" to describe the expected behavior
+   - Define consts in the lowest level of nesting they apply to
+   - Use `beforeEach` for common setup
+   - Clear mocks between tests
+
+2. **Mocking**
+   - Mock all external dependencies
+   - Use `jest.mock()` at the top of the file
+   - Mock implementation details in `beforeEach` blocks
+   - Use TypeScript casting for mock functions: `(useCurrentUser as jest.Mock)`
+
+3. **Test Cases**
+   - Test both success and failure scenarios
+   - Test edge cases and boundary conditions
+   - Test cleanup and unmounting behavior
+   - Use clear, descriptive test names
+
+4. **Assertions**
+   - Include expected values in variable names
+   - Test both the happy path and error cases
+
+### Example Structure
+```typescript
+describe('ComponentName', () => {
+  // Common setup
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  describe('when [condition]', () => {
+    beforeEach(() => {
+      // Setup specific to this condition
+    });
+
+    it('should [expected behavior]', () => {
+      // Test implementation
+    });
+  });
+
+  describe('when [another condition]', () => {
+    beforeEach(() => {
+      // Different setup
+    });
+
+    it('should [different behavior]', () => {
+      // Test implementation
+    });
+  });
+});
+```
+
+### Testing Hooks
+- Use `renderHook` from `@testing-library/react-native`
+- Test all hook return values
+- Test cleanup behavior
+- Test different input scenarios
+- Test error cases
+
+### Testing Components
+- Use `render` from `@testing-library/react-native`
+- Test user interactions
+- Test prop changes
+- Test conditional rendering
+- Test accessibility
+
+### Testing API Calls
+- Mock all external API calls
+- Test success and error cases
+- Test loading states
+- Test retry behavior
+- Test cleanup of subscriptions
+
+### Testing State Management
+- Test state updates
+- Test derived state
+- Test state persistence
+- Test state cleanup
+- Test state synchronization
+
+### Testing Performance
+- Test re-renders
+- Test memoization
+- Test large data sets
+- Test async operations
+- Test memory leaks
