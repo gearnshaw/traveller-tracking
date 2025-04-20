@@ -175,7 +175,7 @@ export const LoginForm = ({ onSubmit }: LoginFormProps) => {
 
 1. **Direct Exports**
    - Export components directly from their files
-   - Avoid barrel exports (index.ts files)
+   - Do not use barrel exports, i.e. DON'T create index.ts files
    - Use named exports for better tree-shaking
    - Export types alongside their components
 
@@ -201,10 +201,6 @@ export const Button = ({ ...props }: ButtonProps) => {
 import { Button } from '@/shared/components/base/Button';
 import { FormField } from '@/shared/components/common/FormField';
 import { Header } from '@/shared/components/composite/Header';
-
-// ❌ Avoid: Barrel imports
-import { Button, Text } from '@/shared/components/base';
-import { FormField, Card } from '@/shared/components/common';
 ```
 
 ## Component Development Guidelines
