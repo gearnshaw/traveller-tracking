@@ -19,6 +19,7 @@ src/
       screens/      # Feature-owned screen, if it only uses this feature
       tasks/         # Background tasks and long-running operations
       actions.ts    # Business operations that coordinate different parts of the application
+      analytics.ts   # Analytics calls relating to the feature
       api.ts         # API calls for this feature
       types.ts       # TypeScript types for this feature
       utils.ts       # Feature-specific utilities
@@ -38,9 +39,8 @@ Note: Navigation is handled through Expo Router's file-based routing system in t
 ## Feature Organization Rules
 
 1. Each feature should be self-contained in its own directory under `src/features/`
-2. Features should export their public API through an `index.ts` file
-3. Features can depend on shared code but should not depend on other features
-4. If code is used by multiple features, move it to `shared/`
+2. Features can depend on shared code but should not depend on other features
+3. If code is used by multiple features, move it to `shared/`
 
 ## Screens
 
@@ -58,7 +58,7 @@ Note: Navigation is handled through Expo Router's file-based routing system in t
 ## API Organization
 
 ### Feature-specific API (`api.ts`)
-- Place all Firestore interactions related to a specific feature in `features/{feature}/api.ts`
+- Place all external interactions (e.g. firestore) related to a specific feature in `features/{feature}/api.ts`
 - Export an object with methods for each Firestore operation
 - Use TypeScript types from the feature's `types.ts`
 - Example:
@@ -109,6 +109,7 @@ export const auth = getAuth(app);
 2. Shared/reusable components go in `shared/components/`
 3. Components should be organized by feature, not by type
 4. Keep components focused and single-purpose
+5. Components should reuse base and common components where applicable
 
 ## State Management
 
@@ -191,45 +192,6 @@ export const auth = getAuth(app);
    - Keep state close to where it's used
    - Consider component composition before reaching for global state
 
-## Service Implementation Pattern
-
-Services should be implemented as simple functions that interact with Firestore:
-
-```typescript
-// features/trips/api.ts
-export const tripsApi = {
-  getTrips: async (userId: string) => {
-    const tripsRef = collection(db, 'trips');
-    const q = query(tripsRef, where('userId', '==', userId));
-    const snapshot = await getDocs(q);
-    return snapshot.docs.map(doc => ({ 
-      id: doc.id, 
-      ...doc.data() 
-    })) as Trip[];
-  },
-
-  addTrip: async (trip: Omit<Trip, 'id'>) => {
-    const tripsRef = collection(db, 'trips');
-    const docRef = await addDoc(tripsRef, {
-      ...trip,
-      createdAt: new Date(),
-      updatedAt: new Date()
-    });
-    return { id: docRef.id, ...trip } as Trip;
-  }
-};
-```
-
-### Guidelines
-1. Keep services simple and focused on Firestore operations
-2. Use TypeScript types for type safety
-3. Handle date conversions between Firestore and JavaScript
-4. Include proper error handling
-5. Co-locate tests using `*.test.ts` naming
-
-### Exceptions
-- React Components
-
 ## Testing
 New code should be testable and tested.
 1. Use jest for unit testing
@@ -251,10 +213,10 @@ New code should be testable and tested.
 2. Use camelCase for utility files: `featureUtils.ts`
 3. Use kebab-case for style files: `feature-styles.ts`
 
-### Types and Interfaces
-1. Place feature-specific types in `features/{feature}/types.ts`
-2. Place shared types in `shared/types/`
-3. Use interfaces for objects that represent entities
+### Types
+1. Prefer types to interfaces
+2. Place feature-specific types in `features/{feature}/types.ts`
+3. Place shared types in `shared/types/`
 4. Use type aliases for unions and utility types
 
 ## Best Practices
@@ -286,13 +248,6 @@ New code should be testable and tested.
    - Use React.memo for expensive components
    - Implement proper error boundaries
 
-## When to Break These Rules
-
-1. When dealing with legacy code that can't be immediately refactored
-2. When a quick prototype or proof of concept is needed
-3. When the overhead of following these rules outweighs the benefits
-4. When there's a compelling reason that has been discussed with the team
-
 ## Adding New Features
 
 1. Create a new directory under `src/features/`
@@ -312,16 +267,3 @@ New code should be testable and tested.
    - Accept clear props types
    - Be well documented
    - Be thoroughly tested
-
-## Documentation Requirements
-
-1. Each feature should have a README.md explaining:
-   - Purpose of the feature
-   - Main components
-   - State management approach
-   - API endpoints used
-
-2. Complex components should have:
-   - JSDoc comments
-   - Props documentation
-   - Usage examples

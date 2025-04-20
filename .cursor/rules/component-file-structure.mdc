@@ -9,54 +9,39 @@ alwaysApply: false
 1. **Use Arrow Function Components**
    - Components should be declared as arrow functions
    - Use const declarations
-   - Export components separately from their declaration
+   - Export the component as it is declared
    ```typescript
-   // ✅ Preferred
-   const MyComponent = () => {
+   export const MyComponent = () => {
      return (
        <View>
          <Text>Content</Text>
        </View>
      );
    };
-   
-   export default MyComponent;
-   
-   // ❌ Avoid
-   export default function MyComponent() {
-     return (
-       <View>
-         <Text>Content</Text>
-       </View>
-     );
-   }
    ```
 
 2. **Component File Structure**
    - Imports first (React/RN imports, then third-party, then local)
-   - Type/Interface declarations (if any)
+   - Type declarations (if any)
    - Component declaration
-   - Helper functions/hooks (if any)
    - Export statement last
    ```typescript
    import { View, Text } from 'react-native';
    import { someUtil } from '@/shared/utils';
    
-   interface MyComponentProps {
+   type MyComponentProps = {
      title: string;
    }
    
-   const MyComponent = ({ title }: MyComponentProps) => {
+   export const MyComponent = ({ title }: MyComponentProps) => {
      // Component implementation
    };
-   
-   export default MyComponent;
    ```
 
 3. **Naming Conventions**
    - Component names should be PascalCase
    - Component files should match the component name
-   - Props interfaces should be named `{ComponentName}Props`
+   - Props types should be named `{ComponentName}Props`
 
 4. **Props and Types**
    - Always define prop types using TypeScript types
@@ -79,14 +64,6 @@ alwaysApply: false
    import { HomeScreen } from "@/features/home/screens/HomeScreen";
    export default HomeScreen;
 
-   // ❌ Avoid: Screen implementation in app directory
-   // app/index.tsx
-   const HomeScreen = () => {
-     // Screen implementation
-   };
-   export default HomeScreen;
-   ```  
-
 ### Hook Organization
 1. **Co-location with Components**
    - Place hooks in the same directory as the component that uses them
@@ -97,14 +74,6 @@ alwaysApply: false
    ├── FollowerCard.tsx
    └── useFollowerCard.ts
 
-   // ❌ Avoid: Hooks in separate directory
-   src/features/followers/
-   ├── components/
-   │   └── FollowerCard.tsx
-   └── hooks/
-       └── useFollowerCard.ts
-   ```
-
 2. **Screen Hooks**
    - Place screen hooks in the same directory as the screen
    - Keep screen-specific business logic in the hook
@@ -114,7 +83,8 @@ alwaysApply: false
    └── useTripDetailsScreen.ts
    ```
 
-3. **Hook Scope**
+3. **Hook Scope** 
+   - Hooks should contain the state and business logic for their component.
    - Component hooks should only contain logic for their specific component
    - Screen hooks can orchestrate multiple components and manage screen-level state
    - Move shared logic to separate utility hooks when needed
