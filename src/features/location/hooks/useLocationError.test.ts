@@ -10,107 +10,141 @@ jest.mock('@/shared/api/userDocument');
 jest.mock('../api');
 
 describe('useLocationError', () => {
-  const mockUserId = 'test-user-123';
   const mockDate = new Date('2024-03-20T12:00:00Z');
 
   beforeEach(() => {
     jest.clearAllMocks();
-    // Mock useCurrentUser to return a user
-    (useCurrentUser as jest.Mock).mockReturnValue({ userUid: mockUserId });
   });
 
-  it('should return false when there is no error', () => {
-    // Mock user document observer to return no error
-    (userDocumentApi.observeUser as jest.Mock).mockImplementation((_, callback) => {
-      callback({ dtLastLocationError: null });
-      return jest.fn();
+  describe('when there is a user', () => {
+    const mockUserId = 'test-user-123';
+
+    beforeEach(() => {
+      // Mock useCurrentUser to return a user
+      (useCurrentUser as jest.Mock).mockReturnValue({ userUid: mockUserId });
     });
 
-    // Mock location observer to return a recent update
-    (locationApi.observeLatestLocation as jest.Mock).mockImplementation((_, callback) => {
-      callback({ dtLastUpdated: mockDate });
-      return jest.fn();
+    describe('when there is no error', () => {
+      const dtLastLocationError = null;
+
+      beforeEach(() => {
+        // Mock user document observer to return no error
+        (userDocumentApi.observeUser as jest.Mock).mockImplementation((_, callback) => {
+          callback({ dtLastLocationError });
+          return jest.fn();
+        });
+
+        // Mock location observer to return a recent update
+        (locationApi.observeLatestLocation as jest.Mock).mockImplementation((_, callback) => {
+          callback({ dtLastUpdated: mockDate });
+          return jest.fn();
+        });
+      });
+
+      it('should return false', () => {
+        const expected = false;
+        const { result } = renderHook(() => useLocationError());
+        expect(result.current).toBe(expected);
+      });
     });
 
-    const { result } = renderHook(() => useLocationError());
-    expect(result.current).toBe(false);
+    describe('when there is an error', () => {
+      const dtLastLocationError = new Date('2024-03-20T12:00:00Z');
+
+      beforeEach(() => {
+        // Mock user document observer to return an error
+        (userDocumentApi.observeUser as jest.Mock).mockImplementation((_, callback) => {
+          callback({ dtLastLocationError });
+          return jest.fn();
+        });
+      });
+
+      describe('when there have been no location updates', () => {
+        const dtLastUpdated = null;
+
+        beforeEach(() => {
+          // Mock location observer to return no update
+          (locationApi.observeLatestLocation as jest.Mock).mockImplementation((_, callback) => {
+            callback({ dtLastUpdated });
+            return jest.fn();
+          });
+        });
+
+        it('should return true', () => {
+          const expected = true;
+          const { result } = renderHook(() => useLocationError());
+          expect(result.current).toBe(expected);
+        });
+      });
+
+      describe('when the location update was BEFORE the error', () => {
+        const dtLastUpdated = new Date(dtLastLocationError.getTime() - 1000);
+
+        beforeEach(() => {
+          // Mock location observer to return an older update
+          (locationApi.observeLatestLocation as jest.Mock).mockImplementation((_, callback) => {
+            callback({ dtLastUpdated });
+            return jest.fn();
+          });
+        });
+
+        it('should return true', () => {
+          const expected = true;
+          const { result } = renderHook(() => useLocationError());
+          expect(result.current).toBe(expected);
+        });
+      });
+
+      describe('when the location update was AFTER the error', () => {
+        const dtLastUpdated = new Date(dtLastLocationError.getTime() + 1000);
+
+        beforeEach(() => {
+          // Mock location observer to return an older update
+          (locationApi.observeLatestLocation as jest.Mock).mockImplementation((_, callback) => {
+            callback({ dtLastUpdated });
+            return jest.fn();
+          });
+        });
+
+        it('should return false', () => {
+          const expected = false;
+          const { result } = renderHook(() => useLocationError());
+          expect(result.current).toBe(expected);
+        });
+      });
+    });
+
+    describe('when subscriptions have been set up', () => {
+      const mockUnsubscribeUser = jest.fn();
+      const mockUnsubscribeLocation = jest.fn();
+
+      beforeEach(() => {
+        // Mock both observers to return unsubscribe functions
+        (userDocumentApi.observeUser as jest.Mock).mockReturnValue(mockUnsubscribeUser);
+        (locationApi.observeLatestLocation as jest.Mock).mockReturnValue(mockUnsubscribeLocation);
+      });
+
+      it('should clean up subscriptions when unmounted', () => {
+        const { unmount } = renderHook(() => useLocationError());
+        unmount();
+
+        expect(mockUnsubscribeUser).toHaveBeenCalledTimes(1);
+        expect(mockUnsubscribeLocation).toHaveBeenCalledTimes(1);
+      });
+    });
   });
 
-  it('should return true when there is an error and no recent update', () => {
-    // Mock user document observer to return an error
-    (userDocumentApi.observeUser as jest.Mock).mockImplementation((_, callback) => {
-      callback({ dtLastLocationError: mockDate });
-      return jest.fn();
+  describe('when there is no user', () => {
+    beforeEach(() => {
+      // Mock useCurrentUser to return no user
+      (useCurrentUser as jest.Mock).mockReturnValue(null);
     });
 
-    // Mock location observer to return no update
-    (locationApi.observeLatestLocation as jest.Mock).mockImplementation((_, callback) => {
-      callback(null);
-      return jest.fn();
+    it('should not set up observers', () => {
+      renderHook(() => useLocationError());
+
+      expect(userDocumentApi.observeUser).not.toHaveBeenCalled();
+      expect(locationApi.observeLatestLocation).not.toHaveBeenCalled();
     });
-
-    const { result } = renderHook(() => useLocationError());
-    expect(result.current).toBe(true);
-  });
-
-  it('should return true when error timestamp is more recent than last update', () => {
-    const errorDate = new Date(mockDate.getTime() + 1000); // 1 second after last update
-
-    // Mock user document observer to return a recent error
-    (userDocumentApi.observeUser as jest.Mock).mockImplementation((_, callback) => {
-      callback({ dtLastLocationError: errorDate });
-      return jest.fn();
-    });
-
-    // Mock location observer to return an older update
-    (locationApi.observeLatestLocation as jest.Mock).mockImplementation((_, callback) => {
-      callback({ dtLastUpdated: mockDate });
-      return jest.fn();
-    });
-
-    const { result } = renderHook(() => useLocationError());
-    expect(result.current).toBe(true);
-  });
-
-  it('should return false when last update is more recent than error', () => {
-    const errorDate = new Date(mockDate.getTime() - 1000); // 1 second before last update
-
-    // Mock user document observer to return an older error
-    (userDocumentApi.observeUser as jest.Mock).mockImplementation((_, callback) => {
-      callback({ dtLastLocationError: errorDate });
-      return jest.fn();
-    });
-
-    // Mock location observer to return a recent update
-    (locationApi.observeLatestLocation as jest.Mock).mockImplementation((_, callback) => {
-      callback({ dtLastUpdated: mockDate });
-      return jest.fn();
-    });
-
-    const { result } = renderHook(() => useLocationError());
-    expect(result.current).toBe(false);
-  });
-
-  it('should clean up subscriptions when unmounted', () => {
-    const mockUnsubscribe = jest.fn();
-
-    // Mock both observers to return unsubscribe functions
-    (userDocumentApi.observeUser as jest.Mock).mockReturnValue(mockUnsubscribe);
-    (locationApi.observeLatestLocation as jest.Mock).mockReturnValue(mockUnsubscribe);
-
-    const { unmount } = renderHook(() => useLocationError());
-    unmount();
-
-    expect(mockUnsubscribe).toHaveBeenCalledTimes(2);
-  });
-
-  it('should not set up observers when there is no user', () => {
-    // Mock useCurrentUser to return no user
-    (useCurrentUser as jest.Mock).mockReturnValue(null);
-
-    renderHook(() => useLocationError());
-
-    expect(userDocumentApi.observeUser).not.toHaveBeenCalled();
-    expect(locationApi.observeLatestLocation).not.toHaveBeenCalled();
   });
 });
