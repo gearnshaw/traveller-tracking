@@ -23,6 +23,7 @@ src/
       api.ts         # API calls for this feature
       types.ts       # TypeScript types for this feature
       utils.ts       # Feature-specific utilities
+      logger.ts      # Logger to use in the feature
   shared/            # Shared/common code
     components/      # Reusable UI components
     hooks/          # Common hooks
@@ -198,6 +199,11 @@ New code should be testable and tested.
 2. Use React Native Testing Library for component testing
 3. Use Maestro for E2E testing
 
+## Logging
+- Each feature should define its own logger.
+- Code outside of features should use the main logger exported from the logger service.
+- Console statements should not be used.
+
 ## Code Organization Rules
 
 ### Imports
@@ -254,6 +260,7 @@ New code should be testable and tested.
 2. Include necessary subdirectories (components, hooks, etc.)
 3. Create `types.ts` for feature-specific types
 4. Create `api.ts` for API calls
+5. Create `logger.ts` for feature level logging
 
 ## Shared Code Guidelines
 

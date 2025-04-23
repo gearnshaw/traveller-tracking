@@ -9,6 +9,22 @@ jest.mock('@/services/firebase', () => ({
   }
 }));
 
+// Mock the logger service
+jest.mock('@/services/logger', () => ({
+  createFeatureLogger: jest.fn().mockReturnValue({
+    debug: jest.fn(),
+    info: jest.fn(),
+    warn: jest.fn(),
+    error: jest.fn()
+  }),
+  log: {
+    debug: jest.fn(),
+    info: jest.fn(),
+    warn: jest.fn(),
+    error: jest.fn()
+  }
+}));
+
 describe('followersApi', () => {
   const mockUserId = 'test-user-id';
 
@@ -69,10 +85,9 @@ describe('followersApi', () => {
       expect(callback).toHaveBeenCalledWith(expectedFollowers);
     });
 
-    it('should return empty array and log error when snapshot fails', async () => {
+    it('should return empty array when snapshot fails', async () => {
       // Arrange
       const mockError = new Error('Firestore error');
-      const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
 
       const mockOnSnapshot = jest.fn().mockImplementation((_, errorCallback) => {
         errorCallback(mockError);
@@ -84,10 +99,12 @@ describe('followersApi', () => {
       await followersApi.observeFollowers(mockUserId, callback);
 
       // Assert
-      expect(consoleSpy).toHaveBeenCalledWith('Error observing followers:', mockError);
       expect(callback).toHaveBeenCalledWith([]);
-
-      consoleSpy.mockRestore();
+      // Verify that error was logged
+      expect(require('@/services/logger').createFeatureLogger().error).toHaveBeenCalledWith(
+        'Error observing followers:',
+        mockError
+      );
     });
   });
 });

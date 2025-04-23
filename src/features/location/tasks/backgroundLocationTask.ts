@@ -5,12 +5,13 @@ import { authService } from '@/services/auth';
 import { BACKGROUND_LOCATION_TASK } from './taskNames';
 import { trackBackgroundLocationError, trackBackgroundLocationStarted } from '../analytics';
 import { userDocumentApi } from '@/shared/api/userDocument';
+import { locationLogger } from '../logger';
 
 // Define the task handler
 TaskManager.defineTask(BACKGROUND_LOCATION_TASK, async ({ data, error }) => {
   const userId = authService.getCurrentUserId();
   if (error) {
-    console.error('Background location task error:', error);
+    locationLogger.error('Background location task error:', { error });
     trackBackgroundLocationError(error.message, {
       source: 'background_location_task',
       code: error.code
@@ -29,7 +30,7 @@ TaskManager.defineTask(BACKGROUND_LOCATION_TASK, async ({ data, error }) => {
     const { locations } = data as { locations: Location.LocationObject[] };
 
     if (!userId) {
-      console.error('No user ID available for background location task');
+      locationLogger.error('No user ID available for background location task');
       return;
     }
 
@@ -43,7 +44,7 @@ TaskManager.defineTask(BACKGROUND_LOCATION_TASK, async ({ data, error }) => {
         await saveOrUpdateLocation({ latitude, longitude }, timestamp, userId);
       }
     } catch (error) {
-      console.error('Error processing background location:', error);
+      locationLogger.error('Error processing background location:', { error });
     }
   }
 });
@@ -74,10 +75,11 @@ export const registerBackgroundLocationTask = async (): Promise<boolean> => {
     });
 
     trackBackgroundLocationStarted();
+    locationLogger.info('Background location task registered successfully');
 
     return true;
   } catch (error) {
-    console.error('Error registering background location task:', error);
+    locationLogger.error('Error registering background location task:', { error });
     return false;
   }
 };
@@ -96,10 +98,11 @@ export const unregisterBackgroundLocationTask = async (): Promise<boolean> => {
 
     // Stop location updates
     await Location.stopLocationUpdatesAsync(BACKGROUND_LOCATION_TASK);
+    locationLogger.info('Background location task unregistered successfully');
 
     return true;
   } catch (error) {
-    console.error('Error unregistering background location task:', error);
+    locationLogger.error('Error unregistering background location task:', { error });
     return false;
   }
 };

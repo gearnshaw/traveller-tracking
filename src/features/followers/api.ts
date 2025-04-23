@@ -1,6 +1,7 @@
-import { Follower } from './types';
 import { db } from '@/services/firebase';
+import { Follower } from './types';
 import { mapFollower, RawFollower } from './utils';
+import { followersLogger } from './logger';
 
 const getFollowersPath = (userId: string) => `users/${userId}/followers`;
 
@@ -17,7 +18,7 @@ export const followersApi = {
         callback(followers);
       },
       (error) => {
-        console.error('Error observing followers:', error);
+        followersLogger.error('Error observing followers:', error);
         callback([]);
       }
     );

@@ -1,6 +1,7 @@
 import { Traveller } from './types';
 import { db } from '@/services/firebase';
 import { mapTraveller, RawTraveller } from './utils';
+import { travellersLogger } from './logger';
 
 const getTravellersPath = (userId: string) => `users/${userId}/travellers`;
 
@@ -17,7 +18,7 @@ export const travellersApi = {
         callback(travellers);
       },
       (error) => {
-        console.error('Error observing travellers:', error);
+        travellersLogger.error('Error observing travellers:', error);
         callback([]);
       }
     );

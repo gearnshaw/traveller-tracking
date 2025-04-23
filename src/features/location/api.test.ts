@@ -40,6 +40,22 @@ jest.mock('@/services/firebase', () => ({
   }
 }));
 
+// Mock the logger service
+jest.mock('@/services/logger', () => ({
+  createFeatureLogger: jest.fn().mockReturnValue({
+    debug: jest.fn(),
+    info: jest.fn(),
+    warn: jest.fn(),
+    error: jest.fn()
+  }),
+  log: {
+    debug: jest.fn(),
+    info: jest.fn(),
+    warn: jest.fn(),
+    error: jest.fn()
+  }
+}));
+
 describe('locationApi', () => {
   const mockUserId = 'test-user-123';
   const mockDate = new Date('2024-01-01T00:00:00.000Z');
