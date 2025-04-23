@@ -1,18 +1,21 @@
-import { logger, consoleTransport } from 'react-native-logs';
+import { logger, consoleTransport, fileAsyncTransport } from 'react-native-logs';
 import { InteractionManager } from 'react-native';
+import * as FileSystem from 'expo-file-system';
 
 // Create a base logger configuration
 const baseConfig = {
-  transport: consoleTransport, // Always use console transport in development
-  severity: __DEV__ ? 'debug' : 'error',
+  transport: __DEV__ ? consoleTransport : fileAsyncTransport,
+  severity: __DEV__ ? 'debug' : 'info',
   transportOptions: {
+    FS: FileSystem as any, // Type assertion needed as react-native-logs expects a different type
+    fileName: '{date-today}-log.txt',
+    fileNameDateType: 'iso' as const,
     colors: {
       info: 'blueBright' as const,
       warn: 'yellowBright' as const,
       error: 'redBright' as const
     }
   },
-  fixedExtLvlLength: true,
   async: true,
   asyncFunc: InteractionManager.runAfterInteractions
 };
@@ -27,9 +30,6 @@ export const createFeatureLogger = (featureName: string) => {
 
 // Export a default logger for general use
 export const log = baseLogger;
-export const debugLog = baseLogger.extend('👾👾👾👾');
-
-log.debug('hello world');
 
 // Export the logger types for type safety
 export type Logger = ReturnType<typeof createFeatureLogger>;
