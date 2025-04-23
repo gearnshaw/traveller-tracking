@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Follower } from '../types';
 import { followersApi } from '../api';
 import { useCurrentUser } from '@/features/auth/hooks/useCurrentUser';
-
+import { followersLogger } from '../logger';
 export const useFollowers = () => {
   const [followers, setFollowers] = useState<Follower[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -23,7 +23,7 @@ export const useFollowers = () => {
           setFollowers(followers);
         });
       } catch (error) {
-        console.error('Error loading followers:', error);
+        followersLogger.error('Error loading followers:', error);
       } finally {
         setIsLoading(false);
       }

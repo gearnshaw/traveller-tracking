@@ -1,6 +1,6 @@
 import { useCurrentUser } from '@/features/auth/hooks/useCurrentUser';
 import { trackBackgroundLocationError } from '@/features/location/analytics';
-import { log } from '@/services/logger';
+import { testLogger } from '../logger';
 import { userDocumentApi } from '@/shared/api/userDocument';
 import { Button } from '@/shared/components/base/Button';
 
@@ -8,14 +8,14 @@ export const TestButton = () => {
   const userId = useCurrentUser()?.userUid;
 
   const doTest = async () => {
-    log.debug('Test button pressed!');
+    testLogger.debug('Test button pressed!');
 
     const error = {
       message: 'Test error',
       code: 'test_error'
     };
 
-    console.error('Background location task error:', error);
+    testLogger.error('Background location task error:', error);
     trackBackgroundLocationError(error.message, {
       source: 'background_location_task',
       code: error.code

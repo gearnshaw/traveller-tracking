@@ -1,5 +1,6 @@
 import { analytics } from './firebase';
 import { ErrorEvent } from '@/shared/analytics/types';
+import { log } from '@/services/logger';
 
 // Helper function to log screen views
 const logScreen = async (screenName: string, screenClass?: string) => {
@@ -9,14 +10,14 @@ const logScreen = async (screenName: string, screenClass?: string) => {
       screen_class: screenClass || screenName
     });
   } catch (error) {
-    console.error('Error logging screen view:', error);
+    log.error('Error logging screen view:', error);
   }
 };
 
 // Synchronous wrapper for screen logging
 export const logScreenSync = (screenName: string, screenClass?: string) => {
   logScreen(screenName, screenClass).catch((error) => {
-    console.error('Error in async screen logging:', error);
+    log.error('Error in async screen logging:', error);
   });
 };
 
@@ -28,14 +29,14 @@ const logEvent = async (eventName: string, params?: Record<string, any>) => {
       ...params
     });
   } catch (error) {
-    console.error('Error logging event:', error);
+    log.error('Error logging event:', error);
   }
 };
 
 // Synchronous wrapper for fire-and-forget analytics
 export const logEventSync = (eventName: string, params?: Record<string, any>) => {
   logEvent(eventName, params).catch((error) => {
-    console.error('Error in async analytics event:', error);
+    log.error('Error in async analytics event:', error);
   });
 };
 
@@ -47,13 +48,13 @@ const logError = async (errorEvent: ErrorEvent) => {
       ...errorEvent
     });
   } catch (error) {
-    console.error('Error logging error event:', error);
+    log.error('Error logging error event:', error);
   }
 };
 
 export const logErrorSync = (errorEvent: ErrorEvent) => {
   logError(errorEvent).catch((error) => {
-    console.error('Error in async error logging:', error);
+    log.error('Error in async error logging:', error);
   });
 };
 
@@ -62,6 +63,6 @@ export const logErrorSync = (errorEvent: ErrorEvent) => {
 //   try {
 //     await analytics.setUserProperties(properties);
 //   } catch (error) {
-//     console.error('Error setting user properties:', error);
+//     log.error('Error setting user properties:', error);
 //   }
 // };

@@ -1,5 +1,6 @@
 import { auth } from '@/services/firebase';
 import { unregisterBackgroundLocationTask } from '@/features/location/tasks/backgroundLocationTask';
+import { homeLogger } from '../logger';
 
 export const useHomeScreen = () => {
   const handleLogout = async () => {
@@ -8,7 +9,7 @@ export const useHomeScreen = () => {
       await unregisterBackgroundLocationTask();
       await auth.signOut();
     } catch (error) {
-      console.error('Error signing out:', error);
+      homeLogger.error('Error signing out:', error);
     }
   };
 

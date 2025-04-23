@@ -2,6 +2,7 @@ import * as Location from 'expo-location';
 import { ReverseGeocodeCity } from '@/features/location/types';
 import * as TaskManager from 'expo-task-manager';
 import { BACKGROUND_LOCATION_TASK } from '@/features/location/tasks/taskNames';
+import { log } from '@/services/logger';
 
 /**
  * Location service for handling location-related operations
@@ -16,7 +17,7 @@ export const locationService = {
       const { status } = await Location.requestBackgroundPermissionsAsync();
       return status === 'granted';
     } catch (error) {
-      console.error('Error requesting location permissions:', error);
+      log.error('Error requesting location permissions:', error);
       return false;
     }
   },
@@ -28,11 +29,11 @@ export const locationService = {
   checkPermissions: async (): Promise<boolean> => {
     try {
       const result = await Location.getBackgroundPermissionsAsync();
-      console.log(`👾👾👾👾 ${JSON.stringify(result)}`); // TODO: GLE remove
+      log.debug(`${JSON.stringify(result)}`); // TODO: GLE remove
       const { status } = result;
       return status === 'granted';
     } catch (error) {
-      console.error('Error checking location permissions:', error);
+      log.error('Error checking location permissions:', error);
       return false;
     }
   },
@@ -45,7 +46,7 @@ export const locationService = {
     try {
       return await TaskManager.isTaskRegisteredAsync(BACKGROUND_LOCATION_TASK);
     } catch (error) {
-      console.error('Error checking background tracking status:', error);
+      log.error('Error checking background tracking status:', error);
       return false;
     }
   },
@@ -65,7 +66,7 @@ export const locationService = {
         longitude: location.coords.longitude
       };
     } catch (error) {
-      console.error('Error getting current position:', error);
+      log.error('Error getting current position:', error);
       return null;
     }
   },
@@ -100,7 +101,7 @@ export const locationService = {
 
       return null;
     } catch (error) {
-      console.error('Error reverse geocoding location:', error);
+      log.error('Error reverse geocoding location:', error);
       return null;
     }
   }

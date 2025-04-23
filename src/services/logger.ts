@@ -27,6 +27,7 @@ export const createFeatureLogger = (featureName: string) => {
 
 // Export a default logger for general use
 export const log = baseLogger;
+export const debugLog = baseLogger.extend('👾👾👾👾');
 
 log.debug('hello world');
 

@@ -10,6 +10,7 @@ import {
 import { db } from '@/services/firebase';
 import { Location } from './types';
 import { mapLocation, RawLocation } from './utils';
+import { locationLogger } from './logger';
 
 const getLocationsPath = (userId: string) => `users/${userId}/locations`;
 
@@ -36,7 +37,7 @@ export const locationApi = {
       await db.collection(locationPath).doc(id).update(locationWithoutId);
       return location;
     } catch (error) {
-      console.error('Error updating location:', error);
+      locationLogger.error('Error updating location:', error);
       throw error;
     }
   },

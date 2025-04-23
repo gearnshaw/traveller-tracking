@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { auth } from '@/services/firebase';
+import { authLogger } from '../logger';
 
 type AlertState = {
   title: string;
@@ -39,7 +40,7 @@ export const useLoginScreen = () => {
     setLoading(true);
     try {
       await auth.signInWithEmailAndPassword(email, password);
-      console.log('User signed in successfully!');
+      authLogger.debug('User signed in successfully!');
     } catch (error: any) {
       let message = 'An error occurred while signing in';
 
@@ -58,7 +59,7 @@ export const useLoginScreen = () => {
         message,
         visible: true
       });
-      console.info(error);
+      authLogger.error('Login error:', error);
     } finally {
       setLoading(false);
     }
