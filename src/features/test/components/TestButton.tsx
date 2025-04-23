@@ -1,5 +1,6 @@
 import { useCurrentUser } from '@/features/auth/hooks/useCurrentUser';
 import { trackBackgroundLocationError } from '@/features/location/analytics';
+import { log } from '@/services/logger';
 import { userDocumentApi } from '@/shared/api/userDocument';
 import { Button } from '@/shared/components/base/Button';
 
@@ -7,7 +8,7 @@ export const TestButton = () => {
   const userId = useCurrentUser()?.userUid;
 
   const doTest = async () => {
-    console.log('Test button pressed!');
+    log.debug('Test button pressed!');
 
     const error = {
       message: 'Test error',

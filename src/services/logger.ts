@@ -1,19 +1,18 @@
-import { logger, consoleTransport, fileAsyncTransport } from 'react-native-logs';
-import RNFS from 'react-native-fs';
+import { logger, consoleTransport } from 'react-native-logs';
 import { InteractionManager } from 'react-native';
 
 // Create a base logger configuration
 const baseConfig = {
-  transport: __DEV__ ? consoleTransport : fileAsyncTransport,
+  transport: consoleTransport, // Always use console transport in development
   severity: __DEV__ ? 'debug' : 'error',
   transportOptions: {
     colors: {
       info: 'blueBright' as const,
       warn: 'yellowBright' as const,
       error: 'redBright' as const
-    },
-    FS: RNFS as any // Type assertion needed due to type mismatch between libraries
+    }
   },
+  fixedExtLvlLength: true,
   async: true,
   asyncFunc: InteractionManager.runAfterInteractions
 };
@@ -28,6 +27,8 @@ export const createFeatureLogger = (featureName: string) => {
 
 // Export a default logger for general use
 export const log = baseLogger;
+
+log.debug('hello world');
 
 // Export the logger types for type safety
 export type Logger = ReturnType<typeof createFeatureLogger>;
