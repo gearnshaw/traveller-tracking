@@ -1,0 +1,180 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Error Handling Guidelines
+
+## Hook Error Handling
+
+1. **Error State Management**
+   ```typescript
+   // ✅ Preferred: Handle errors internally in hooks
+   const useMyHook = () => {
+     const [error, setError] = useState<string | null>(null);
+     
+     const handleOperation = async () => {
+       try {
+         setError(null); // Clear errors before new operations
+         await someOperation();
+       } catch (error) {
+         const errorMessage = error instanceof Error ? error.message : 'Operation failed';
+         setError(errorMessage);
+         logger.error('Operation failed:', errorMessage);
+       }
+     };
+
+     return { error, handleOperation };
+   };
+   ```
+
+2. **Error Logging**
+   - Log errors with appropriate context
+   - Use feature-specific loggers
+   - Include error messages and relevant data
+   - Objects other than strings should be stringified
+   ```typescript
+   // ✅ Good
+   logger.error('Failed to load data:', errorMessage);
+   logger.error('Failed to load data:', JSON.stringify(error));
+   
+   // ❌ Avoid
+   console.error(error);
+   logger.error('Failed to load data:', error);
+   ```
+
+3. **Error Types**
+   - Use string type for error messages
+   - Convert unknown errors to Error instances
+   - Provide fallback error messages
+   ```typescript
+   const errorMessage = error instanceof Error ? error.message : 'Operation failed';
+   ```
+
+4. **Error State Clearing**
+   - Clear error state before new operations
+   - Reset error state when component unmounts
+   - Clear errors when operation succeeds
+   ```typescript
+   try {
+     setError(null);
+     await operation();
+   } catch (error) {
+     setError(errorMessage);
+   }
+   ```
+
+## Component Error Handling
+
+1. **Error Display**
+   ```typescript
+   // ✅ Preferred: Display errors from hooks
+   const MyComponent = () => {
+     const { error, handleOperation } = useMyHook();
+     
+     return (
+       <View>
+         <Button onPress={handleOperation}>Do Something</Button>
+         {error && (
+           <Typography variant="secondary" style={tw`text-red-500`}>
+             {error}
+           </Typography>
+         )}
+       </View>
+     );
+   };
+   ```
+
+2. **Multiple Error Sources**
+   - Combine errors from multiple hooks
+   - Show most relevant error
+   - Maintain error hierarchy
+   ```typescript
+   const { error: updateError } = useUpdater();
+   const { error: statusError } = useStatus();
+   
+   {(updateError || statusError) && (
+     <Typography variant="secondary" style={tw`text-red-500`}>
+       {updateError || statusError}
+     </Typography>
+   )}
+   ```
+
+3. **Error Boundaries**
+   - Use error boundaries for unhandled errors
+   - Keep error boundaries close to error sources
+   - Provide fallback UI for error states
+
+## Best Practices
+
+1. **Never Throw Errors from Hooks**
+   ```typescript
+   // ✅ Good
+   catch (error) {
+     setError(errorMessage);
+     logger.error('Operation failed:', errorMessage);
+   }
+   
+   // ❌ Avoid
+   catch (error) {
+     throw error;
+   }
+   ```
+
+2. **Consistent Error Messages**
+   - Use clear, user-friendly messages
+   - Include action items when possible
+   - Maintain consistent tone
+   ```typescript
+   // ✅ Good
+   'Failed to load data. Please try again.'
+   'Location permission denied. Please enable in settings.'
+   
+   // ❌ Avoid
+   'Error 500'
+   'Something went wrong'
+   ```
+
+3. **Error Recovery**
+   - Provide retry mechanisms
+   - Allow users to dismiss errors
+   - Clear errors on successful operations
+
+4. **Error State Types**
+   ```typescript
+   // ✅ Preferred: Use string for error messages
+   const [error, setError] = useState<string | null>(null);
+   
+   // ❌ Avoid: Using Error objects in state
+   const [error, setError] = useState<Error | null>(null);
+   ```
+
+5. **Error Handling Flow**
+   1. Clear error state
+   2. Attempt operation
+   3. Catch and process error
+   4. Log error
+   5. Update error state
+   6. Display error to user
+   7. Provide recovery options
+
+## Testing Error States
+
+1. **Test Error Handling**
+   ```typescript
+   it('should handle errors correctly', async () => {
+     const { result } = renderHook(() => useMyHook());
+     
+     // Simulate error
+     await act(async () => {
+       await result.current.handleOperation();
+     });
+     
+     expect(result.current.error).toBe('Expected error message');
+   });
+   ```
+
+2. **Test Error Recovery**
+   - Test error clearing
+   - Test retry mechanisms
+   - Test error dismissal
