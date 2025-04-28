@@ -28,6 +28,7 @@ TaskManager.defineTask(BACKGROUND_LOCATION_TASK, async ({ data, error }) => {
 
   if (data) {
     const { locations } = data as { locations: Location.LocationObject[] };
+    locationLogger.debug(`List of locations received (${locations.length})`);
 
     if (!userId) {
       locationLogger.error('No user ID available for background location task');
@@ -35,14 +36,15 @@ TaskManager.defineTask(BACKGROUND_LOCATION_TASK, async ({ data, error }) => {
     }
 
     try {
-      // Process each location update
-      for (const location of locations) {
-        const { latitude, longitude } = location.coords;
-        const { timestamp } = location;
+      const latestLocation = locations.reduce((prev, current) => {
+        return prev.timestamp > current.timestamp ? prev : current;
+      });
 
-        // Save or update the location
-        await saveOrUpdateLocation({ latitude, longitude }, timestamp, userId);
-      }
+      const { latitude, longitude } = latestLocation.coords;
+      const { timestamp } = latestLocation;
+
+      // Save or update the location
+      await saveOrUpdateLocation({ latitude, longitude }, timestamp, userId);
     } catch (error) {
       locationLogger.error('Error processing background location:', { error });
     }
