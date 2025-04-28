@@ -50,11 +50,13 @@ export const locationApi = {
 
     return onSnapshot(latestLocationQuery, (snapshot) => {
       if (!snapshot || snapshot.empty) {
+        locationLogger.debug('Location snapshot was missing or empty');
         onLocationUpdate(null);
         return;
       }
 
       const doc = snapshot.docs[0];
+      locationLogger.debug('Received a location update');
       onLocationUpdate(mapLocation(doc.id, doc.data() as RawLocation));
     });
   },

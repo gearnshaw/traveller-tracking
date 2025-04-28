@@ -12,7 +12,9 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.gearnshaw.travellertracking",
       "infoPlist": {
-        "ITSAppUsesNonExemptEncryption": false
+        "ITSAppUsesNonExemptEncryption": false,
+        "LSSupportsOpeningDocumentsInPlace": true,
+        "UIFileSharingEnabled": true
       },
       "googleServicesFile": "./GoogleService-Info.plist"
     },
