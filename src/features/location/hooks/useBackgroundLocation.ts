@@ -5,6 +5,7 @@ import {
 } from '../tasks/backgroundLocationTask';
 import { locationService } from '@/services/location';
 import { useAppState } from '@/shared/hooks/useAppState';
+import { locationLogger } from '../logger';
 
 type BackgroundLocationState = {
   isTracking: boolean;
@@ -48,14 +49,17 @@ export const useBackgroundLocation = () => {
       }
 
       // Register the background task
+      locationLogger.debug('Registering background location task');
       const success = await registerBackgroundLocationTask();
       if (!success) {
         throw new Error('Failed to register background location task');
       }
 
       setState({ isTracking: true, error: null });
+      locationLogger.debug('Background location task successfully registered');
     } catch (error) {
       setState((prev) => ({ ...prev, error: error as Error }));
+      locationLogger.error('Failed to start tracking', error);
     }
   };
 
