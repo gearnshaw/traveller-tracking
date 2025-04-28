@@ -1,12 +1,9 @@
-import { useCurrentUser } from '@/features/auth/hooks/useCurrentUser';
 import { trackBackgroundLocationError } from '@/features/location/analytics';
 import { testLogger } from '../logger';
-import { userDocumentApi } from '@/shared/api/userDocument';
 import { Button } from '@/shared/components/base/Button';
+import { flush } from '@/services/mixpanel';
 
 export const TestButton = () => {
-  const userId = useCurrentUser()?.userUid;
-
   const doTest = async () => {
     testLogger.debug('Test button pressed!');
 
@@ -15,18 +12,14 @@ export const TestButton = () => {
       code: 'test_error'
     };
 
-    testLogger.error('Background location task error:', error);
+    testLogger.error('Test error error:', JSON.stringify(error));
     trackBackgroundLocationError(error.message, {
-      source: 'background_location_task',
+      source: 'test_error',
       code: error.code
     });
 
-    // Update user's last error timestamp
-    if (userId) {
-      await userDocumentApi.updateUser(userId, {
-        dtLastLocationError: new Date()
-      });
-    }
+    // Flush the mixpanel buffer
+    flush();
   };
 
   const handlePress = () => {

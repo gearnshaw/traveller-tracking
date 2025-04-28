@@ -1,4 +1,4 @@
-import { logErrorSync, logEventSync } from '@/services/analytics';
+import { logError, logEvent } from '@/services/analytics';
 
 // Location-specific event names
 export const LocationEvents = {
@@ -10,22 +10,22 @@ export const LocationEvents = {
 
 // Location-specific analytics functions
 export const trackBackgroundLocationStarted = () => {
-  logEventSync(LocationEvents.BACKGROUND_LOCATION_STARTED);
+  logEvent(LocationEvents.BACKGROUND_LOCATION_STARTED);
 };
 
 export const trackBackgroundLocationStopped = () => {
-  logEventSync(LocationEvents.BACKGROUND_LOCATION_STOPPED);
+  logEvent(LocationEvents.BACKGROUND_LOCATION_STOPPED);
 };
 
 export const trackLocationUpdatedManually = () => {
-  logEventSync(LocationEvents.LOCATION_UPDATED_MANUALLY);
+  logEvent(LocationEvents.LOCATION_UPDATED_MANUALLY);
 };
 
 export const trackBackgroundLocationError = (
   errorMessage: string,
   context?: Record<string, any>
 ) => {
-  logErrorSync({
+  logError({
     errorCode: 'background_location_error',
     errorMessage,
     context
