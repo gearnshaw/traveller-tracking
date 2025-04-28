@@ -9,15 +9,16 @@ import { Button } from '@/shared/components/base/Button';
 import { LocationRequired } from './LocationRequired';
 import { LocationTrackingButton } from './LocationTrackingButton';
 import { LocationInfo } from '@/shared/components/common/LocationInfo';
+import { Typography } from '@/shared/components/base/Typography';
 
 type LocationCardProps = {
   onUpdate?: () => void;
 };
 
 export const LocationCard = ({ onUpdate }: LocationCardProps) => {
-  const trackingStatus = useLocationTrackingStatus();
+  const { status: trackingStatus, error: trackingError } = useLocationTrackingStatus();
   const { location, temperature, weather, timestamp, timezone } = useLocationDisplay();
-  const { isLoading, handleUpdate } = useLocationUpdater({ onUpdate });
+  const { isLoading, error: updateError, handleUpdate } = useLocationUpdater({ onUpdate });
 
   // Don't render anything if tracking is not required
   if (trackingStatus === 'not-required') {
@@ -50,6 +51,11 @@ export const LocationCard = ({ onUpdate }: LocationCardProps) => {
                 {isLoading ? <ActivityIndicator color="white" size="small" /> : 'Update'}
               </Button>
             </View>
+            {(updateError || trackingError) && (
+              <Typography variant="secondary" style={tw`mt-2 text-red-500`}>
+                {updateError || trackingError}
+              </Typography>
+            )}
             <LocationTrackingButton />
           </View>
         )}

@@ -3,6 +3,7 @@ import { locationService } from '@/services/location';
 import { saveOrUpdateLocation } from '../actions';
 import { useCurrentUser } from '@/features/auth/hooks/useCurrentUser';
 import { trackLocationUpdatedManually } from '../analytics';
+import { locationLogger } from '../logger';
 
 type UseLocationUpdaterProps = {
   onUpdate?: () => void;
@@ -20,6 +21,7 @@ export const useLocationUpdater = ({ onUpdate }: UseLocationUpdaterProps = {}) =
     }
 
     try {
+      locationLogger.debug('Location updater loading');
       setIsLoading(true);
       setError(null);
 
@@ -28,6 +30,7 @@ export const useLocationUpdater = ({ onUpdate }: UseLocationUpdaterProps = {}) =
         throw new Error('Failed to get current position');
       }
 
+      locationLogger.debug('Location updater saving location');
       await saveOrUpdateLocation(
         {
           latitude: position.latitude,
@@ -41,7 +44,7 @@ export const useLocationUpdater = ({ onUpdate }: UseLocationUpdaterProps = {}) =
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : 'Failed to update location';
       setError(errorMessage);
-      throw error;
+      locationLogger.error('Location update failed:', errorMessage);
     } finally {
       setIsLoading(false);
     }

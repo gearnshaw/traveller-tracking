@@ -11,7 +11,7 @@ import { locationLogger } from '../logger';
 TaskManager.defineTask(BACKGROUND_LOCATION_TASK, async ({ data, error }) => {
   const userId = authService.getCurrentUserId();
   if (error) {
-    locationLogger.error('Background location task error:', { error });
+    locationLogger.error(`Background location task error: ${JSON.stringify(error)}`);
     trackBackgroundLocationError(error.message, {
       source: 'background_location_task',
       code: error.code

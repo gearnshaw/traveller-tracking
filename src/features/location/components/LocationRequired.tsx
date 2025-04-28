@@ -9,7 +9,7 @@ type LocationRequiredProps = {
 };
 
 export const LocationRequired = ({ onUpdate }: LocationRequiredProps) => {
-  const { enableLocation } = useLocationEnabling(onUpdate);
+  const { enableLocation, error } = useLocationEnabling(onUpdate);
 
   return (
     <View style={tw`items-center py-2`}>
@@ -22,6 +22,11 @@ export const LocationRequired = ({ onUpdate }: LocationRequiredProps) => {
       <Button onPress={enableLocation} style={tw`mt-4`} accessibilityLabel="Share my city">
         Share my city
       </Button>
+      {error && (
+        <Typography variant="secondary" style={tw`mt-2 text-red-500`}>
+          {error}
+        </Typography>
+      )}
     </View>
   );
 };

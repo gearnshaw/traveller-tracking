@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { LocationInfo, Location } from '../types';
 import { useCurrentUser } from '@/features/auth/hooks/useCurrentUser';
 import { locationApi } from '../api';
+import { locationLogger } from '../logger';
 
 const DUMMY_LOCATION = {
   location: 'Unknown 🤷‍♀️',
@@ -35,6 +36,8 @@ export const useLocationDisplay = ({ onLocationChange }: UseLocationDisplayProps
     }
 
     const unsubscribe = locationApi.observeLatestLocation(userId, (location) => {
+      locationLogger.debug(`Received an update of the TT location: ${JSON.stringify(location)}`);
+
       if (location) {
         setLocationState({
           ...DUMMY_LOCATION,

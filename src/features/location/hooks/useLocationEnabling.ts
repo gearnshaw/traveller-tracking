@@ -1,12 +1,15 @@
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { useLocationUpdater } from './useLocationUpdater';
 import { locationService } from '@/services/location';
+import { locationLogger } from '../logger';
 
 export const useLocationEnabling = (onUpdate?: () => void) => {
   const { handleUpdate } = useLocationUpdater({ onUpdate });
+  const [error, setError] = useState<string | null>(null);
 
   const enableLocation = useCallback(async () => {
     try {
+      setError(null);
       // Request location permissions
       const hasPermission = await locationService.requestPermissions();
 
@@ -17,12 +20,14 @@ export const useLocationEnabling = (onUpdate?: () => void) => {
       // If permissions granted, proceed with location update
       await handleUpdate();
     } catch (error) {
-      // Re-throw the error to be handled by the component
-      throw error;
+      const errorMessage = error instanceof Error ? error.message : 'Failed to enable location';
+      setError(errorMessage);
+      locationLogger.error('Location enabling failed:', errorMessage);
     }
   }, [handleUpdate]);
 
   return {
-    enableLocation
+    enableLocation,
+    error
   };
 };
